@@ -6,11 +6,6 @@ import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-// import { TextAreaInput } from '@/components/TextInputArea'
-import { useQuery } from '@tanstack/react-query'
-
-// import { FileInput } from '@/components/Upload'
-import Cep from './components/Cep'
 
 type PatientInputs = {
   name: string

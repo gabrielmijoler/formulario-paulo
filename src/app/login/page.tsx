@@ -10,7 +10,6 @@ import { Toast } from '@/components/Toast'
 import { useAppData } from '@/context'
 import { useRouter } from 'next/navigation'
 
-
 export default function Autenticacao() {
   const { Login } = useAppData()
   const { errorMessage } = useAppData()

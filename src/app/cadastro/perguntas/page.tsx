@@ -6,8 +6,8 @@ import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 import { QuestionsPost } from '@/contextApi/questions'
-import { Toast } from '@/components/Toast'
-import { useAppData } from '@/context'
+// import { Toast } from '@/components/Toast'
+// import { useAppData } from '@/context'
 
 type QuestionsProps = {
   name: string
@@ -15,7 +15,6 @@ type QuestionsProps = {
 }
 
 export default function Patologias() {
-
   const {
     handleSubmit,
     formState: { errors },
@@ -31,12 +30,15 @@ export default function Patologias() {
 
   const onSubmit: SubmitHandler<QuestionsProps> = async (data) => {
     try {
-      const response = await QuestionsPost({ name: data.name, response: data.response });
-      console.log(response);
+      const response = await QuestionsPost({
+        name: data.name,
+        response: data.response,
+      })
+      console.log(response)
     } catch (error: any) {
       console.error(error)
     }
-  };
+  }
 
   return (
     <Layout titulo="Cadastro de Patologias">
@@ -74,9 +76,14 @@ export default function Patologias() {
           )}
         />
         {errors.response && <span>Campo obrigatório</span>}
-        <button className="px-4 py-3 rounded-lg bg-gray-200 mt-4
+        <button
+          className="px-4 py-3 rounded-lg bg-gray-200 mt-4
             border-2 focus:border-blue-500 focus:bg-white
-            focus:outline-none text-black w-20" type="submit">Enviar</button>
+            focus:outline-none text-black w-20"
+          type="submit"
+        >
+          Enviar
+        </button>
       </form>
     </Layout>
   )

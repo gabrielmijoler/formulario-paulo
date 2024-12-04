@@ -1,22 +1,22 @@
-import './globals.css';
+import './globals.css'
 import { AppProvider } from '@/context'
-import { Metadata } from 'next';
-import localFont from 'next/font/local';
+import { Metadata } from 'next'
+import localFont from 'next/font/local'
 
 export const metadata: Metadata = {
   title: 'Medoc',
 }
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
+})
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+  src: './fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
+})
 
 export default function RootLayout({
   children,

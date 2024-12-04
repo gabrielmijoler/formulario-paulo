@@ -5,7 +5,6 @@ import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { useQuery } from '@tanstack/react-query'
 import { QuestionsPost } from '@/contextApi/questions'
 
 type PathologiesProps = {
@@ -18,7 +17,6 @@ export default function Patologias() {
     handleSubmit,
     formState: { errors },
     control,
-    getValues
   } = useForm({
     criteriaMode: 'all',
     defaultValues: {
@@ -26,7 +24,6 @@ export default function Patologias() {
       response: '',
     },
   })
-
 
   // const { data, isFetching, isError } = useQuery({
   //   queryKey: ['Questions'], queryFn: () => QuestionsPost({

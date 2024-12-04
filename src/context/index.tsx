@@ -22,7 +22,7 @@ interface AppContextProps {
 const AppContext = createContext<AppContextProps>({
   Login: async () => '',
   errorMessage: { message: '', type: '' },
-  Logout: () => { },
+  Logout: () => {},
 })
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -48,7 +48,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const response = await postLogin({
         username,
-        password
+        password,
       })
       setAuth(true)
       console.log(response)

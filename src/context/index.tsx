@@ -7,46 +7,36 @@ import { postLogin } from '@/services/clients'
 import { getCookie, removeCookie, setCookie } from '@/app/actions'
 import { NextResponse } from 'next/server'
 import { IAuthUser } from '@/services/clients/types'
+import { setToken } from '@/helpers/tokenManager'
 
 interface AppContextProps {
-  tema?: string
+  theme?: string
   Login: (username: string, password: string) => Promise<string | undefined>
-  alternarTema?: () => void
+  changeTheme?: () => void
   Logout: () => void
   errorMessage: {
     message: string
     type: string
   }
-  getToken: () => Promise<string>
 }
 
 const AppContext = createContext<AppContextProps>({
   Login: async () => '',
   errorMessage: { message: '', type: '' },
   Logout: () => {},
-  getToken: async () => '',
 })
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tema, setTema] = useState('dark')
+  const [theme, setTheme] = useState('dark')
 
   const router = useRouter()
 
   const [errorMessage, setErrorMessage] = useState({ message: '', type: '' })
 
-  const handleErrorMessage = (message: string, type: string) => {
-    setErrorMessage({ message, type })
-  }
-
-  function alternarTema() {
-    const novoTema = tema === '' ? 'dark' : ''
-    setTema(novoTema)
-    localStorage.setItem('tema', novoTema)
-  }
-
-  const getToken = async () => {
-    const auth = (await getCookie('authToken')) as IAuthUser
-    return `Bearer ${auth.token}`
+  function changeTheme() {
+    const newTheme = theme === '' ? 'dark' : ''
+    setTheme(newTheme)
+    localStorage.setItem('theme', newTheme)
   }
 
   async function setAuthToken(auth: IAuthUser) {
@@ -59,6 +49,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         username,
         password,
       })
+      setToken(response.token)
       setAuthToken(response)
 
       return response.name
@@ -70,26 +61,25 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const Logout = async () => {
     await removeCookie('authToken')
     const user = await getCookie('authToken')
-
+    setToken('')
     if (!user) {
       router.push('/')
     }
   }
 
   useEffect(() => {
-    const temaSalvo = localStorage.getItem('tema')
-    setTema(temaSalvo as string)
-  }, [tema])
+    const saveTheme = localStorage.getItem('theme')
+    setTheme(saveTheme as string)
+  }, [theme])
 
   return (
     <AppContext.Provider
       value={{
-        tema,
-        alternarTema,
+        theme,
+        changeTheme,
         Login,
         Logout,
         errorMessage,
-        getToken,
       }}
     >
       {children}

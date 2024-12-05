@@ -1,14 +1,14 @@
 import { IconLua, IconSol } from '../icons'
 
 interface ButtonToggleThemeProps {
-  tema?: string
-  alternarTema?: () => void
+  theme?: string
+  changeTheme?: () => void
 }
 
 export default function ButtonToggleTheme(props: ButtonToggleThemeProps) {
-  return props.tema === 'dark' ? (
+  return props.theme === 'dark' ? (
     <div
-      onClick={props.alternarTema}
+      onClick={props.changeTheme}
       className={`
             flex items-center cursor-pointer
             bg-gradient-to-r from-yellow-300 to-yellow-600
@@ -35,7 +35,7 @@ export default function ButtonToggleTheme(props: ButtonToggleThemeProps) {
     </div>
   ) : (
     <div
-      onClick={props.alternarTema}
+      onClick={props.changeTheme}
       className={`
             flex items-center justify-end cursor-pointer
             bg-gradient-to-r from-gray-500 to-gray-900

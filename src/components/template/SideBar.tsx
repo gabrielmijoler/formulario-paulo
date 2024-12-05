@@ -13,7 +13,7 @@ import Logo from './Logo'
 import MenuItems from './MenuItems'
 
 export default function Menu() {
-  const { tema, alternarTema, Logout } = useAppData()
+  const { theme, changeTheme, Logout } = useAppData()
   const [open, setOpen] = useState(false)
 
   const handleLogout = async () => {
@@ -44,7 +44,7 @@ export default function Menu() {
         ))}
       </ul>
       <ul>
-        <ButtonToggleTheme tema={tema} alternarTema={alternarTema} />
+        <ButtonToggleTheme theme={theme} changeTheme={changeTheme} />
       </ul>
       <ul>
         <MenuItems

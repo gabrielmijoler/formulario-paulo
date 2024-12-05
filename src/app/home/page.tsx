@@ -5,11 +5,8 @@ import { useAppData } from '@/context'
 import { getUserById } from '@/services/user'
 
 export default function Home() {
-  const { getToken } = useAppData()
-
   const getUser = async () => {
-    const token = await getToken()
-    const user = await getUserById(1, token)
+    const user = await getUserById(1)
     console.log('User:', user)
   }
 

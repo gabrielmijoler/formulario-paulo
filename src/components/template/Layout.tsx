@@ -13,7 +13,7 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
-  const { tema } = useAppData()
+  const { theme } = useAppData()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleToggleSidebar = (isOpen: boolean) => {
@@ -21,7 +21,7 @@ export default function Layout(props: LayoutProps) {
   }
 
   return (
-    <div className={`${tema} flex h-auto min-h-dvh`}>
+    <div className={`${theme} flex h-auto min-h-dvh`}>
       <div
         className={`
             flex flex-col p-2 w-full

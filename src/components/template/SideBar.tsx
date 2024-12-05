@@ -39,7 +39,6 @@ export default function Menu() {
             icon={menu.icon}
             hasSubMenu={menu.submenu}
             subItems={menu.submenuItens}
-            onClickIcon={() => setOpen(!open)}
           />
         ))}
       </ul>

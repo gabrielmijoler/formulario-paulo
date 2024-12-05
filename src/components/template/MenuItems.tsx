@@ -61,7 +61,7 @@ export default function MenuItems(props: MenuItemsProps) {
         <ul>
           {props.subItems?.map((submenuItem, index) => (
             <li
-              onClick={props.onClick}
+              onClick={() => (window.location.href = submenuItem.url)}
               key={index}
               className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:bg-purple-600 rounded-md"
             >

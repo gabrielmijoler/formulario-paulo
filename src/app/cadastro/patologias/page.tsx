@@ -5,7 +5,7 @@ import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { QuestionsPost } from '@/contextApi/questions'
+import { QuestionsPost } from '@/services/questions'
 
 type PathologiesProps = {
   name: string

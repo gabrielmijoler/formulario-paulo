@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { QuestionsPost } from '@/contextApi/questions'
+import { QuestionsPost } from '@/services/questions'
 // import { Toast } from '@/components/Toast'
 // import { useAppData } from '@/context'
 

@@ -3,10 +3,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { postLogin } from '@/contextApi/clients'
+import { postLogin } from '@/services/clients'
 import { getCookie, removeCookie, setCookie } from '@/app/actions'
 import { NextResponse } from 'next/server'
-import { IAuthUser } from '@/contextApi/clients/types'
+import { IAuthUser } from '@/services/clients/types'
 
 interface AppContextProps {
   tema?: string
@@ -45,8 +45,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const getToken = async () => {
-    const autToken = (await getCookie('authToken')) as IAuthUser
-    return autToken.token
+    const auth = (await getCookie('authToken')) as IAuthUser
+    return `Bearer ${auth.token}`
   }
 
   async function setAuthToken(auth: IAuthUser) {

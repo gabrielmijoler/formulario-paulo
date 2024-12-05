@@ -7,7 +7,7 @@ import {
 } from './interceptors'
 
 export function createAxiosApiInstance(baseURL?: string): AxiosInstance {
-  const Api = axios.create({
+  const axiosInstance = axios.create({
     baseURL,
     timeout: 5000,
     headers: {
@@ -15,12 +15,12 @@ export function createAxiosApiInstance(baseURL?: string): AxiosInstance {
     },
   })
 
-  Api.interceptors.response.use(
+  axiosInstance.interceptors.response.use(
     (res) => responseInterceptor(res),
     (err) => errorInterceptor(err),
   )
 
-  Api.interceptors.request.use((config) => authInterceptor(config))
+  axiosInstance.interceptors.request.use((config) => authInterceptor(config))
 
-  return Api
+  return axiosInstance
 }

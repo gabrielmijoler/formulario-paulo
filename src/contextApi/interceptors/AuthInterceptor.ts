@@ -2,10 +2,9 @@ import { useAppData } from '@/context'
 import { InternalAxiosRequestConfig } from 'axios'
 
 export const authInterceptor = (config: InternalAxiosRequestConfig) => {
-  const { getToken } = useAppData()
   let token = null
   try {
-    token = getToken()
+    token = localStorage.getItem('authToken')
   } catch (error) {}
   if (process.env.NODE_ENV !== 'development' && !token) {
     window.location.href = '/'

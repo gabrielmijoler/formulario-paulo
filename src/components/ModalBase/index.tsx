@@ -47,9 +47,9 @@ export function ModalBase({
           <div className={`flex items-center content-center min-h-screen`}>
             <div
               className={`
-                ${height ? `h-${height}` : 'h-screen'} 
-                ${width ? `w-${width}` : 'w-20'} 
-                ${p ? `p-${p}` : 'p-0'} 
+                ${height ? `h-${height}` : 'h-screen'}
+                ${width ? `w-${width}` : 'w-20'}
+                ${p ? `p-${p}` : 'p-0'}
                 bg-white rounded-lg shadow-lg scale-100	duration-300
               `}
               ref={modalRef}

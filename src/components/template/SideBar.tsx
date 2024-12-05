@@ -13,8 +13,12 @@ import Logo from './Logo'
 import MenuItems from './MenuItems'
 
 export default function Menu() {
-  const { tema, alternarTema } = useAppData()
+  const { tema, alternarTema, Logout } = useAppData()
   const [open, setOpen] = useState(false)
+
+  const handleLogout = async () => {
+    return await Logout()
+  }
 
   return (
     <div
@@ -46,7 +50,7 @@ export default function Menu() {
         <MenuItems
           texto="Sair"
           icon={IconSair()}
-          // onClick={logout}
+          onClickIcon={handleLogout}
           className="text-red-500 dark:text-red-500"
         />
       </ul>

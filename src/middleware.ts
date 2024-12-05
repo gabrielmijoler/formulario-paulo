@@ -1,15 +1,22 @@
 import { NextResponse } from 'next/server'
+import { getCookie } from './app/actions'
 
-export function middleware(request: any) {
-  const token = request.cookies.get('authToken') || null
-
+export async function middleware(request: any) {
+  const auth = await getCookie('authToken')
   const protectedRoutes = config.matcher
-  if (protectedRoutes.includes(request.nextUrl.pathname) && !token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+
+  if (protectedRoutes.includes(request.nextUrl.pathname) && !auth?.token) {
+    return NextResponse.redirect(new URL('/', request.url))
   }
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['dashboard', 'perfil', 'prontuario', '/cadastro/perguntas'],
+  matcher: [
+    '/home',
+    '/dashboard',
+    '/perfil',
+    '/prontuario',
+    '/cadastro/perguntas',
+  ],
 }

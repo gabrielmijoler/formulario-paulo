@@ -7,11 +7,17 @@ import { ModalBase } from '../ModalBase'
 
 import SideBar from './SideBar'
 
-export function Header() {
+interface HeaderProps {
+  onToggleSidebar: (isOpen: boolean) => void
+}
+
+export function Header({ onToggleSidebar }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleModalVisibility = () => {
-    setIsOpen(!isOpen)
+    const newState = !isOpen
+    setIsOpen(newState)
+    onToggleSidebar(newState)
   }
 
   return (

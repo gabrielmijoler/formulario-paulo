@@ -4,31 +4,31 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { postLogin } from '@/contextApi/clients'
+import { getCookie, removeCookie, setCookie } from '@/app/actions'
+import { NextResponse } from 'next/server'
+import { IAuthUser } from '@/contextApi/clients/types'
+
 interface AppContextProps {
   tema?: string
-  Login: (
-    username: string,
-    password: string,
-    { errorMessage }: { errorMessage: { message: string; type: string } },
-  ) => Promise<string>
+  Login: (username: string, password: string) => Promise<string | undefined>
   alternarTema?: () => void
   Logout: () => void
   errorMessage: {
     message: string
     type: string
   }
+  getToken: () => Promise<string>
 }
 
 const AppContext = createContext<AppContextProps>({
   Login: async () => '',
   errorMessage: { message: '', type: '' },
   Logout: () => {},
+  getToken: async () => '',
 })
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [tema, setTema] = useState('dark')
-  const [user, setUser] = useState(null)
-  const [auth, setAuth] = useState(false)
 
   const router = useRouter()
 
@@ -44,46 +44,42 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('tema', novoTema)
   }
 
+  const getToken = async () => {
+    const autToken = (await getCookie('authToken')) as IAuthUser
+    return autToken.token
+  }
+
+  async function setAuthToken(auth: IAuthUser) {
+    await setCookie('authToken', JSON.stringify(auth))
+  }
+
   const Login = async (username: string, password: string) => {
     try {
       const response = await postLogin({
         username,
         password,
       })
-      setAuth(true)
-      console.log(response)
-      if (response.token) {
-        handleErrorMessage('Login feito com sucesso', 'success')
-      }
+      setAuthToken(response)
 
-      const token = response.token
-      localStorage.setItem('token', token)
-      localStorage.setItem('auth', JSON.stringify(response))
-      setUser(response)
-      return response.token
+      return response.name
     } catch (error: any) {
-      handleErrorMessage(
-        error.response.data?.message ?? 'Usuário ou senha inválida',
-        'error',
-      )
-      console.log('error', error.response.data?.message)
+      throw error.response?.data?.message ?? 'Usuário ou senha inválida'
     }
   }
 
-  const Logout = () => {
-    setUser(null)
-    localStorage.removeItem('token')
-    router.push('/login')
-    setAuth(false)
+  const Logout = async () => {
+    await removeCookie('authToken')
+    const user = await getCookie('authToken')
+
+    if (!user) {
+      router.push('/')
+    }
   }
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      setAuth(true)
-    }
     const temaSalvo = localStorage.getItem('tema')
     setTema(temaSalvo as string)
-  }, [auth, user])
+  }, [tema])
 
   return (
     <AppContext.Provider
@@ -93,6 +89,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         Login,
         Logout,
         errorMessage,
+        getToken,
       }}
     >
       {children}

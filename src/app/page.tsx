@@ -40,7 +40,7 @@ export default function Autenticacao() {
     } catch (error) {
       const errorMessage =
         (error as any)?.response?.data?.message || 'Ocorreu um erro ao logar.'
-      setError('Ocorreu um erro ao logar.')
+      setError(errorMessage)
       setLoading(false)
     }
   }

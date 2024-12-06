@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { QuestionsPost } from '@/services/questions'
+import { PostQuestion } from '@/services/questions'
 // import { Toast } from '@/components/Toast'
 // import { useAppData } from '@/context'
 
@@ -30,7 +30,7 @@ export default function Patologias() {
 
   const onSubmit: SubmitHandler<QuestionsProps> = async (data) => {
     try {
-      const response = await QuestionsPost({
+      const response = await PostQuestion({
         name: data.name,
         response: data.response,
       })

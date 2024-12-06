@@ -1,7 +1,6 @@
 'use client'
 
 import Layout from '@/components/template/Layout'
-import { useAppData } from '@/context'
 import { getUserById } from '@/services/user'
 
 export default function Home() {

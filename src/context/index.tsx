@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { postLogin } from '@/services/clients'
 import { getCookie, removeCookie, setCookie } from '@/app/actions'
-import { NextResponse } from 'next/server'
 import { IAuthUser } from '@/services/clients/types'
-import { setToken } from '@/helpers/tokenManager'
 
 interface AppContextProps {
   theme?: string
@@ -49,7 +47,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         username,
         password,
       })
-      setToken(response.token)
+
       setAuthToken(response)
 
       return response.name
@@ -61,7 +59,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const Logout = async () => {
     await removeCookie('authToken')
     const user = await getCookie('authToken')
-    setToken('')
     if (!user) {
       router.push('/')
     }

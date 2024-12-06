@@ -10,6 +10,7 @@ interface LayoutProps {
   titulo: string
   subtitulo?: string
   children?: any
+  className?: string
 }
 
 export default function Layout(props: LayoutProps) {

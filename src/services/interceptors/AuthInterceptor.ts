@@ -1,10 +1,10 @@
 'use client'
 
-import { getToken } from '@/helpers/tokenManager'
+import { getCookie } from '@/app/actions'
 import { InternalAxiosRequestConfig } from 'axios'
 
 export const authInterceptor = async (config: InternalAxiosRequestConfig) => {
-  const token = await getToken()
+  const { token } = await getCookie('authToken')
 
   if (process.env.NODE_ENV !== 'development' && !token) {
     window.location.href = '/'

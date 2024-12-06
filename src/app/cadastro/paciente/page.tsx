@@ -10,12 +10,12 @@ import { TextInput } from '@/components/TextInput'
 type PatientInputs = {
   name: string
   address: {
-    street: string,
-    number: string,
-    zipCode: string,
-    neighborhood: string,
-    city: string,
-    UF: string,
+    street: string
+    number: string
+    zipCode: string
+    neighborhood: string
+    city: string
+    UF: string
     complement: string
   }
   email: string
@@ -38,7 +38,7 @@ export default function Paciente() {
         neighborhood: '',
         city: '',
         UF: '',
-        complement: ''
+        complement: '',
       },
       email: '',
       document: '',
@@ -52,7 +52,7 @@ export default function Paciente() {
   const onSubmit = (data: PatientInputs) => console.log(data)
   // const query = useQuery({ queryKey: ['patiente'], queryFn:  })
   return (
-    <Layout titulo="Cadastro de Paciente">
+    <Layout titulo="Cadastro de Paciente" className="font-bold">
       <FormProvider {...methods}>
         <Box
           as="form"

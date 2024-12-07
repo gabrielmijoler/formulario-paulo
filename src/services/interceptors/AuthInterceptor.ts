@@ -5,6 +5,7 @@ import { InternalAxiosRequestConfig } from 'axios'
 
 export const authInterceptor = async (config: InternalAxiosRequestConfig) => {
   const { token } = await getCookie('authToken')
+  console.log('token', token)
 
   if (process.env.NODE_ENV !== 'development' && !token) {
     window.location.href = '/'

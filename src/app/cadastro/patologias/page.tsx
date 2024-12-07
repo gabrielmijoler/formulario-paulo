@@ -5,11 +5,12 @@ import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { QuestionsPost } from '@/services/questions'
+import { useQuery } from '@tanstack/react-query'
+import { postPathologies } from '@/services/pathologies'
 
 type PathologiesProps = {
-  name: string
-  response: string
+  code: string
+  description: string
 }
 
 export default function Patologias() {
@@ -17,26 +18,26 @@ export default function Patologias() {
     handleSubmit,
     formState: { errors },
     control,
+    getValues
   } = useForm({
     criteriaMode: 'all',
     defaultValues: {
-      name: '',
-      response: '',
+      code: '',
+      description: '',
     },
   })
 
-  // const { data, isFetching, isError } = useQuery({
-  //   queryKey: ['Questions'], queryFn: () => QuestionsPost({
-  //     name: getValues('name'),
-  //     response: getValues('response')
-  //   }),
-  //   enabled: false
-  // })
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ['postQuestions'], queryFn: async () =>
+      postPathologies({
+        code: getValues('code'),
+        description: getValues('description')
+      }),
+    enabled: false
+  })
 
-  // useEffect(() => {
-  // }, [])
   const onSubmit: SubmitHandler<PathologiesProps> = (data) => {
-    QuestionsPost({ name: data.name, response: data.response })
+    postPathologies({ code: data.code, description: data.description })
   }
 
   return (
@@ -49,36 +50,34 @@ export default function Patologias() {
       >
         <Text fontSize="xl">Cadastro de patologias</Text>
         <Controller
-          name="name"
+          name="code"
           control={control}
           render={({ field }) => (
             <TextInput
               {...field}
               width="1/2"
               type="text"
-              label="Codígo"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite o código"
             />
           )}
         />
-        {errors.name && <span>Campo obrigatório</span>}
+        {errors.code && <span>Campo obrigatório</span>}
         <Controller
-          name="response"
+          name="description"
           control={control}
           render={({ field }) => (
             <TextInput
               {...field}
               width="1/2"
-              label="Descrição"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite a descrição"
             />
           )}
         />
-        {errors.response && <span>Campo obrigatório</span>}
+        {errors.description && <span>Campo obrigatório</span>}
       </Box>
       <TextInput width="20" type="submit" />
     </Layout>

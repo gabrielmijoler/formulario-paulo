@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { PostQuestion } from '@/services/questions'
+import { postQuestion } from '@/services/questions'
 // import { Toast } from '@/components/Toast'
 // import { useAppData } from '@/context'
 
@@ -30,11 +30,11 @@ export default function Patologias() {
 
   const onSubmit: SubmitHandler<QuestionsProps> = async (data) => {
     try {
-      const response = await PostQuestion({
+      const responses = await postQuestion({
         name: data.name,
         response: data.response,
       })
-      console.log(response)
+      console.log(responses)
     } catch (error: any) {
       console.error(error)
     }
@@ -53,7 +53,6 @@ export default function Patologias() {
               {...field}
               width="1/2"
               type="text"
-              label="Pergunta"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite a pergunta"
@@ -68,7 +67,6 @@ export default function Patologias() {
             <TextInput
               {...field}
               width="1/2"
-              label="Resposta"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite a resposta"

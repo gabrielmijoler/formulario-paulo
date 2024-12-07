@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 
 const removeCookie = async (name: string) => {
-  ;(await cookies()).delete(name)
+  await (await cookies()).delete(name)
 }
 
 const setCookie = async (name: string, value: any) => {

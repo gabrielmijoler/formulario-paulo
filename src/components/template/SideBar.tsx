@@ -14,7 +14,6 @@ import MenuItems from './MenuItems'
 
 export default function Menu() {
   const { theme, changeTheme, Logout } = useAppData()
-  const [open, setOpen] = useState(false)
 
   const handleLogout = async () => {
     return await Logout()

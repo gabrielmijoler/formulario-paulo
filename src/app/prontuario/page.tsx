@@ -50,7 +50,6 @@ export default function Prontuario() {
             <TextAreaInput
               {...field}
               type="text"
-              label="Nome"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite o nome"
@@ -64,7 +63,6 @@ export default function Prontuario() {
           render={({ field }) => (
             <TextAreaInput
               {...field}
-              label="CPF"
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite o seu CPF"
@@ -75,7 +73,6 @@ export default function Prontuario() {
       </Box>
       <SelectInput
         options={colorOptions}
-        label="Patologia"
         onChange={() => console}
       ></SelectInput>
     </Layout>

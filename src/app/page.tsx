@@ -84,6 +84,7 @@ export default function Autenticacao() {
           type="password"
           value={password}
           onChangeValue={setPassword}
+          autoComplete='current-password'
           required
         />
 

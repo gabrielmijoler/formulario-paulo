@@ -68,7 +68,6 @@ export default function Paciente() {
                 {...field}
                 width="full"
                 type="text"
-                label="Nome"
                 value={field.value}
                 onChangeValue={field.onChange}
                 placeholder="Digite o nome"
@@ -83,7 +82,6 @@ export default function Paciente() {
               <TextInput
                 {...field}
                 width="full"
-                label="CPF"
                 value={field.value}
                 onChangeValue={field.onChange}
                 placeholder="Digite o seu CPF"
@@ -98,7 +96,6 @@ export default function Paciente() {
               <TextInput
                 {...field}
                 width="full"
-                label="RG ou IE"
                 value={field.value}
                 onChangeValue={field.onChange}
                 placeholder="Digite o seu RG"
@@ -113,7 +110,6 @@ export default function Paciente() {
             render={({ field }) => (
               <TextInput
                 {...field}
-                label="Email"
                 value={field.value}
                 onChangeValue={field.onChange}
                 placeholder="Digite o Email"
@@ -126,7 +122,6 @@ export default function Paciente() {
             render={({ field }) => (
               <TextAreaInput
                 {...field}
-                label="Observações sobre o paciente"
                 value={field.value}
                 onChangeValue={field.onChange}
                 placeholder="Digite as observações sobre o paciente"

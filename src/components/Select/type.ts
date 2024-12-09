@@ -8,6 +8,7 @@ import { Props as SelectProps } from 'react-select'
  * @see More about in react-select [docs](https://react-select.com/components#replacing-components)
  */
 export type Option = {
+  id: number
   label: string
   value: string
   disabled?: boolean

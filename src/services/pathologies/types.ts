@@ -5,5 +5,9 @@ export type IPathologiesRequest = {
 export type IPathologiesResponse = {
   code: string
   description: string
-  id: number
+  id: string
+}
+export type IGetPathologiesRequest = {
+  paginate: boolean
+  per_page:number
 }

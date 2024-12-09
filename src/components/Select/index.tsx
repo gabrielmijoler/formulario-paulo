@@ -14,7 +14,7 @@ export function SelectInput({
   noOptionsMessage = () => 'Nenhuma opção encontrada',
 }: SelectInputProps) {
   const formatGroupLabel = (data: any) => (
-    <div className="flex items-center justify-between rounded-full">
+    <div className="flex items-center justify-between rounded-full w-full">
       <span>{label}</span>
       <span className="bg-gray-200 !active:bg-amber-700 hover:bg-amber-700 rounded-full text-gray-800 text-xs font-normal leading-none min-w-1 py-1 px-2 text-center">
         {data.options.length}
@@ -22,20 +22,6 @@ export function SelectInput({
     </div>
   )
 
-  //   const filterColors = (inputValue: string) => {
-  //     return colorOptions.filter((i) =>
-  //       i.label.toLowerCase().includes(inputValue.toLowerCase()),
-  //     )
-  //   }
-
-  //   const loadOptions = (
-  //     inputValue: string,
-  //     callback: (options: ColourOption[]) => void,
-  //   ) => {
-  //     setTimeout(() => {
-  //       callback(filterColors(inputValue))
-  //     }, 1000)
-  //   }
   if (isMulti) {
     return (
       <Select
@@ -87,3 +73,17 @@ export function SelectInput({
     />
   )
 }
+//   const filterColors = (inputValue: string) => {
+//     return colorOptions.filter((i) =>
+//       i.label.toLowerCase().includes(inputValue.toLowerCase()),
+//     )
+//   }
+
+//   const loadOptions = (
+//     inputValue: string,
+//     callback: (options: ColourOption[]) => void,
+//   ) => {
+//     setTimeout(() => {
+//       callback(filterColors(inputValue))
+//     }, 1000)
+//   }

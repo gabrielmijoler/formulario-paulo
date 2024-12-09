@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 interface Props {
   item: {
     message: string
-    type: 'warning' | 'error' | 'success' | 'info' | string
+    type: 'warning' | 'error' | 'success' | 'info'
   }
 }
 

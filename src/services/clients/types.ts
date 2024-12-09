@@ -17,3 +17,12 @@ export type IAuthUser = {
   telephone: string
   token: string
 }
+
+export type IClient = {
+  name: string,
+  document: string,
+  address: string,
+  ieRg: string,
+  email: string,
+  telephone: string
+}

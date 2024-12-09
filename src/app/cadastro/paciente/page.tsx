@@ -1,46 +1,38 @@
 'use client'
 
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form'
 
 import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 
-type PatientInputs = {
-  name: string
-  address: {
-    street: string
-    number: string
-    zipCode: string
-    neighborhood: string
-    city: string
-    UF: string
-    complement: string
-  }
-  email: string
-  document: string
-  ieRg: string
-  telephone: string
-  // files: File[]
-  // obsAboutPatient: string
-}
+import { IClient } from '@/services/clients/types'
+import { postClient } from '@/services/clients'
+import { Toast } from '@/components/Toast'
 
 export default function Paciente() {
-  const methods = useForm<PatientInputs>({
+  const methods = useForm({
     criteriaMode: 'all',
     defaultValues: {
       name: '',
-      address: {
-        street: '',
-        number: '',
-        zipCode: '',
-        neighborhood: '',
-        city: '',
-        UF: '',
-        complement: '',
-      },
+      // address: {
+      //   street: '',
+      //   number: '',
+      //   zipCode: '',
+      //   neighborhood: '',
+      //   city: '',
+      //   UF: '',
+      //   complement: '',
+      // },
       email: '',
+      address: '',
       document: '',
       ieRg: '',
       telephone: '',
@@ -49,10 +41,28 @@ export default function Paciente() {
     },
   })
 
-  const onSubmit = (data: PatientInputs) => console.log(data)
-  // const query = useQuery({ queryKey: ['patiente'], queryFn:  })
+  const { mutate, isSuccess } = useMutation({
+    mutationFn: postClient,
+  })
+
+  const onSubmit: SubmitHandler<IClient> = (data) => {
+    mutate({
+      name: data.name,
+      email: data.email,
+      address: data.address,
+      document: data.document,
+      ieRg: data.ieRg,
+      telephone: data.telephone,
+    })
+  }
+
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
+      {isSuccess && (
+        <Toast
+          item={{ message: 'Paciente criada com sucesso!', type: 'success' }}
+        />
+      )}
       <FormProvider {...methods}>
         <Box
           as="form"

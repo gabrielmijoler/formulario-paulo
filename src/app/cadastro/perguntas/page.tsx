@@ -6,8 +6,8 @@ import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 import { postQuestion } from '@/services/questions'
-// import { Toast } from '@/components/Toast'
-// import { useAppData } from '@/context'
+import { useMutation } from '@tanstack/react-query'
+import { Toast } from '@/components/Toast'
 
 type QuestionsProps = {
   name: string
@@ -19,7 +19,6 @@ export default function Patologias() {
     handleSubmit,
     formState: { errors },
     control,
-    // getValues
   } = useForm({
     criteriaMode: 'all',
     defaultValues: {
@@ -28,22 +27,22 @@ export default function Patologias() {
     },
   })
 
-  const onSubmit: SubmitHandler<QuestionsProps> = async (data) => {
-    try {
-      const responses = await postQuestion({
-        name: data.name,
-        response: data.response,
-      })
-      console.log(responses)
-    } catch (error: any) {
-      console.error(error)
-    }
+  const { mutate, isSuccess } = useMutation({
+    mutationFn: postQuestion,
+  })
+
+  const onSubmit: SubmitHandler<QuestionsProps> = (data) => {
+    mutate({ name: data.name, response: data.response })
   }
 
   return (
-    <Layout titulo="Cadastro de Patologias">
+    <Layout titulo="Cadastro de Perguntas">
       <form className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
-        {/* <Toast item={{ message: 'error', type: 'warning' }} /> */}
+        {isSuccess && (
+          <Toast
+            item={{ message: 'Pergunta criada com sucesso!', type: 'success' }}
+          />
+        )}
         <Text fontSize="xl">Cadastro de perguntas</Text>
         <Controller
           name="name"

@@ -1,3 +1,4 @@
+"use server"
 import { requestApi } from '../request.api'
 import { IMedicalRecordRequest, IMedicalRecordResponse } from './types'
 

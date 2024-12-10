@@ -3,7 +3,6 @@
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Box } from '@/components/Box'
-import { SelectInput } from '@/components/Select'
 import { ColourOption } from '@/components/Select/mock'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
@@ -16,13 +15,23 @@ import { IQuestionResponse } from '@/services/questions/types'
 import { getPathologies } from '@/services/pathologies'
 import { IPathologiesResponse } from '@/services/pathologies/types'
 import { IClient } from '@/services/clients/types'
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from '@mui/material'
+import { SelectInput } from '@/components/Select'
 
 export default function Prontuario() {
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<IMedicalRecordRequest>({
+  } = useForm({
     criteriaMode: 'all',
     defaultValues: {
       symptoms: '',
@@ -40,16 +49,8 @@ export default function Prontuario() {
         email: '',
         telephone: 0,
       },
-      medicalRecordPathologies: [
-        {
-          pathologiesId: 0,
-        },
-      ],
-      medicalRecordQuestions: [
-        {
-          questionId: 0,
-        },
-      ],
+      medicalRecordPathologies: [],
+      medicalRecordQuestions: [],
       treatments: [
         {
           description: '',
@@ -58,12 +59,24 @@ export default function Prontuario() {
       ],
     },
   })
-
+  // const loadOptions = async (inputValue: string) => {
+  //   const response: IPathologiesResponse[] = await getPathologies({
+  //     filter: inputValue,
+  //     paginate: true,
+  //     per_page: 10,
+  //     current_page: 1,
+  //   })
+  //   return response.map((item) => ({
+  //     value: item.code,
+  //     label: item.description,
+  //   }))
+  // }
   const results = useQueries({
     queries: [
       {
         queryKey: ['getClient'],
-        queryFn: () => getClient(),
+        queryFn: () =>
+          getClient({ paginate: false, per_page: 10, current_page: 1 }),
         enabled: true,
         retry: 1,
       },
@@ -75,7 +88,8 @@ export default function Prontuario() {
       },
       {
         queryKey: ['getPathologies'],
-        queryFn: () => getPathologies({ paginate: true, per_page: 20 }),
+        queryFn: () =>
+          getPathologies({ paginate: false, per_page: 10, current_page: 1 }),
         enabled: true,
         retry: 1,
       },
@@ -92,26 +106,27 @@ export default function Prontuario() {
     ? results[2].data
     : []
 
-  const options: ColourOption[] = questions.map((item) => ({
+  const optionsQuestion = questions.map((item) => ({
     id: item.id,
     value: item.name,
-    label: item.name,
+    label: item.response,
   }))
 
-  const optionsClient: any = clients.map((item) => ({
-    id: item.ieRg,
-    value: item.name,
-    label: item.name,
-  }))
+  const optionsClient =
+    clients.map((item, index) => ({
+      id: index,
+      value: item.ieRg,
+      label: item.ieRg,
+    })) || []
 
-  const optionsPathologies: any = pathologies.map((item) => ({
-    id: item.id,
-    value: item.code,
-    label: item.code,
-  }))
+  const optionsPathologies =
+    pathologies.map((item, index) => ({
+      id: index,
+      value: item.code,
+      label: item.description,
+    })) || []
 
-  const onSubmit: SubmitHandler<IMedicalRecordRequest> = (data) =>
-    console.log(data)
+  const onSubmit: SubmitHandler<any> = (data) => console.log(data)
 
   return (
     <Layout titulo="Prontuário do Prontuario">
@@ -139,33 +154,64 @@ export default function Prontuario() {
           render={({ field }) => (
             <SelectInput
               {...field}
+              isMulti
+              className="w-full"
               options={optionsPathologies}
-              placeholder="Selecione o patologias"
+              placeholder="Selecione as patologias"
               value={optionsPathologies.filter(() => field.value.ieRg)}
               getOptionValue={(option) => option.id.toString()}
+              getOptionLabel={(option) => option.label}
+              onChange={(selected) =>
+                field.onChange(
+                  selected.map((option: { value: any }) => option.value),
+                )
+              }
             />
           )}
         />
         {errors.medicalRecordPathologies && <span>Campo obrigatório</span>}
-        <Controller
-          name="medicalRecordQuestions"
-          control={control}
-          render={({ field }) => (
-            <SelectInput
-              {...field}
-              options={options}
-              placeholder="Selecione a questão"
-              isMulti
-              value={options.filter((option) =>
-                field.value.some((item) => item.questionId === option.id),
-              )}
-              getOptionValue={(option) => option.id.toString()}
-            />
-          )}
-        />
+        <FormControl className="w-full !mt-4 ">
+          <Controller
+            name="medicalRecordQuestions"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Select
+                  {...field}
+                  multiple
+                  value={field.value}
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  onChange={field.onChange}
+                  renderValue={(selected) =>
+                    selected
+                      .map(
+                        (id) =>
+                          optionsQuestion.find((option) => option.id === id)
+                            ?.label,
+                      )
+                      .join(', ')
+                  }
+                >
+                  {optionsQuestion.map((option, index) => (
+                    <MenuItem key={index} value={option.id}>
+                      <Checkbox
+                        checked={(field.value as number[]).includes(option.id)}
+                      />
+                      <ListItemText
+                        primary={option.value}
+                        secondary={option.label}
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+          />
+        </FormControl>
         {errors.medicalRecordQuestions && <span>Campo obrigatório</span>}
         <Controller
-          name="conclusion"
+          name="symptoms"
           control={control}
           render={({ field }) => (
             <TextAreaInput
@@ -176,7 +222,21 @@ export default function Prontuario() {
             />
           )}
         />
-        {errors.conclusion && <span>Campo obrigatório</span>}
+        {errors.symptoms && <span>Campo obrigatório</span>}
+        <Controller
+          name="clinicalExam"
+          control={control}
+          render={({ field }) => (
+            <TextAreaInput
+              {...field}
+              value={field.value}
+              onChangeValue={field.onChange}
+              placeholder="Digite a conclusão"
+            />
+          )}
+        />
+        {errors.clinicalExam && <span>Campo obrigatório</span>}
+
         <Controller
           name="completeClinicalExam"
           control={control}

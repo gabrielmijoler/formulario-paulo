@@ -19,6 +19,7 @@ export default function Patologias() {
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     criteriaMode: 'all',
     defaultValues: {
@@ -27,8 +28,11 @@ export default function Patologias() {
     },
   })
 
-  const { mutate, isSuccess } = useMutation({
+  const { mutate, isSuccess, isError } = useMutation({
     mutationFn: postQuestion,
+    onSuccess: () => {
+      reset()
+    },
   })
 
   const onSubmit: SubmitHandler<QuestionsProps> = (data) => {
@@ -38,10 +42,13 @@ export default function Patologias() {
   return (
     <Layout titulo="Cadastro de Perguntas">
       <form className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
-        {isSuccess && (
+        {isSuccess ?? (
           <Toast
             item={{ message: 'Pergunta criada com sucesso!', type: 'success' }}
           />
+        )}{' '}
+        {isError ?? (
+          <Toast item={{ message: 'Erro ao cria pergunta.', type: 'error' }} />
         )}
         <Text fontSize="xl">Cadastro de perguntas</Text>
         <Controller

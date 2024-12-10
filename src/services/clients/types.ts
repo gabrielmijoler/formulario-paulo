@@ -26,3 +26,9 @@ export type IClient = {
   email: string,
   telephone: string
 }
+
+export type IGetParams = {
+  paginate: boolean
+  per_page: number
+  current_page: number
+}

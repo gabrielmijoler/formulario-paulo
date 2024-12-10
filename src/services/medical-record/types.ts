@@ -32,8 +32,8 @@ export type IMedicalRecordRequest = {
   userId: number;
   status: string;
   client: IClient;
-  medicalRecordPathologies: IMedicalRecordPathology[];
-  medicalRecordQuestions: IMedicalRecordQuestion[];
+  medicalRecordPathologies: IMedicalRecordPathology;
+  medicalRecordQuestions: IMedicalRecordQuestion;
   treatments: ITreatment[];
 }
 

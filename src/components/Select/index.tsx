@@ -25,7 +25,7 @@ export function SelectInput({
   if (isMulti) {
     return (
       <Select
-        className="rounded-full mt-4"
+        className="rounded-full mt-4 w-full text-black"
         options={options}
         onChange={(e) => e?.values}
         formatGroupLabel={formatGroupLabel}

@@ -1,3 +1,5 @@
+"use server"
+
 import { requestApi } from '../request.api'
 import { IFeedback } from './type'
 

@@ -9,5 +9,7 @@ export type IPathologiesResponse = {
 }
 export type IGetPathologiesRequest = {
   paginate: boolean
-  per_page:number
+  per_page: number
+  current_page: number
+  filter?: string
 }

@@ -13,7 +13,6 @@ import Logo from '@/components/template/Logo'
 
 export default function Autenticacao() {
   const { Login } = useAppData()
-  const { errorMessage } = useAppData()
   const router = useRouter()
 
   const [username, setUsername] = useState('')
@@ -47,7 +46,6 @@ export default function Autenticacao() {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Toast item={errorMessage} />
       <div className="hidden md:block"></div>
       <div className="m-10 w-full md:w-1/2 lg:w-1/3">
         <h1 className="flex justify-center text-3xl font-bold mb-5">
@@ -84,7 +82,7 @@ export default function Autenticacao() {
           type="password"
           value={password}
           onChangeValue={setPassword}
-          autoComplete='current-password'
+          autoComplete="current-password"
           required
         />
 

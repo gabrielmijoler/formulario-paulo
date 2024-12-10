@@ -1,5 +1,6 @@
+"use server"
 import { requestApi } from '../request.api'
-import { IAuthUser, IClient, ILogin } from './types'
+import { IAuthUser, IClient, IGetParams, ILogin } from './types'
 
 export async function postLogin(params: ILogin): Promise<IAuthUser> {
   return requestApi({
@@ -8,10 +9,11 @@ export async function postLogin(params: ILogin): Promise<IAuthUser> {
     data: params,
   })
 }
-export async function getClient(): Promise<IClient> {
+export async function getClient(params: IGetParams ): Promise<IClient[]> {
   return requestApi({
-    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients?paginate=true',
+    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients',
     method: 'GET',
+    params
   })
 }
 export async function getClientByID(id: string): Promise<IAuthUser> {

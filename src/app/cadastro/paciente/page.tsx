@@ -16,10 +16,14 @@ import { TextInput } from '@/components/TextInput'
 import { IClient } from '@/services/clients/types'
 import { postClient } from '@/services/clients'
 import { Toast } from '@/components/Toast'
+import { maskCPF, maskRG } from '@/helpers/maskCep'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { clientSchema } from './schema'
 
 export default function Paciente() {
   const methods = useForm({
     criteriaMode: 'all',
+    resolver: zodResolver(clientSchema),
     defaultValues: {
       name: '',
       // address: {
@@ -84,7 +88,9 @@ export default function Paciente() {
               />
             )}
           />
-          {methods.formState.errors.name && <span>Campo obrigatório</span>}
+          {methods.formState.errors.name && (
+            <Text color="red-500">{methods.formState.errors.name.message}</Text>
+          )}
           <Controller
             name="document"
             control={methods.control}
@@ -92,13 +98,17 @@ export default function Paciente() {
               <TextInput
                 {...field}
                 width="full"
-                value={field.value}
+                value={maskCPF(field.value)}
                 onChangeValue={field.onChange}
                 placeholder="Digite o seu CPF"
               />
             )}
           />
-          {methods.formState.errors.document && <span>Campo obrigatório</span>}
+          {methods.formState.errors.document && (
+            <Text color="red-500">
+              {methods.formState.errors.document.message}
+            </Text>
+          )}
           <Controller
             name="ieRg"
             control={methods.control}
@@ -106,17 +116,26 @@ export default function Paciente() {
               <TextInput
                 {...field}
                 width="full"
-                value={field.value}
+                value={maskRG(field.value)}
                 onChangeValue={field.onChange}
                 placeholder="Digite o seu RG"
               />
             )}
           />
-          {methods.formState.errors.ieRg && <span>Campo obrigatório</span>}
+          {methods.formState.errors.ieRg && (
+            <Text color="red-500">{methods.formState.errors.ieRg.message}</Text>
+          )}
           {/* <Cep /> */}
           <Controller
             name="email"
             control={methods.control}
+            rules={{
+              required: 'Campo obrigatório',
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                message: 'Email inválido',
+              },
+            }}
             render={({ field }) => (
               <TextInput
                 {...field}
@@ -126,6 +145,11 @@ export default function Paciente() {
               />
             )}
           />
+          {methods.formState.errors.email && (
+            <Text color="red-500">
+              {methods.formState.errors.email.message}
+            </Text>
+          )}
           {/* <Controller
             name="obsAboutPatient"
             control={methods.control}
@@ -139,7 +163,7 @@ export default function Paciente() {
             )}
           /> */}
           {/* <FileInput /> */}
-          {/* {methods.formState.errors.files && <span>Campo obrigatório</span>} */}
+          {/* {methods.formState.errors.files && <Text>Campo obrigatório</Text>} */}
           <TextInput type="submit" />
         </Box>
       </FormProvider>

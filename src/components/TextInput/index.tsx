@@ -1,10 +1,8 @@
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  value?: any
+  name?: string
   required?: boolean
   type?: 'text' | 'email' | 'password' | 'submit' | 'date'
   naoRenderizarQuando?: boolean
-  onChangeValue?: (newValue: any) => void
   height?: string
   width?: string
   placeholder?: string
@@ -13,12 +11,9 @@ interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const TextInput = (props: AuthInputProps) => {
   return props.naoRenderizarQuando ? null : (
     <div className="flex flex-col mt-4 w-full">
-      <label>{props.label}</label>
-
       <input
         type={props.type ?? 'text'}
-        value={props.value}
-        onChange={(e) => props.onChangeValue?.(e.target.value)}
+        name={props.name}
         required={props.required}
         placeholder={props.placeholder}
         className={`

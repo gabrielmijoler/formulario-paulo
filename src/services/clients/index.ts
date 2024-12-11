@@ -2,11 +2,13 @@
 import { requestApi } from '../request.api'
 import { IAuthUser, IClient, IGetParams, ILogin } from './types'
 
-export async function postLogin(params: ILogin): Promise<IAuthUser> {
-  return requestApi({
-    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/auth/login',
+export async function postLogin(params: ILogin): Promise<any> {
+  await fetch('https://clinical-backend-ae40133038af.herokuapp.com/v1/auth/login',{
     method: 'POST',
-    data: params,
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params),
   })
 }
 export async function getClient(params: IGetParams ): Promise<IClient[]> {

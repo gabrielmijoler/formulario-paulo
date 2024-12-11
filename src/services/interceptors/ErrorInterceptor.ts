@@ -13,12 +13,12 @@ export const errorInterceptor = (err: AxiosError) => {
   }
 
   if (err instanceof Error) {
-    const { cause, message, stack } = err
+    const { message, stack } = err
     console.error(err)
 
     if (process.env.NODE_ENV === 'development' && 'response' in err) {
       console.groupCollapsed('Show details error')
-      console.info(FETCH_ERROR_MESSAGE, { cause, message, stack })
+      console.info(FETCH_ERROR_MESSAGE, {  message, stack })
       console.info(err.response?.data)
       console.groupEnd()
     }

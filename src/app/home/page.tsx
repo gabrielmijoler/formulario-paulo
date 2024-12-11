@@ -1,8 +1,8 @@
 import Layout from '@/components/template/Layout'
-import { getUserById } from '@/services/user'
-import { useQuery } from '@tanstack/react-query'
+// import { getUserById } from '@/services/user'
+// import { useQuery } from '@tanstack/react-query'
 
-export default function Home() {
+export default async function Home() {
   // const { data, error, isLoading } = useQuery({
   //   queryKey: ['user', 1],
   //   queryFn: () => getUserById(1),

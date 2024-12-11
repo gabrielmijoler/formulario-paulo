@@ -5,7 +5,7 @@ import { IAuthUser, IClient, IGetParams, ILogin } from './types'
 export async function postLogin(params: ILogin): Promise<any> {
   await fetch('https://clinical-backend-ae40133038af.herokuapp.com/v1/auth/login',{
     method: 'POST',
-    headers:{
+    headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(params),

@@ -5,7 +5,7 @@ export async function middleware(request: any) {
   const auth = await getCookie('authToken')
   const protectedRoutes = config.matcher
 
-  if (protectedRoutes.includes(request.nextUrl.pathname) && !auth?.token) {
+  if (protectedRoutes.includes(request.nextUrl.pathname) && !auth) {
     return NextResponse.redirect(new URL('/', request.url))
   }
   return NextResponse.next()

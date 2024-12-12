@@ -1,24 +1,22 @@
 import Layout from '@/components/template/Layout'
-// import { getUserById } from '@/services/user'
+import { getUserById } from '@/services/user'
 // import { useQuery } from '@tanstack/react-query'
 
+export async function handleGetUserAction() {
+  'use server'
+
+  const response = await getUserById(1)
+  console.log('user========', response)
+}
+
 export default async function Home() {
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ['user', 1],
-  //   queryFn: () => getUserById(1),
-  // })
-
-  // const handleClick = () => {
-  //   console.log('User data:', data)
-  // }
-
   return (
     <Layout
       titulo="Página Inicial"
       subtitulo="Estamos construindo um template Admin!"
     >
       <h3>Conteúdo!!!!</h3>
-      {/* <button onClick={handleClick}>Fetch Data</button> */}
+      <button onClick={handleGetUserAction}>Fetch Data</button>
     </Layout>
   )
 }

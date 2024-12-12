@@ -2,23 +2,18 @@ import { TextInput } from '@/components/TextInput'
 import Logo from '@/components/template/Logo'
 import { setCookie } from './actions'
 import { redirect } from 'next/navigation'
+import { postLogin } from '@/services/clients'
 
 export async function loginAction(formData: FormData) {
   'use server'
 
   const { username, password } = Object.fromEntries(formData)
 
-  const response = await fetch(`${process.env.CLINICAL_BASE_URL}auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username, password }),
-  })
-  if (response.ok) {
-    const data = await response.json()
-    const token = JSON.stringify(data.token)
-    setCookie('authToken', token)
+  const payload = JSON.stringify({ username, password })
+  const response = await postLogin(payload as any)
+
+  if (response?.token) {
+    setCookie('authToken', JSON.stringify(response))
     redirect('/home')
   }
 }

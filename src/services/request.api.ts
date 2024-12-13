@@ -14,7 +14,7 @@ export async function requestApi<T>(config: AxiosRequestConfig): Promise<T | any
     return response.data
   } catch (error) {
     console.log(error)
-    return Toast({item:{message: 'error', type: 'error'}})
+    return Toast({message: 'error', type: 'error'})
 
   }
 }

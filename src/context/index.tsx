@@ -9,59 +9,18 @@ import { IAuthUser } from '@/services/clients/types'
 
 interface AppContextProps {
   theme?: string
-  Login: (username: string, password: string) => Promise<string | undefined>
   changeTheme?: () => void
-  Logout: () => void
-  errorMessage: {
-    message: string
-    type: string
-  }
 }
 
-const AppContext = createContext<AppContextProps>({
-  Login: async () => '',
-  errorMessage: { message: '', type: '' },
-  Logout: () => {},
-})
+const AppContext = createContext<AppContextProps>({})
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState('dark')
-
-  const router = useRouter()
-
-  const [errorMessage, setErrorMessage] = useState({ message: '', type: '' })
 
   function changeTheme() {
     const newTheme = theme === '' ? 'dark' : ''
     setTheme(newTheme)
     localStorage.setItem('theme', newTheme)
-  }
-
-  async function setAuthToken(auth: IAuthUser) {
-    await setCookie('authToken', JSON.stringify(auth))
-  }
-
-  const Login = async (username: string, password: string) => {
-    try {
-      const response = await postLogin({
-        username,
-        password,
-      })
-
-      setAuthToken(response)
-
-      return response.name
-    } catch (error: any) {
-      throw error.response?.data?.message ?? 'Usuário ou senha inválida'
-    }
-  }
-
-  const Logout = async () => {
-    await removeCookie('authToken')
-    const user = await getCookie('authToken')
-    if (!user) {
-      router.push('/')
-    }
   }
 
   useEffect(() => {
@@ -74,9 +33,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         theme,
         changeTheme,
-        Login,
-        Logout,
-        errorMessage,
       }}
     >
       {children}

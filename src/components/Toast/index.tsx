@@ -1,11 +1,9 @@
 interface Props {
-  item: {
-    message: string
-    type: 'warning' | 'error' | 'success' | 'info'
-  }
+  message: string
+  type: 'warning' | 'error' | 'success' | 'info'
 }
 
-export const Toast = ({ item }: Props) => {
+export const Toast = ({ message, type }: Props) => {
   // useEffect(() => {
   //   if (showToast) {
   //     setTimeout(() => {
@@ -39,14 +37,14 @@ export const Toast = ({ item }: Props) => {
 
   return (
     <>
-      {item?.message && (
+      {message && (
         <div className="absolute z-50 top-10 right-8 p-2">
           <div
-            className={`flex items-center justify-end w-full h-full border border-white rounded-2xl min-h-20 ${getToastColor(item.type)}`}
+            className={`flex items-center justify-end w-full h-full border border-white rounded-2xl min-h-20 ${getToastColor(type)}`}
           >
             <div className="flex items-center justify-center w-72 h-full">
               <span className="break-words w-full h-full text-center">
-                {item.message}
+                {message}
               </span>
             </div>
           </div>

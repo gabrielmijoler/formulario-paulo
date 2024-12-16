@@ -1,8 +1,9 @@
-import { ReactQueryProvider } from '@/providers/ReactQueryProviders'
+import { Toast } from '@/components/Toast'
 import './globals.css'
 import { AppProvider } from '@/context'
 import { Metadata } from 'next'
 import localFont from 'next/font/local'
+import ToastClient from '@/useClient/toast'
 // import { useState } from 'react'
 
 const metadata: Metadata = {
@@ -24,9 +25,8 @@ export default function RootLayout({
     <>
       <html lang="pt" className="bg-white">
         <AppProvider>
-          <ReactQueryProvider>
-            <body className={`${geistSans.variable}`}>{children}</body>
-          </ReactQueryProvider>
+          <ToastClient />
+          <body className={`${geistSans.variable}`}>{children}</body>
         </AppProvider>
       </html>
     </>

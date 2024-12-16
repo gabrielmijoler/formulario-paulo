@@ -1,24 +1,33 @@
+'use client'
+
+import { useEffect, useState } from "react"
+
 interface Props {
   message: string
   type: 'warning' | 'error' | 'success' | 'info'
 }
 
 export const Toast = ({ message, type }: Props) => {
-  // useEffect(() => {
-  //   if (showToast) {
-  //     setTimeout(() => {
-  //       setShowToast(false)
-  //       setMessage({ message: '', type: '' })
-  //     }, 3000)
-  //   }
-  // }, [showToast])
+  const [showToast, setShowToast] = useState(false)
+  const [messagem, setMessagem] = useState({ message: '', type: '' })
 
-  // useEffect(() => {
-  //   if (item.message) {
-  //     setMessage(item)
-  //     setShowToast(true)
-  //   }
-  // }, [item])
+  useEffect(() => {
+    if (message) {
+      setMessagem({ message, type })
+      setShowToast(true)
+    }
+  }, [message, type])
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false)
+        setMessagem({ message: '', type: '' })
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [showToast])
 
   const getToastColor = (type: string) => {
     switch (type) {
@@ -37,14 +46,14 @@ export const Toast = ({ message, type }: Props) => {
 
   return (
     <>
-      {message && (
+      {showToast && (
         <div className="absolute z-50 top-10 right-8 p-2">
           <div
-            className={`flex items-center justify-end w-full h-full border border-white rounded-2xl min-h-20 ${getToastColor(type)}`}
+            className={`flex items-center justify-end w-full h-full border border-white rounded-2xl min-h-20 ${getToastColor(messagem.type)}`}
           >
             <div className="flex items-center justify-center w-72 h-full">
               <span className="break-words w-full h-full text-center">
-                {message}
+                {messagem.message}
               </span>
             </div>
           </div>

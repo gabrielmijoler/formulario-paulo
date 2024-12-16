@@ -21,8 +21,7 @@ export default async function Prontuario() {
           </option>
         ))}
       </select>
-      <NewForm >
-
+      <NewForm>
         <TextAreaInput
           type="text"
           name="conclusion"

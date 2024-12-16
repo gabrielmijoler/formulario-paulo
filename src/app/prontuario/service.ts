@@ -6,5 +6,5 @@ export async function addMedicalAction(state: any, formData: FormData) {
 
   const payload = JSON.stringify({ code, description })
   await postMedicalRecord(payload as any)
-  return { succes: 'Prontuario criado com sucesso!' }
+  return  state.succes = 'Prontuario criado com sucesso!' 
 }

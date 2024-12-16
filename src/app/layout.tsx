@@ -3,7 +3,6 @@ import './globals.css'
 import { AppProvider } from '@/context'
 import { Metadata } from 'next'
 import localFont from 'next/font/local'
-import ToastClient from '@/useClient/toast'
 // import { useState } from 'react'
 
 const metadata: Metadata = {
@@ -25,7 +24,6 @@ export default function RootLayout({
     <>
       <html lang="pt" className="bg-white">
         <AppProvider>
-          <ToastClient />
           <body className={`${geistSans.variable}`}>{children}</body>
         </AppProvider>
       </html>

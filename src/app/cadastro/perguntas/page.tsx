@@ -59,6 +59,7 @@ export default function Patologias() {
               {...field}
               width="1/2"
               type="text"
+              required
               value={field.value}
               onChangeValue={field.onChange}
               placeholder="Digite a pergunta"
@@ -66,20 +67,6 @@ export default function Patologias() {
           )}
         />
         {errors.name && <span>Campo obrigatório</span>}
-        <Controller
-          name="response"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              {...field}
-              width="1/2"
-              value={field.value}
-              onChangeValue={field.onChange}
-              placeholder="Digite a resposta"
-            />
-          )}
-        />
-        {errors.response && <span>Campo obrigatório</span>}
         <button
           className="px-4 py-3 rounded-lg bg-gray-200 mt-4
             border-2 focus:border-blue-500 focus:bg-white

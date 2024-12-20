@@ -26,6 +26,15 @@ export type IClient = {
   email: string,
   telephone: string
 }
+export type IGetClient = {
+  id: number
+  name: string,
+  document: string,
+  address: string,
+  ieRg: string,
+  email: string,
+  telephone: string
+}
 
 export type IGetParams = {
   paginate: boolean

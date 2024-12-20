@@ -1,7 +1,7 @@
 'use client'
 
 import Select from 'react-select'
-
+import { useEffect, useState } from 'react'
 import { SelectInputProps } from './type'
 
 export function SelectInput({
@@ -11,8 +11,15 @@ export function SelectInput({
   options,
   isClearable = false,
   width,
+  name,
   noOptionsMessage = () => 'Nenhuma opção encontrada',
 }: SelectInputProps) {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const formatGroupLabel = (data: any) => (
     <div className="flex items-center justify-between rounded-full w-full">
       <span>{label}</span>
@@ -22,9 +29,14 @@ export function SelectInput({
     </div>
   )
 
+  if (!isClient) {
+    return null
+  }
+
   if (isMulti) {
     return (
       <Select
+        name={name}
         className="rounded-full mt-4 w-full text-black"
         options={options}
         onChange={(e) => e?.values}
@@ -73,17 +85,3 @@ export function SelectInput({
     />
   )
 }
-//   const filterColors = (inputValue: string) => {
-//     return colorOptions.filter((i) =>
-//       i.label.toLowerCase().includes(inputValue.toLowerCase()),
-//     )
-//   }
-
-//   const loadOptions = (
-//     inputValue: string,
-//     callback: (options: ColourOption[]) => void,
-//   ) => {
-//     setTimeout(() => {
-//       callback(filterColors(inputValue))
-//     }, 1000)
-//   }

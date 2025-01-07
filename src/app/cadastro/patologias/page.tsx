@@ -14,6 +14,7 @@ export default function Patologias() {
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     criteriaMode: 'all',
     defaultValues: {
@@ -24,6 +25,9 @@ export default function Patologias() {
 
   const { mutate, isSuccess } = useMutation({
     mutationFn: postPathologies,
+    onSuccess: () => {
+      reset()
+    },
   })
 
   const onSubmit: SubmitHandler<IPathologiesRequest> = (data) => {

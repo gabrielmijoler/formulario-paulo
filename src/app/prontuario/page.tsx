@@ -26,9 +26,12 @@ import {
 } from '@mui/material'
 import { SelectInput } from '@/components/Select'
 import { useState } from 'react'
+import { ModalBase } from '@/components/ModalBase'
+import { CloseIcon } from '@/components/icons'
 
 export default function Prontuario() {
   const [isContentSelected, setIsContentSelected] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const {
     handleSubmit,
@@ -56,8 +59,21 @@ export default function Prontuario() {
         email: '',
         telephone: '',
       },
-      medicalRecordPathologies: [],
-      medicalRecordQuestions: [],
+      pathologies: [
+        {
+          id: '',
+          code: '',
+          description: '',
+        },
+      ],
+      questions: [
+        {
+          id: '',
+          name: '',
+          response: '',
+        },
+      ],
+
       treatments: [
         {
           description: '',
@@ -68,8 +84,7 @@ export default function Prontuario() {
   })
 
   const clientWatch = watch('client')
-  const QuestionsWatch = watch('medicalRecordQuestions')
-  console.log(QuestionsWatch)
+  const QuestionsWatch = watch('questions')
   const results = useQueries({
     queries: [
       {
@@ -111,18 +126,18 @@ export default function Prontuario() {
     label: item.name,
   }))
 
-  const [selectedQuestions, setSelectedQuestions] = useState([])
+  const [selectedQuestions, setSelectedQuestions] = useState<string[]>([])
 
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    const selectedQuestions = optionsClient.filter((el) =>
-      (event.target.value as unknown as number[]).includes(el.id),
-    )
-
-    const currentValue = event.target.name as any
-    console.log(currentValue)
-    setSelectedQuestions(currentValue)
-    setValue(currentValue, selectedQuestions)
-  }
+  // const handleSelectChange = (event: SelectChangeEvent<number[]>) => {
+  //   const selectedQuestions = optionsQuestion.filter((el) =>
+  //     event.target.value.includes(el.id),
+  //   )
+  //   console.log('selectedQuestions', selectedQuestions)
+  //   const currentValue = event.target.name as any
+  //   console.log('currentValue', currentValue)
+  //   setSelectedQuestions(currentValue)
+  //   setValue(currentValue, selectedQuestions)
+  // }
 
   const onChangeClient = (event: SelectChangeEvent) => {
     const selectedClient = optionsClient.find(
@@ -151,42 +166,66 @@ export default function Prontuario() {
       label: item.description,
     })) || []
 
-  console.log(selectedQuestions)
-
   const onSubmit: SubmitHandler<any> = (data) => console.log(data)
+
+  const handleSelectChange = (
+    event: SelectChangeEvent<typeof selectedQuestions>,
+  ) => {
+    const {
+      target: { value },
+    } = event
+    setSelectedQuestions(typeof value === 'string' ? value.split(',') : value)
+    setValue(
+      'questions',
+      selectedQuestions.map((item) => ({
+        id: item,
+        name: optionsQuestion.find((q) => q.id === parseInt(item))?.label || '',
+        response: '',
+      })),
+    )
+  }
+  const handleModal = () => {
+    setModalOpen(!modalOpen)
+    console.log('aqui', modalOpen)
+  }
 
   return (
     <Layout titulo="Prontuário do Prontuario">
       <Box className="p-1" onSubmit={handleSubmit(onSubmit)}>
         <Text fontSize="xl">Prontuario</Text>
-        <Controller
-          name="client"
-          control={control}
-          render={({ field }) => (
-            <>
-              <Select
-                {...field}
-                className="w-full bg-slate-200 my-3"
-                value={getValues(field.name).id as any}
-                label="Cliente"
-                onChange={onChangeClient}
-              >
-                {optionsClient.map((option, index) => (
-                  <MenuItem key={index} value={option.id}>
-                    <ListItemText
-                      primary={option.name}
-                      secondary={option.email}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </>
-          )}
-        />
+        <hr className="w-full border-black box-border mb-2" />
+        <FormControl className="w-full">
+          <InputLabel id="select-label-clients">Paciente</InputLabel>
+          <Controller
+            name="client"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Select
+                  {...field}
+                  labelId="select-label-clients"
+                  id="select-label-clients"
+                  value={getValues(field.name).id as any}
+                  label="Paciente"
+                  onChange={onChangeClient}
+                >
+                  {optionsClient.map((option, index) => (
+                    <MenuItem key={index} value={option.id}>
+                      <ListItemText
+                        primary={option.name}
+                        secondary={option.email}
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+          />
+        </FormControl>
         {errors.clientId && <span>Campo obrigatório</span>}
 
         {isContentSelected && (
-          <div className="grid grid-cols-2 gap-4 text-black">
+          <div className="grid grid-cols-2 gap-4 text-black mt-4">
             <input
               name="client.name"
               type="text"
@@ -233,7 +272,7 @@ export default function Prontuario() {
           </div>
         )}
         <Controller
-          name="medicalRecordPathologies"
+          name="pathologies"
           control={control}
           render={({ field }) => (
             <SelectInput
@@ -253,56 +292,88 @@ export default function Prontuario() {
             />
           )}
         />
-        {errors.medicalRecordPathologies && <span>Campo obrigatório</span>}
-        <FormControl className="w-full !mt-4 ">
-          <Controller
-            name="medicalRecordQuestions"
-            control={control}
-            render={({ field }) => {
-              console.log(field.value.map((item) => item))
-              return (
-                <SelectInput
-                  {...field}
-                  isMulti
-                  className="w-full bg-slate-200"
-                  options={optionsQuestion}
-                  placeholder="Selecione as questões"
-                  value={getValues('medicalRecordQuestions')}
-                  onChange={handleSelectChange}
-                />
-              )
-            }}
-          />
-        </FormControl>
-        {errors.medicalRecordQuestions && <span>Campo obrigatório</span>}
-        {selectedQuestions.length > 0 && (
-          <>
-            <div className="mt-4">
-              {selectedQuestions.map((question, index) => (
-                <div key={index} className="mb-4">
-                  <TextField
-                    label="Pergunta"
-                    variant="outlined"
-                    fullWidth
-                    value={question}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    className="mb-2"
+        {errors.pathologies && <span>Campo obrigatório</span>}
+        <button
+          onClick={handleModal}
+          className="w-48 h-10 my-3 rounded-2xl bg-amber-500 text-black"
+        >
+          Adicionar perguntas
+        </button>
+        {
+          <ModalBase
+            height="h-auto"
+            width="w-full"
+            isOpen={modalOpen}
+            p="10"
+            onClose={handleModal}
+          >
+            <div className="p-2 bg-gray-200 flex flex-row justify-between items-center">
+              <Text as="h1" fontSize="xl">
+                Selecionar as perguntas
+              </Text>
+              <button onClick={handleModal} className="p-1">
+                <CloseIcon />
+              </button>
+            </div>
+            <hr className="w-full border-black box-border mb-2" />
+
+            <FormControl className="w-full">
+              <InputLabel id="select-label-question">Perguntas</InputLabel>
+              <Controller
+                name="questions"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <Select
+                      {...field}
+                      multiple
+                      labelId="select-label-question"
+                      id="select-label-quetions"
+                      label="Perguntas"
+                      className="w-full bg-slate-200"
+                      value={selectedQuestions}
+                      onChange={(event) => {
+                        handleSelectChange(event)
+                        field.onChange(event)
+                      }}
+                    >
+                      {optionsQuestion.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )
+                }}
+              />
+            </FormControl>
+            {errors.questions && <span>Campo obrigatório</span>}
+
+            {selectedQuestions.length > 0 &&
+              QuestionsWatch.length > 0 &&
+              QuestionsWatch.map((item) => (
+                <div
+                  className="grid grid-flow-row w-full gap-4 text-black"
+                  key={item.id}
+                >
+                  <h1 className="mt-5">{item.name}</h1>
+                  <input
+                    type="text"
+                    value={optionsQuestion.map((item) => item.label)}
+                    readOnly
+                    className=" border p-2 rounded bg-gray-100"
                   />
-                  <TextField
-                    label="Resposta"
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    placeholder="Insira sua resposta aqui"
+                  <input
+                    type="text"
+                    value={optionsQuestion.map((item) => item.label)}
+                    readOnly
+                    placeholder="Resposta"
+                    className="border p-2 rounded bg-gray-100"
                   />
                 </div>
               ))}
-            </div>
-          </>
-        )}
+          </ModalBase>
+        }
 
         <Controller
           name="symptoms"

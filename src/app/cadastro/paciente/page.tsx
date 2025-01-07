@@ -47,6 +47,9 @@ export default function Paciente() {
 
   const { mutate, isSuccess } = useMutation({
     mutationFn: postClient,
+    onSuccess: () => {
+      methods.reset()
+    },
   })
 
   const onSubmit: SubmitHandler<IClient> = (data) => {

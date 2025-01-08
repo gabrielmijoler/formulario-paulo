@@ -3,7 +3,7 @@ export type IQuestion = {
   response: string
 }
 export type IQuestionResponse = {
+  id: number
   name: string
   response: string
-  id: number
 }

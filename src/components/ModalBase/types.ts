@@ -9,4 +9,5 @@ export interface ModalBaseProps {
   children: ReactNode
   className?: string
   onClose?: () => void
+  bgOpacity: boolean
 }

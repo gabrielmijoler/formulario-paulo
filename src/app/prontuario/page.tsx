@@ -17,17 +17,13 @@ import {
   FormControl,
   ListItemText,
   MenuItem,
-  OutlinedInput,
   Select,
   InputLabel,
   SelectChangeEvent,
-  TextField,
-  Button,
 } from '@mui/material'
 import { SelectInput } from '@/components/Select'
 import { useState } from 'react'
-import { ModalBase } from '@/components/ModalBase'
-import { CloseIcon } from '@/components/icons'
+import { ModalQuestion } from './componentes/ModalQuestion'
 
 export default function Prontuario() {
   const [isContentSelected, setIsContentSelected] = useState(false)
@@ -68,7 +64,7 @@ export default function Prontuario() {
       ],
       questions: [
         {
-          id: '',
+          id: 0,
           name: '',
           response: '',
         },
@@ -126,8 +122,6 @@ export default function Prontuario() {
     label: item.name,
   }))
 
-  const [selectedQuestions, setSelectedQuestions] = useState<string[]>([])
-
   // const handleSelectChange = (event: SelectChangeEvent<number[]>) => {
   //   const selectedQuestions = optionsQuestion.filter((el) =>
   //     event.target.value.includes(el.id),
@@ -166,34 +160,17 @@ export default function Prontuario() {
       label: item.description,
     })) || []
 
-  const onSubmit: SubmitHandler<any> = (data) => console.log(data)
-
-  const handleSelectChange = (
-    event: SelectChangeEvent<typeof selectedQuestions>,
-  ) => {
-    const {
-      target: { value },
-    } = event
-    setSelectedQuestions(typeof value === 'string' ? value.split(',') : value)
-    setValue(
-      'questions',
-      selectedQuestions.map((item) => ({
-        id: item,
-        name: optionsQuestion.find((q) => q.id === parseInt(item))?.label || '',
-        response: '',
-      })),
-    )
-  }
   const handleModal = () => {
     setModalOpen(!modalOpen)
-    console.log('aqui', modalOpen)
   }
+
+  const onSubmit: SubmitHandler<any> = (data) => console.log(data)
 
   return (
     <Layout titulo="Prontuário do Prontuario">
       <Box className="p-1" onSubmit={handleSubmit(onSubmit)}>
         <Text fontSize="xl">Prontuario</Text>
-        <hr className="w-full border-black box-border mb-2" />
+        <hr className="w-full border-black box-border mb-8" />
         <FormControl className="w-full">
           <InputLabel id="select-label-clients">Paciente</InputLabel>
           <Controller
@@ -230,44 +207,44 @@ export default function Prontuario() {
               name="client.name"
               type="text"
               value={clientWatch.name}
-              readOnly
+              disabled
               placeholder="Nome"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
             <input
               type="text"
               value={clientWatch.document}
-              readOnly
+              disabled
               placeholder="Documento"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
             <input
               type="text"
               value={clientWatch.address}
-              readOnly
+              disabled
               placeholder="Endereço"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
             <input
               type="text"
               value={clientWatch.ieRg}
-              readOnly
+              disabled
               placeholder="IE/RG"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
             <input
               type="text"
               value={clientWatch.email}
-              readOnly
+              disabled
               placeholder="E-mail"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
             <input
               type="text"
               value={clientWatch.telephone}
-              readOnly
+              disabled
               placeholder="Telefone"
-              className="border p-2 rounded bg-gray-100"
+              className="p-2 rounded disabled:bg-gray-400"
             />
           </div>
         )}
@@ -299,82 +276,15 @@ export default function Prontuario() {
         >
           Adicionar perguntas
         </button>
-        {
-          <ModalBase
-            height="h-auto"
-            width="w-full"
-            isOpen={modalOpen}
-            p="10"
-            onClose={handleModal}
-          >
-            <div className="p-2 bg-gray-200 flex flex-row justify-between items-center">
-              <Text as="h1" fontSize="xl">
-                Selecionar as perguntas
-              </Text>
-              <button onClick={handleModal} className="p-1">
-                <CloseIcon />
-              </button>
-            </div>
-            <hr className="w-full border-black box-border mb-2" />
-
-            <FormControl className="w-full">
-              <InputLabel id="select-label-question">Perguntas</InputLabel>
-              <Controller
-                name="questions"
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <Select
-                      {...field}
-                      multiple
-                      labelId="select-label-question"
-                      id="select-label-quetions"
-                      label="Perguntas"
-                      className="w-full bg-slate-200"
-                      value={selectedQuestions}
-                      onChange={(event) => {
-                        handleSelectChange(event)
-                        field.onChange(event)
-                      }}
-                    >
-                      {optionsQuestion.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )
-                }}
-              />
-            </FormControl>
-            {errors.questions && <span>Campo obrigatório</span>}
-
-            {selectedQuestions.length > 0 &&
-              QuestionsWatch.length > 0 &&
-              QuestionsWatch.map((item) => (
-                <div
-                  className="grid grid-flow-row w-full gap-4 text-black"
-                  key={item.id}
-                >
-                  <h1 className="mt-5">{item.name}</h1>
-                  <input
-                    type="text"
-                    value={optionsQuestion.map((item) => item.label)}
-                    readOnly
-                    className=" border p-2 rounded bg-gray-100"
-                  />
-                  <input
-                    type="text"
-                    value={optionsQuestion.map((item) => item.label)}
-                    readOnly
-                    placeholder="Resposta"
-                    className="border p-2 rounded bg-gray-100"
-                  />
-                </div>
-              ))}
-          </ModalBase>
-        }
-
+        <ModalQuestion
+          control={control}
+          errors={errors}
+          optionsQuestion={optionsQuestion}
+          QuestionsWatch={QuestionsWatch}
+          setValue={setValue}
+          modalOpen={modalOpen}
+          handleModal={handleModal}
+        />
         <Controller
           name="symptoms"
           control={control}

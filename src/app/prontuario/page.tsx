@@ -24,11 +24,12 @@ import {
 import { SelectInput } from '@/components/Select'
 import { useState } from 'react'
 import { ModalQuestion } from './componentes/ModalQuestion'
+import { useAppData } from '@/context'
 
 export default function Prontuario() {
   const [isContentSelected, setIsContentSelected] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-
+  const { user } = useAppData()
   const {
     handleSubmit,
     watch,
@@ -44,8 +45,8 @@ export default function Prontuario() {
       completeClinicalExam: '',
       conclusion: '',
       clientId: 0,
-      userId: 0,
-      status: '',
+      userId: user.id,
+      status: user.status,
       client: {
         id: 0,
         name: '',
@@ -164,11 +165,13 @@ export default function Prontuario() {
     setModalOpen(!modalOpen)
   }
 
-  const onSubmit: SubmitHandler<any> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<any> = (data) => {
+    console.log(data)
+  }
 
   return (
     <Layout titulo="Prontuário do Prontuario">
-      <Box className="p-1" onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-1" onSubmit={handleSubmit(onSubmit)}>
         <Text fontSize="xl">Prontuario</Text>
         <hr className="w-full border-black box-border mb-8" />
         <FormControl className="w-full">
@@ -347,7 +350,7 @@ export default function Prontuario() {
         >
           Cadastrar Prontuario
         </button>
-      </Box>
+      </form>
     </Layout>
   )
 }

@@ -48,7 +48,9 @@ export function ModalBase({
         <div
           className={`fixed z-[999] inset-0 overflow-y-auto ${bgOpacity && 'bg-black bg-opacity-50'}`}
         >
-          <div className={`flex items-center content-center min-h-screen`}>
+          <div
+            className={`flex items-center flex-col justify-center min-h-screen`}
+          >
             <div
               className={`
                 ${height ? `${height}` : 'h-auto'}

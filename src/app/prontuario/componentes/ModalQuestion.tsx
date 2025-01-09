@@ -19,11 +19,7 @@ type IModalQuestion = {
     value: string
     label: string
   }[]
-  QuestionsWatch: {
-    id: number
-    name: string
-    response: string
-  }[]
+  QuestionsWatch: any
   setValue: any
   modalOpen: boolean
   handleModal: () => void
@@ -38,6 +34,7 @@ export const ModalQuestion = ({
   handleModal,
 }: IModalQuestion) => {
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([])
+  const [response, setResponse] = useState('')
 
   const handleSelectChange = (
     event: SelectChangeEvent<typeof selectedQuestions>,
@@ -53,7 +50,6 @@ export const ModalQuestion = ({
         return {
           id: question?.id || '',
           name: question?.label || '',
-          response: '',
         }
       }),
     )
@@ -63,13 +59,12 @@ export const ModalQuestion = ({
     <ModalBase
       bgOpacity
       height="h-auto"
-      width="w-full"
+      width="w-3/4"
       isOpen={modalOpen}
-      p="10"
       className="min-h-72"
       onClose={handleModal}
     >
-      <div className="p-2 bg-gray-200 flex flex-row justify-between items-center">
+      <div className="p-2 bg-amber-200 flex flex-row justify-between items-center">
         <Text as="h1" fontSize="xl">
           Selecionar as perguntas
         </Text>
@@ -113,27 +108,33 @@ export const ModalQuestion = ({
 
       {selectedQuestions.length > 0 &&
         QuestionsWatch.length > 0 &&
-        QuestionsWatch.map((item) => (
-          <div
-            className="grid grid-flow-row w-full gap-4 text-black"
-            key={item.id}
-          >
-            <h1 className="mt-5">{item.name}</h1>
-            <input
-              type="text"
-              value={optionsQuestion.map((item) => item.label)}
-              readOnly
-              className=" border p-2 rounded bg-gray-100"
-            />
-            <input
-              type="text"
-              value={optionsQuestion.map((item) => item.label)}
-              readOnly
-              placeholder="Resposta"
-              className="border p-2 rounded bg-gray-100"
-            />
-          </div>
-        ))}
+        QuestionsWatch.map((item: number) => {
+          console.log(item)
+          return (
+            <div
+              className="grid grid-flow-row w-full gap-4 p-2 text-black"
+              key={item}
+            >
+              <h5>Pergunta</h5>
+              <input
+                key={item}
+                type="text"
+                value={
+                  optionsQuestion.find((value) => value.id === item)?.label
+                }
+                disabled
+                className=" border p-2 rounded bg-gray-100 disabled:bg-slate-300"
+              />
+              <h5>Resposta</h5>
+              <input
+                type="text"
+                value={response}
+                onChange={(e) => setResponse(e.target.value)}
+                className=" border p-2 rounded bg-gray-100 "
+              />
+            </div>
+          )
+        })}
     </ModalBase>
   )
 }

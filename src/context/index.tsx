@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { postLogin } from '@/services/clients'
+import { getUserByName, postLogin } from '@/services/clients'
 import { getCookie, removeCookie, setCookie } from '@/app/actions'
 import { IAuthUser } from '@/services/clients/types'
 
@@ -16,16 +16,29 @@ interface AppContextProps {
     message: string
     type: string
   }
+  user: IAuthUser
 }
 
 const AppContext = createContext<AppContextProps>({
   Login: async () => '',
   errorMessage: { message: '', type: '' },
-  Logout: () => { },
+  Logout: () => {},
+  user: {
+    id: 0,
+    document: '',
+    email: '',
+    name: '',
+    password: '',
+    status: '',
+    telephone: '',
+    token: '',
+    type: '',
+  },
 })
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState('dark')
+  const [user, setUser] = useState<IAuthUser>({} as IAuthUser)
 
   const router = useRouter()
 
@@ -49,7 +62,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       })
 
       setAuthToken(response)
-
       return response.name
     } catch (error: any) {
       throw error.response?.data?.message ?? 'Usuário ou senha inválida'
@@ -64,9 +76,23 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
+  const fetchAndSetUser = async (user: string) => {
+    try {
+      const response = await getUserByName(user)
+
+      setUser(response)
+      return response
+    } catch (error: any) {
+      throw error.response?.data?.message ?? 'Usuário ou senha inválida'
+    }
+  }
+
   useEffect(() => {
     const saveTheme = localStorage.getItem('theme')
-    setTheme(saveTheme as string)
+    if (saveTheme) {
+      setTheme(saveTheme as string)
+    }
+    fetchAndSetUser(user.name)
   }, [theme])
 
   return (
@@ -77,6 +103,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         Login,
         Logout,
         errorMessage,
+        user,
       }}
     >
       {children}

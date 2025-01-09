@@ -4,16 +4,17 @@ export type ILogin = {
 }
 
 export type IAuthUser = {
+  id:number
   name: string
   password: string
   type: string
   document: string
   email: string
   status: string
-  credentials: Record<string, any>
-  calendarId: string
-  whatsAppToken: string
-  whatsAppId: string
+  credentials?: Record<string, any>
+  calendarId?: string
+  whatsAppToken?: string
+  whatsAppId?: string
   telephone: string
   token: string
 }

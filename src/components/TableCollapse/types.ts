@@ -28,15 +28,14 @@ export interface ColumnTypeProps<T = any> {
 }
 
 export interface RowProps {
-  id?: string
-  subRows?: RowProps[]
+  id?: string,
+  isOpen?: boolean;
 }
 
 export interface CommonProps<T = RowProps & any, U = Params> {
   data: T[]
   columns: ColumnTypeProps<T>[]
   columnsCollapse: ColumnTypeProps<T>[]
-  rowCollapse: T[]
   params?: U
   emptyMessage?: React.ReactNode
   isLoading?: boolean
@@ -44,7 +43,6 @@ export interface CommonProps<T = RowProps & any, U = Params> {
   shouldRenderEmptyColumns?: boolean
   hideHeader?: boolean
   sorting?: SortDirectionType
-  isOpen: boolean | undefined
   fetchItems?: (params: U & Pagination) => void
   handleChangeSort?: (key: string) => void
 }

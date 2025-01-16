@@ -19,7 +19,7 @@ export async function getUserByName(name: string): Promise<IAuthUser> {
   })
 }
 
-export async function getClient(params: IGetParams ): Promise<IGetClient[]> {
+export async function getClient(params: IGetParams ): Promise<IGetClient> {
   return requestApi({
     url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients',
     method: 'GET',

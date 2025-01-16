@@ -1,20 +1,29 @@
 'use client'
 
-import { FPTable } from '@/components/TableCollapse'
-import { ColumnTypeProps } from '@/components/TableCollapse/types'
-import Layout from '@/components/template/Layout'
-import { getUserById } from '@/services/user'
-import { IUser } from '@/services/user/type'
-import { Box, Icon, IconButton, TextField } from '@mui/material'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useCallback, useRef, useState } from 'react'
-import { getClient } from '@/services/clients'
 
-interface GenericObject<T> {
+import { Box, TextField } from '@mui/material'
+
+import Layout from '@/components/template/Layout'
+import { FPTable } from '@/components/TableCollapse'
+
+import { getClient } from '@/services/clients'
+import { IClient, Pagination } from '@/services/clients/types'
+
+import { useDebounceState } from '@/hook/useDebounceState'
+
+import { getColumns, subColumns } from './columns'
+import { parseSubscriptions } from './utils'
+
+export interface GenericObject<T> {
   [key: string | number | symbol]: T
 }
+
+const ErrorComponent = ({ error }: { error: any }) => (
+  <div>Error: {JSON.stringify(error)}</div>
+)
+
 export default function Home() {
   const [pagination, setPagination] = useState({
     page: 1,
@@ -22,87 +31,46 @@ export default function Home() {
     total: 10,
   })
 
-  const [expandedRows, setExpandedRows] =
-    useState<GenericObject<boolean> | null>(null)
+  const [debounceSearch, search, setSearch] = useDebounceState<
+    string | undefined
+  >(undefined, 1000)
+  const [clientData, setClientData] = useState<IClient[]>([])
 
-  const searchTermRef = useRef('')
+  let { data, error, isLoading } = useQuery({
+    queryKey: ['user', pagination, debounceSearch],
+    queryFn: async () => {
+      const response = await getClient({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+      })
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => getClient(1),
+      const updatedData = response.data.map((client: IClient) => ({
+        ...client,
+        isOpen: false,
+      }))
+
+      setClientData(updatedData)
+      return { ...response, data: updatedData }
+    },
   })
 
-  if (!data) {
-    return <div>Error</div>
+  const handleOpenRow = (rowData: IClient) => {
+    const updatedData = clientData.map((client) =>
+      client.id === rowData.id ? { ...client, isOpen: !client.isOpen } : client,
+    )
+
+    setClientData(updatedData)
   }
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+
+  const columns = getColumns(handleOpenRow)
 
   if (error) {
-    return <div>Error: {JSON.stringify(error)}</div>
+    return <ErrorComponent error={error} />
   }
 
-  console.log(Array(data))
-  const filteredData = Array(data).map((row) => row.filter((item) => item.name))
-
-  const rowStatus = useCallback(
-    (id?: number) => {
-      if (!id || !expandedRows) return false
-
-      return expandedRows[id]
-    },
-    [expandedRows],
-  )
-
-  const toggleRow = useCallback(
-    (id?: number) => {
-      if (!id) return
-      setExpandedRows((prev) => ({ ...prev, [id]: !rowStatus(id) }))
-    },
-    [rowStatus],
-  )
-
-  const columns: ColumnTypeProps<IUser>[] = [
-    {
-      key: 'collapse',
-      render: (row) => {
-        if (!row.id) return
-
-        return (
-          <IconButton size="small" onClick={() => toggleRow(row.id)}>
-            {data?.some((user) => rowStatus(user.id))} ? (
-            <KeyboardArrowUpIcon />
-            ) : (
-            <KeyboardArrowDownIcon />)
-          </IconButton>
-        )
-      },
-    },
-    {
-      name: 'Categoria TF',
-      key: 'category',
-      visibleOrdering: false,
-      render: (row) => <>{row?.email ?? '-'}</>,
-    },
-    {
-      name: 'Capacidade Máxima',
-      key: 'maximumCapacity',
-      width: '10rem',
-      visibleOrdering: false,
-      render: (row) => <>{row.name ?? '-'}</>,
-    },
-    {
-      name: 'Visa',
-      key: 'visa',
-      visibleOrdering: false,
-      render: (row) => <>{row.status ?? '-'}</>,
-    },
-  ]
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    searchTermRef.current = event.target.value
-  }
   return (
     <Layout
       titulo="Página Inicial"
@@ -115,20 +83,21 @@ export default function Home() {
         mb={2}
       >
         <TextField
-          label="Buscar"
+          label="Buscar por nome"
           variant="outlined"
-          size="small"
-          onChange={handleSearchChange}
+          size="medium"
+          value={search ?? ''}
+          onChange={(event) => setSearch(event.target.value)}
         />
       </Box>
-
       <FPTable
         columns={columns}
-        data={filteredData}
-        columnsCollapse={columns}
-        rowCollapse={[data]}
+        data={parseSubscriptions({
+          ...data,
+          data: clientData,
+        })}
+        columnsCollapse={subColumns}
         isLoading={isLoading}
-        isOpen={data?.some((user) => rowStatus(user.id))}
         pagination={pagination}
         setPagination={setPagination}
         paginationItems={[10, 20, 30, 40]}

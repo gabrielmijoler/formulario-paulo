@@ -20,25 +20,35 @@ export type IAuthUser = {
 }
 
 export type IClient = {
-  name: string,
-  document: string,
-  address: string,
-  ieRg: string,
-  email: string,
-  telephone: string
+  id: number;
+  name: string;
+  document: string;
+  address: string
+  ieRg: string;
+  email: string;
+  telephone: string;
+  isOpen?: boolean;
 }
+
 export type IGetClient = {
-  id: number
-  name: string,
-  document: string,
-  address: string,
-  ieRg: string,
-  email: string,
-  telephone: string
+  data: IClient[];
+  pagination?: Pagination; 
 }
 
 export type IGetParams = {
-  paginate: boolean
-  per_page: number
-  current_page: number
+  paginate: boolean;
+  per_page: number;
+  current_page: number;
+  total: number;
+  filter: FilterParams;
 }
+
+export type Pagination = {
+  per_page: number;
+  current_page: number;
+  total: number;
+}
+
+export type FilterParams = {
+  [key: string]: string;
+};

@@ -36,18 +36,62 @@ export function FPTable({
   setPagination,
   fetchItems,
   handleChangeSort,
-  rowCollapse,
   columnsCollapse,
-  isOpen = false,
 }: TableProps) {
   const renderRows = (rows: RowProps[], parentColor?: string) => {
     return rows.map((row, index): JSX.Element => {
       const bgColor = index % 2 === 0 ? '#f5f6f6' : '#ffffff'
       const rowColor = parentColor ?? bgColor
+
       return (
         <Fragment key={index}>
           <TableRow sx={{ backgroundColor: rowColor }}>
             {renderColumns(row, rowColor)}
+          </TableRow>
+          <TableRow>
+            <TableCell
+              style={{ paddingBottom: 0, paddingTop: 0, background: rowColor }}
+              colSpan={columns.length + 1}
+            >
+              <Collapse in={row?.isOpen} timeout="auto" unmountOnExit>
+                <Box margin={1}>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        {columnsCollapse.map((item) => (
+                          <TableCell
+                            key={`${item.name}-${item.key}`}
+                            align={item.align && 'center'}
+                            sx={{
+                              width: item.width,
+                              minWidth: item.minWidth,
+                              maxWidth: item.maxWidth,
+                            }}
+                          >
+                            {renderTableSortLabel(item)}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data
+                        ?.filter((r) => r.id === row.id)
+                        .map((collapsedRow) => (
+                          <TableRow key={collapsedRow.id}>
+                            {columnsCollapse?.map((column) => (
+                              <TableCell key={column.key}>
+                                {column.render
+                                  ? column.render(collapsedRow, collapsedRow.id)
+                                  : collapsedRow[column.key]}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
           </TableRow>
         </Fragment>
       )
@@ -228,30 +272,7 @@ export function FPTable({
           )}
           <TableBody>{renderRows(data)}</TableBody>
         </Table>
-        <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <Box sx={{ margin: 1 }}>
-            <Table size="small" aria-label="purchases">
-              <TableHead>
-                <TableRow>
-                  {columnsCollapse.map((item) => (
-                    <TableCell
-                      key={`${item.name}-${item.key}`}
-                      align={item.align && 'center'}
-                      sx={{
-                        width: item.width,
-                        minWidth: item.minWidth,
-                        maxWidth: item.maxWidth,
-                      }}
-                    >
-                      {renderTableSortLabel(item)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>{renderRows(data)}</TableBody>
-            </Table>
-          </Box>
-        </Collapse>
+
         {renderPagination()}
       </TableContainer>
     </>

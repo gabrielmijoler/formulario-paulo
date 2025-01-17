@@ -3,7 +3,7 @@ import { IClient, IGetClient } from "@/services/clients/types"
 
 const parseTexts = (txt?: string | null) => txt ?? '-'
 
-const parseSubscription = (data: IClient): IClient => {
+const parsePatient = (data: IClient): IClient => {
   return {
     id: data?.id,
     name: parseTexts(data.name),
@@ -15,5 +15,5 @@ const parseSubscription = (data: IClient): IClient => {
     isOpen: data?.isOpen ?? false,
   }
 }
-export const parseSubscriptions = (subscriptions: IGetClient): IClient[] =>
-  subscriptions.data.map(parseSubscription)
+export const parsePatients = (subscriptions: IGetClient): IClient[] =>
+  subscriptions.data.map(parsePatient)

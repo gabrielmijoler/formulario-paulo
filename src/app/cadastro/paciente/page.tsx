@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   Controller,
   FormProvider,
@@ -8,23 +8,40 @@ import {
   useForm,
 } from 'react-hook-form'
 
-import { Box } from '@/components/Box'
+import { FPBox } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 
 import { IClient } from '@/services/clients/types'
-import { postClient } from '@/services/clients'
+import { getClient, postClient } from '@/services/clients'
 import { Toast } from '@/components/Toast'
 import { maskCPF, maskRG } from '@/helpers/maskCep'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { clientSchema } from './schema'
+import { parsePatients } from '@/app/home/utils'
+import { FPTable } from '@/components/TableCollapse'
+import { Box, Paper, TextField } from '@mui/material'
+import { getColumns, subColumns } from '@/app/home/columns'
+import { useDebounceState } from '@/hook/useDebounceState'
+import EditIcon from '@mui/icons-material/Edit'
+import { useState } from 'react'
+
+const ErrorComponent = ({ error }: { error: any }) => (
+  <div>Error: {JSON.stringify(error)}</div>
+)
 
 export default function Paciente() {
+  const [debounceSearch, search, setSearch] = useDebounceState<
+    string | undefined
+  >(undefined, 1000)
+  const [clientData, setClientData] = useState<IClient[]>([])
+
   const methods = useForm({
     criteriaMode: 'all',
     resolver: zodResolver(clientSchema),
     defaultValues: {
+      id: 0,
       name: '',
       // address: {
       //   street: '',
@@ -54,6 +71,7 @@ export default function Paciente() {
 
   const onSubmit: SubmitHandler<IClient> = (data) => {
     mutate({
+      id: data.id,
       name: data.name,
       email: data.email,
       address: data.address,
@@ -61,6 +79,46 @@ export default function Paciente() {
       ieRg: data.ieRg,
       telephone: data.telephone,
     })
+  }
+  const [pagination, setPagination] = useState({
+    page: 1,
+    itemsPerPage: 10,
+    total: 10,
+  })
+
+  let { data, error, isLoading } = useQuery({
+    queryKey: ['user', pagination, debounceSearch],
+    queryFn: async () => {
+      const response = await getClient({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+      })
+
+      const updatedData = response.data.map((client: IClient) => ({
+        ...client,
+        isOpen: false,
+      }))
+
+      setClientData(updatedData)
+      return { ...response, data: updatedData }
+    },
+  })
+
+  const handleOpenRow = (rowData: IClient) => {
+    const updatedData = clientData.map((client) =>
+      client.id === rowData.id ? { ...client, isOpen: !client.isOpen } : client,
+    )
+
+    setClientData(updatedData)
+  }
+
+  const columns = getColumns(handleOpenRow)
+
+  if (error) {
+    return <ErrorComponent error={error} />
   }
 
   return (
@@ -70,8 +128,17 @@ export default function Paciente() {
           item={{ message: 'Paciente criada com sucesso!', type: 'success' }}
         />
       )}
+      <Box justifyContent="end">
+        <button className="bg-green-400 w-20 rounded-md h-10 content-end">
+          {
+            <>
+              Editar <EditIcon fontSize="small" />
+            </>
+          }
+        </button>
+      </Box>
       <FormProvider {...methods}>
-        <Box
+        <FPBox
           as="form"
           className="p-1"
           onSubmit={methods.handleSubmit(onSubmit)}
@@ -168,8 +235,31 @@ export default function Paciente() {
           {/* <FileInput /> */}
           {/* {methods.formState.errors.files && <Text>Campo obrigatório</Text>} */}
           <TextInput type="submit" />
-        </Box>
+        </FPBox>
       </FormProvider>
+      <hr className="w-full border-black box-border mb-8" />
+      <Paper className="p-1">
+        <TextField
+          label="Buscar por nome"
+          variant="outlined"
+          size="medium"
+          margin="dense"
+          value={search ?? ''}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <FPTable
+          columns={columns}
+          data={parsePatients({
+            ...data,
+            data: clientData,
+          })}
+          columnsCollapse={subColumns}
+          isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
+          paginationItems={[10, 20, 30, 40]}
+        />
+      </Paper>
     </Layout>
   )
 }

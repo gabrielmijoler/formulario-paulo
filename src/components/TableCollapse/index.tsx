@@ -15,6 +15,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Paper,
 } from '@mui/material'
 import { ChevronLeft, ChevronRight, Sort } from '@mui/icons-material'
 import { ColumnTypeProps, RowProps, TableProps } from './types'
@@ -249,7 +250,7 @@ export function FPTable({
 
   return (
     <>
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table>
           {!hideHeader && (
             <TableHead>

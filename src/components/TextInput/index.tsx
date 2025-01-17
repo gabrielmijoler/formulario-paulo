@@ -2,7 +2,7 @@ interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   value?: any
   required?: boolean
-  type?: 'text' | 'email' | 'password' | 'submit' | 'date'
+  type?: 'text' | 'email' | 'password' | 'submit' | 'date' | 'button'
   naoRenderizarQuando?: boolean
   onChangeValue?: (newValue: any) => void
   height?: string

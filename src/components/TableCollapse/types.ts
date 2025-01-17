@@ -53,3 +53,7 @@ export interface ConditionalProps {
 }
 
 export type TableProps = CommonProps & ConditionalProps
+
+export interface GenericObject<T> {
+  [key: string | number | symbol]: T
+}

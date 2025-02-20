@@ -4,7 +4,7 @@ export type ILogin = {
 }
 
 export type IAuthUser = {
-  id:number
+  id: number
   name: string
   password: string
   type: string
@@ -20,35 +20,35 @@ export type IAuthUser = {
 }
 
 export type IClient = {
-  id: number;
-  name: string;
-  document: string;
+  id: number
+  name: string
+  document: string
   address: string
-  ieRg: string;
-  email: string;
-  telephone: string;
-  isOpen?: boolean;
+  ieRg: string
+  email: string
+  telephone: string
+  isOpen?: boolean
 }
 
-export type IGetClient = {
-  data: IClient[];
-  pagination?: Pagination; 
+export type IGetClient<T> = {
+  data: T[]
+  pagination?: Pagination
 }
 
-export type IGetParams = {
-  paginate: boolean;
-  per_page: number;
-  current_page: number;
-  total: number;
-  filter: FilterParams;
+export type IGetPagination = {
+  paginate: boolean
+  per_page: number
+  current_page: number
+  total: number
+  filter: FilterParams
 }
 
 export type Pagination = {
-  per_page: number;
-  current_page: number;
-  total: number;
+  per_page: number
+  current_page: number
+  total: number
 }
 
 export type FilterParams = {
-  [key: string]: string;
-};
+  [key: string]: string
+}

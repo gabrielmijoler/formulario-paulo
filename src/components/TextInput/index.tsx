@@ -1,33 +1,39 @@
+import React from 'react'
+
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   value?: any
   required?: boolean
   type?: 'text' | 'email' | 'password' | 'submit' | 'date' | 'button'
   naoRenderizarQuando?: boolean
-  onChangeValue?: (newValue: any) => void
   height?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   width?: string
   placeholder?: string
+  name: string
 }
 
-export const TextInput = (props: AuthInputProps) => {
-  return props.naoRenderizarQuando ? null : (
-    <div className="flex flex-col mt-4 w-full">
-      <label>{props.label}</label>
+export const TextInput: React.FC<AuthInputProps> = (props) => {
+  if (props.naoRenderizarQuando) return null
 
+  return (
+    <div className="flex flex-col mt-4 w-full">
+      {props.label && <label htmlFor={props.name}>{props.label}</label>}
       <input
         type={props.type ?? 'text'}
         value={props.value}
-        onChange={(e) => props.onChangeValue?.(e.target.value)}
+        onChange={props.onChange}
         required={props.required}
         placeholder={props.placeholder}
+        name={props.name}
+        id={props.name}
         className={`
-            ${props.height ? `h-${props.height}` : 'h-12'} 
-            ${props.width ? `w-${props.width}` : 'w-full'} 
-            px-4 py-3 rounded-lg bg-gray-200 mt-2
-            border-2 focus:border-blue-500 focus:bg-white
-            focus:outline-none text-black 
-          `}
+          ${props.height ? `h-${props.height}` : 'h-12'} 
+          ${props.width ? `w-${props.width}` : 'w-full'} 
+          px-4 py-3 rounded-lg bg-gray-200 mt-2
+          border-2 focus:border-blue-500 focus:bg-white
+          focus:outline-none text-black 
+        `}
       />
     </div>
   )

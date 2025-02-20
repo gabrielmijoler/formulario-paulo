@@ -28,14 +28,14 @@ export interface ColumnTypeProps<T = any> {
 }
 
 export interface RowProps {
-  id?: string,
-  isOpen?: boolean;
+  id?: string
+  isOpen?: boolean
 }
 
 export interface CommonProps<T = RowProps & any, U = Params> {
   data: T[]
   columns: ColumnTypeProps<T>[]
-  columnsCollapse: ColumnTypeProps<T>[]
+  columnsCollapse?: ColumnTypeProps<T>[]
   params?: U
   emptyMessage?: React.ReactNode
   isLoading?: boolean

@@ -1,6 +1,7 @@
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Controller,
   FormProvider,
@@ -25,17 +26,26 @@ import { Box, Paper, TextField } from '@mui/material'
 import { getColumns, subColumns } from '@/app/home/columns'
 import { useDebounceState } from '@/hook/useDebounceState'
 import EditIcon from '@mui/icons-material/Edit'
-import { useState } from 'react'
-
-const ErrorComponent = ({ error }: { error: any }) => (
-  <div>Error: {JSON.stringify(error)}</div>
-)
+import { Modal, Button } from '@mui/material'
+import Link from 'next/link'
+import { ErrorComponent } from '@/components/Error'
 
 export default function Paciente() {
+  const queryClient = useQueryClient()
   const [debounceSearch, search, setSearch] = useDebounceState<
     string | undefined
   >(undefined, 1000)
   const [clientData, setClientData] = useState<IClient[]>([])
+  const [open, setOpen] = useState(false)
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    itemsPerPage: 10,
+    total: 10,
+  })
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const methods = useForm({
     criteriaMode: 'all',
@@ -66,6 +76,7 @@ export default function Paciente() {
     mutationFn: postClient,
     onSuccess: () => {
       methods.reset()
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
     },
   })
 
@@ -80,14 +91,9 @@ export default function Paciente() {
       telephone: data.telephone,
     })
   }
-  const [pagination, setPagination] = useState({
-    page: 1,
-    itemsPerPage: 10,
-    total: 10,
-  })
 
   let { data, error, isLoading } = useQuery({
-    queryKey: ['user', pagination, debounceSearch],
+    queryKey: ['clients', pagination, debounceSearch],
     queryFn: async () => {
       const response = await getClient({
         paginate: true,
@@ -128,16 +134,111 @@ export default function Paciente() {
           item={{ message: 'Paciente criada com sucesso!', type: 'success' }}
         />
       )}
-      <Box justifyContent="end">
-        <button className="bg-green-400 w-20 rounded-md h-10 content-end">
-          {
-            <>
-              Editar <EditIcon fontSize="small" />
-            </>
-          }
-        </button>
-      </Box>
-      <FormProvider {...methods}>
+
+      <Button variant="contained" color="primary" onClick={handleOpen}>
+        Novo Paciente
+      </Button>
+
+      <Modal
+        className="flex justify-center items-center"
+        open={open}
+        onClose={handleClose}
+      >
+        <Box
+          sx={{ width: 600, height: 'auto', backgroundColor: 'white', p: 2 }}
+        >
+          <FormProvider {...methods}>
+            <FPBox
+              as="form"
+              className="p-1"
+              onSubmit={methods.handleSubmit(onSubmit)}
+            >
+              <Text fontSize="xl">Cadastro de paciente</Text>
+              <Controller
+                name="name"
+                control={methods.control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    width="full"
+                    type="text"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Digite o nome"
+                  />
+                )}
+              />
+              {methods.formState.errors.name && (
+                <Text color="red-500">
+                  {methods.formState.errors.name.message}
+                </Text>
+              )}
+              <Controller
+                name="document"
+                control={methods.control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    width="full"
+                    value={maskCPF(field.value)}
+                    onChange={field.onChange}
+                    placeholder="Digite o seu CPF"
+                  />
+                )}
+              />
+              {methods.formState.errors.document && (
+                <Text color="red-500">
+                  {methods.formState.errors.document.message}
+                </Text>
+              )}
+              <Controller
+                name="ieRg"
+                control={methods.control}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    width="full"
+                    value={maskRG(field.value)}
+                    onChange={field.onChange}
+                    placeholder="Digite o seu RG"
+                  />
+                )}
+              />
+              {methods.formState.errors.ieRg && (
+                <Text color="red-500">
+                  {methods.formState.errors.ieRg.message}
+                </Text>
+              )}
+              <Controller
+                name="email"
+                control={methods.control}
+                rules={{
+                  required: 'Campo obrigatório',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                    message: 'Email inválido',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextInput
+                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Digite o Email"
+                  />
+                )}
+              />
+              {methods.formState.errors.email && (
+                <Text color="red-500">
+                  {methods.formState.errors.email.message}
+                </Text>
+              )}
+              <TextInput name="submit" type="submit" />
+            </FPBox>
+          </FormProvider>
+        </Box>
+      </Modal>
+      {/* <FormProvider {...methods}>
         <FPBox
           as="form"
           className="p-1"
@@ -153,7 +254,7 @@ export default function Paciente() {
                 width="full"
                 type="text"
                 value={field.value}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="Digite o nome"
               />
             )}
@@ -169,7 +270,7 @@ export default function Paciente() {
                 {...field}
                 width="full"
                 value={maskCPF(field.value)}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="Digite o seu CPF"
               />
             )}
@@ -187,7 +288,7 @@ export default function Paciente() {
                 {...field}
                 width="full"
                 value={maskRG(field.value)}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="Digite o seu RG"
               />
             )}
@@ -196,48 +297,46 @@ export default function Paciente() {
             <Text color="red-500">{methods.formState.errors.ieRg.message}</Text>
           )}
           {/* <Cep /> */}
-          <Controller
-            name="email"
-            control={methods.control}
-            rules={{
-              required: 'Campo obrigatório',
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                message: 'Email inválido',
-              },
-            }}
-            render={({ field }) => (
-              <TextInput
-                {...field}
-                value={field.value}
-                onChangeValue={field.onChange}
-                placeholder="Digite o Email"
-              />
-            )}
+      {/* <Controller
+        name="email"
+        control={methods.control}
+        rules={{
+          required: 'Campo obrigatório',
+          pattern: {
+            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+            message: 'Email inválido',
+          },
+        }}
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            value={field.value}
+            onChange={field.onChange}
+            placeholder="Digite o Email"
           />
-          {methods.formState.errors.email && (
-            <Text color="red-500">
-              {methods.formState.errors.email.message}
-            </Text>
-          )}
-          {/* <Controller
+        )}
+      />
+      {methods.formState.errors.email && (
+        <Text color="red-500">{methods.formState.errors.email.message}</Text>
+      )} */}
+      {/* <Controller
             name="obsAboutPatient"
             control={methods.control}
             render={({ field }) => (
               <TextAreaInput
                 {...field}
                 value={field.value}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="Digite as observações sobre o paciente"
               />
             )}
           /> */}
-          {/* <FileInput /> */}
-          {/* {methods.formState.errors.files && <Text>Campo obrigatório</Text>} */}
-          <TextInput type="submit" />
+      {/* <FileInput /> */}
+      {/* {methods.formState.errors.files && <Text>Campo obrigatório</Text>} */}
+      {/* <TextInput type="submit" />
         </FPBox>
       </FormProvider>
-      <hr className="w-full border-black box-border mb-8" />
+      <hr className="w-full border-black box-border mb-8" />  */}
       <Paper className="p-1">
         <TextField
           label="Buscar por nome"

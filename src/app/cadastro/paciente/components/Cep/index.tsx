@@ -2,10 +2,10 @@
 
 import { Controller } from 'react-hook-form'
 
-import { Box } from '@/components/Box'
 import { TextInput } from '@/components/TextInput'
 
 import { UseCep } from './use'
+import { FPBox } from '@/components/Box'
 
 export default function Cep() {
   const { errors, control } = UseCep()
@@ -14,9 +14,9 @@ export default function Cep() {
   }
 
   return (
-    <Box width="full">
-      <Box direction="row" gap="1">
-        <Box width="1/2">
+    <FPBox width="full">
+      <FPBox direction="row" gap="1">
+        <FPBox width="1/2">
           <Controller
             name="address.zipCode"
             control={control}
@@ -24,7 +24,7 @@ export default function Cep() {
               <TextInput
                 {...field}
                 value={field.value}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="CEP"
                 maxLength={9}
               />
@@ -33,8 +33,8 @@ export default function Cep() {
           {errors.address?.zipCode?.message && (
             <ErrorMessage message={errors.address?.zipCode?.message} />
           )}
-        </Box>
-        <Box width="1/2">
+        </FPBox>
+        <FPBox width="1/2">
           <Controller
             name="address.number"
             control={control}
@@ -42,7 +42,7 @@ export default function Cep() {
               <TextInput
                 {...field}
                 value={field.value}
-                onChangeValue={field.onChange}
+                onChange={field.onChange}
                 placeholder="Número"
               />
             )}
@@ -50,9 +50,9 @@ export default function Cep() {
           {errors.address?.number?.message && (
             <ErrorMessage message={errors.address?.number?.message} />
           )}
-        </Box>
-      </Box>
-      <Box>
+        </FPBox>
+      </FPBox>
+      <FPBox>
         <Controller
           name="address.street"
           control={control}
@@ -60,7 +60,7 @@ export default function Cep() {
             <TextInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Rua"
             />
           )}
@@ -69,8 +69,8 @@ export default function Cep() {
         {errors.address?.street?.message && (
           <ErrorMessage message={errors.address?.street?.message} />
         )}
-      </Box>
-      <Box>
+      </FPBox>
+      <FPBox>
         <Controller
           name="address.district"
           control={control}
@@ -78,7 +78,7 @@ export default function Cep() {
             <TextInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Estado"
             />
           )}
@@ -86,8 +86,8 @@ export default function Cep() {
         {errors.address?.district?.message && (
           <ErrorMessage message={errors.address?.district?.message} />
         )}
-      </Box>
-      <Box>
+      </FPBox>
+      <FPBox>
         <Controller
           name="address.state"
           control={control}
@@ -96,7 +96,7 @@ export default function Cep() {
               {...field}
               width="50"
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="UF"
             />
           )}
@@ -104,7 +104,7 @@ export default function Cep() {
         {errors.address?.state?.message && (
           <ErrorMessage message={errors.address?.state?.message} />
         )}
-      </Box>
+      </FPBox>
       <Controller
         name="address.city"
         control={control}
@@ -113,7 +113,7 @@ export default function Cep() {
             {...field}
             width="50"
             value={field.value}
-            onChangeValue={field.onChange}
+            onChange={field.onChange}
             placeholder="Cidade"
           />
         )}
@@ -121,7 +121,7 @@ export default function Cep() {
       {errors.address?.city?.message && (
         <ErrorMessage message={errors.address?.city?.message} />
       )}
-      <Box>
+      <FPBox>
         <Controller
           name="address.complement"
           control={control}
@@ -129,7 +129,7 @@ export default function Cep() {
             <TextInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Complemento"
             />
           )}
@@ -137,8 +137,8 @@ export default function Cep() {
         {errors.address?.complement?.message && (
           <ErrorMessage message={errors.address?.complement?.message} />
         )}
-      </Box>
-    </Box>
+      </FPBox>
+    </FPBox>
   )
 }
 

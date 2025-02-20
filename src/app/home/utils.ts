@@ -1,7 +1,6 @@
-import { maskCPF } from "@/helpers/maskCep"
-import { IClient, IGetClient } from "@/services/clients/types"
-
-const parseTexts = (txt?: string | null) => txt ?? '-'
+import { maskCPF } from '@/helpers/maskCep'
+import { IClient, IGetClient } from '@/services/clients/types'
+import { IPathologiesResponse } from '@/services/pathologies/types'
 
 const parsePatient = (data: IClient): IClient => {
   return {
@@ -15,5 +14,18 @@ const parsePatient = (data: IClient): IClient => {
     isOpen: data?.isOpen ?? false,
   }
 }
-export const parsePatients = (subscriptions: IGetClient): IClient[] =>
+export const parsePatients = (subscriptions: IGetClient<IClient>): IClient[] =>
   subscriptions.data.map(parsePatient)
+
+const parseTexts = (txt?: string | null) => txt ?? '-'
+
+const parsePathologia = (data: IPathologiesResponse): IPathologiesResponse => {
+  return {
+    id: data?.id,
+    code: parseTexts(data.code),
+    description: parseTexts(data.description),
+  }
+}
+export const parsePatholias = (
+  subscriptions: IGetClient<IPathologiesResponse>,
+): IPathologiesResponse[] => subscriptions.data.map(parsePathologia)

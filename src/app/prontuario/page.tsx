@@ -2,7 +2,6 @@
 
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { Box } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextAreaInput } from '@/components/TextInputArea'
@@ -87,7 +86,13 @@ export default function Prontuario() {
       {
         queryKey: ['getClient'],
         queryFn: () =>
-          getClient({ paginate: false, per_page: 10, current_page: 1 }),
+          getClient({
+            paginate: false,
+            per_page: 10,
+            current_page: 1,
+            total: 0,
+            filter: {},
+          }),
         enabled: true,
         retry: 1,
       },
@@ -100,7 +105,13 @@ export default function Prontuario() {
       {
         queryKey: ['getPathologies'],
         queryFn: () =>
-          getPathologies({ paginate: false, per_page: 10, current_page: 1 }),
+          getPathologies({
+            paginate: false,
+            per_page: 10,
+            current_page: 1,
+            total: 0,
+            filter: {},
+          }),
         enabled: true,
         retry: 1,
       },
@@ -295,7 +306,7 @@ export default function Prontuario() {
             <TextAreaInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Digite a conclusão"
             />
           )}
@@ -308,7 +319,7 @@ export default function Prontuario() {
             <TextAreaInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Digite a conclusão"
             />
           )}
@@ -323,7 +334,7 @@ export default function Prontuario() {
               {...field}
               type="text"
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Digite o nome"
             />
           )}
@@ -336,7 +347,7 @@ export default function Prontuario() {
             <TextAreaInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Digite o seu conclusion"
             />
           )}

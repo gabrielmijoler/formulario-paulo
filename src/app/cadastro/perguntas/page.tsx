@@ -61,7 +61,7 @@ export default function Patologias() {
               type="text"
               required
               value={field.value}
-              onChangeValue={field.onChange}
+              onChange={field.onChange}
               placeholder="Digite a pergunta"
             />
           )}

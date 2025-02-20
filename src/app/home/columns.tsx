@@ -4,12 +4,13 @@ import { IClient } from '@/services/clients/types'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { FPBox } from '@/components/Box'
+import Link from 'next/link'
 
 export const getColumns = (
-  handleOpenRow: (rowData: IClient) => void,
+  handleOpenRow?: (rowData: IClient) => void,
 ): ColumnTypeProps<IClient>[] => [
   {
     key: 'collapse',
@@ -17,7 +18,10 @@ export const getColumns = (
       if (!row) return null
 
       return (
-        <IconButton size="small" onClick={() => handleOpenRow(row)}>
+        <IconButton
+          size="small"
+          onClick={() => handleOpenRow && handleOpenRow(row)}
+        >
           {row.isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
       )
@@ -44,9 +48,9 @@ export const getColumns = (
 
       return (
         <FPBox display="flex" direction="row">
-          <IconButton size="small" onClick={() => handleOpenRow(row)}>
-            {<DeleteIcon />}
-          </IconButton>
+          <Link href={`/cadastro/paciente/editar/${row.id}`} passHref>
+            <IconButton size="small">{<EditIcon />}</IconButton>
+          </Link>
         </FPBox>
       )
     },

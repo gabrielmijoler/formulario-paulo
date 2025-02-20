@@ -71,17 +71,19 @@ export default function Autenticacao() {
         )}
 
         <TextInput
+          name="username"
           placeholder="Email de usuário"
           type="email"
           value={username}
-          onChangeValue={setUsername}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <TextInput
+          name="password"
           placeholder="Senha"
           type="password"
           value={password}
-          onChangeValue={setPassword}
+          onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
           required
         />

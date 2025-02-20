@@ -59,19 +59,20 @@ export function FPTable({
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        {columnsCollapse.map((item) => (
-                          <TableCell
-                            key={`${item.name}-${item.key}`}
-                            align={item.align && 'center'}
-                            sx={{
-                              width: item.width,
-                              minWidth: item.minWidth,
-                              maxWidth: item.maxWidth,
-                            }}
-                          >
-                            {renderTableSortLabel(item)}
-                          </TableCell>
-                        ))}
+                        {columnsCollapse &&
+                          columnsCollapse.map((item) => (
+                            <TableCell
+                              key={`${item.name}-${item.key}`}
+                              align={item.align && 'center'}
+                              sx={{
+                                width: item.width,
+                                minWidth: item.minWidth,
+                                maxWidth: item.maxWidth,
+                              }}
+                            >
+                              {renderTableSortLabel(item)}
+                            </TableCell>
+                          ))}
                       </TableRow>
                     </TableHead>
                     <TableBody>

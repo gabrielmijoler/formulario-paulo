@@ -1,6 +1,12 @@
 'use server'
 import { requestApi } from '../request.api'
-import { IAuthUser, IClient, IGetClient, IGetPagination, ILogin } from './types'
+import {
+  IAuthUser,
+  IClient,
+  IGetResponse,
+  IGetPagination,
+  ILogin,
+} from './types'
 
 export async function postLogin(params: ILogin): Promise<IAuthUser> {
   return requestApi({
@@ -20,7 +26,7 @@ export async function getUserByName(name: string): Promise<IAuthUser> {
 
 export async function getClient(
   params: IGetPagination,
-): Promise<IGetClient<IClient>> {
+): Promise<IGetResponse<IClient>> {
   return requestApi({
     url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients',
     method: 'GET',

@@ -60,7 +60,7 @@ export default function PatientEdit({ params }: ParamsID) {
   }
 
   const clientWatch = methods.watch('client')
-
+  console.log(clientWatch)
   return (
     <>
       {data && (
@@ -72,7 +72,7 @@ export default function PatientEdit({ params }: ParamsID) {
               <TextInput
                 name="client.name"
                 type="text"
-                defaultValue={clientWatch.name}
+                value={clientWatch.name}
                 onChange={(e) =>
                   methods.setValue('client.name', e.target.value)
                 }
@@ -84,13 +84,13 @@ export default function PatientEdit({ params }: ParamsID) {
                   methods.setValue('client.document', e.target.value)
                 }
                 type="text"
-                defaultValue={clientWatch.document}
+                value={clientWatch.document}
                 label="Documento"
               />
               <TextInput
                 name="client.address"
                 type="text"
-                defaultValue={clientWatch.address}
+                value={clientWatch.address}
                 onChange={(e) =>
                   methods.setValue('client.address', e.target.value)
                 }
@@ -100,7 +100,7 @@ export default function PatientEdit({ params }: ParamsID) {
               <TextInput
                 name="client.ieRg"
                 type="text"
-                defaultValue={clientWatch.ieRg}
+                value={clientWatch.ieRg}
                 onChange={(e) =>
                   methods.setValue('client.ieRg', e.target.value)
                 }
@@ -110,7 +110,7 @@ export default function PatientEdit({ params }: ParamsID) {
               <TextInput
                 name="client.email"
                 type="text"
-                defaultValue={clientWatch.email}
+                value={clientWatch.email}
                 onChange={(e) =>
                   methods.setValue('client.email', e.target.value)
                 }
@@ -120,7 +120,7 @@ export default function PatientEdit({ params }: ParamsID) {
               <TextInput
                 name="client.telephone"
                 type="text"
-                defaultValue={clientWatch.telephone}
+                value={clientWatch.telephone}
                 onChange={(e) =>
                   methods.setValue('client.telephone', e.target.value)
                 }

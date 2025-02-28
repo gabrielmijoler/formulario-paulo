@@ -1,6 +1,6 @@
 'use server'
 
-import { IGetClient, IGetPagination } from '../clients/types'
+import { IGetResponse, IGetPagination } from '../clients/types'
 import { requestApi } from '../request.api'
 import { IPathologiesRequest, IPathologiesResponse } from './types'
 
@@ -16,7 +16,7 @@ export async function postPathologies(
 
 export async function getPathologies(
   params: IGetPagination,
-): Promise<IGetClient<IPathologiesResponse[]>> {
+): Promise<IGetResponse<IPathologiesResponse[]>> {
   return requestApi({
     url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/pathologies',
     method: 'GET',

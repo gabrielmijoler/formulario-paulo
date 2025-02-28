@@ -30,7 +30,7 @@ export type IClient = {
   isOpen?: boolean
 }
 
-export type IGetClient<T> = {
+export type IGetResponse<T> = {
   data: T[]
   pagination?: Pagination
 }

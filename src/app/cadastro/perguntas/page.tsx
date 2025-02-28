@@ -5,9 +5,18 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { postQuestion } from '@/services/questions'
-import { useMutation } from '@tanstack/react-query'
+import { getQuestion, postQuestion } from '@/services/questions'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Toast } from '@/components/Toast'
+import { parseQuestions } from '@/app/home/utils'
+import { FPTable } from '@/components/TableCollapse'
+import { columnsPathologies } from '@/utils/columns'
+import { Box, Button, Modal, Paper, TextField } from '@mui/material'
+import usePagination from '@/app/hooks/usePagination'
+import { useState } from 'react'
+import { useDebounceState } from '@/hook/useDebounceState'
+import { IQuestionResponse } from '@/services/questions/types'
+import { FPBox } from '@/components/Box'
 
 type QuestionsProps = {
   name: string
@@ -15,6 +24,39 @@ type QuestionsProps = {
 }
 
 export default function Patologias() {
+  const { pagination, setPagination } = usePagination()
+  const [open, setOpen] = useState(false)
+  const [debounceSearch, search, setSearch] = useDebounceState<
+    string | undefined
+  >(undefined, 1000)
+  const [questionData, setQuestionData] = useState<IQuestionResponse[]>([])
+
+  let { data, error, isLoading } = useQuery({
+    queryKey: ['questions', pagination, debounceSearch],
+    queryFn: async () => {
+      const response = await getQuestion({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+      })
+      console.log(response.data)
+      const updatedData = response.data.map((client: any) => ({
+        ...client,
+        isOpen: false,
+      }))
+
+      setQuestionData(updatedData)
+      return { ...response, data: updatedData }
+    },
+  })
+
+  console.log(questionData)
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
   const {
     handleSubmit,
     formState: { errors },
@@ -35,47 +77,82 @@ export default function Patologias() {
     },
   })
 
+  // if (error) {
+  //   return <ErrorComponent error={error} />
+  // }
+
   const onSubmit: SubmitHandler<QuestionsProps> = (data) => {
     mutate({ name: data.name, response: data.response })
   }
 
   return (
     <Layout titulo="Cadastro de Perguntas">
-      <form className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
-        {isSuccess ?? (
-          <Toast
-            item={{ message: 'Pergunta criada com sucesso!', type: 'success' }}
-          />
-        )}{' '}
-        {isError ?? (
-          <Toast item={{ message: 'Erro ao cria pergunta.', type: 'error' }} />
-        )}
-        <Text fontSize="xl">Cadastro de perguntas</Text>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              {...field}
-              width="1/2"
-              type="text"
-              required
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="Digite a pergunta"
-            />
-          )}
+      {isSuccess ?? (
+        <Toast
+          item={{ message: 'Pergunta criada com sucesso!', type: 'success' }}
         />
-        {errors.name && <span>Campo obrigatório</span>}
-        <button
-          className="px-4 py-3 rounded-lg bg-gray-200 mt-4
-            border-2 focus:border-blue-500 focus:bg-white
-            focus:outline-none text-black w-20"
-          type="submit"
+      )}{' '}
+      {isError ?? (
+        <Toast item={{ message: 'Erro ao cria pergunta.', type: 'error' }} />
+      )}
+      <Button variant="contained" color="primary" onClick={handleOpen}>
+        Nova Patologia
+      </Button>
+      <Modal
+        className="flex justify-center items-center"
+        open={open}
+        onClose={handleClose}
+      >
+        <Box
+          sx={{ width: 600, height: 'auto', backgroundColor: 'white', p: 2 }}
         >
-          Enviar
-        </button>
-      </form>
+          <FPBox className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
+            <Text fontSize="xl">Cadastro de perguntas</Text>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  width="1/2"
+                  type="text"
+                  required
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Digite a pergunta"
+                />
+              )}
+            />
+            {errors.name && <span>Campo obrigatório</span>}
+            <button
+              className="px-4 py-3 rounded-lg bg-gray-200 mt-4
+                border-2 focus:border-blue-500 focus:bg-white
+                focus:outline-none text-black w-20"
+              type="submit"
+            >
+              Enviar
+            </button>
+          </FPBox>
+        </Box>
+      </Modal>
+      <Paper className="p-1">
+        <TextField
+          label="Buscar por nome"
+          variant="outlined"
+          size="medium"
+          margin="dense"
+          value={search ?? ''}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <FPTable
+          columns={columnsPathologies()}
+          data={parseQuestions({ ...data, data: questionData })}
+          isLoading={isLoading}
+          pagination={pagination}
+          setPagination={setPagination}
+          paginationItems={[10, 20, 30, 40]}
+        />
+      </Paper>
     </Layout>
   )
 }

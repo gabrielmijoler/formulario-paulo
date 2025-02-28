@@ -1,88 +1,85 @@
 'use client'
 
 import { use, useEffect } from 'react'
-import { putClient } from '@/services/clients'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { TextInput } from '@/components/TextInput'
-import { patholiaSchema } from '../../schema'
-import { getPathologiesByID, putPathologies } from '@/services/pathologies'
+import { questionSchema } from '@/app/cadastro/patologias/schema'
+import { getQuestionsById, putQuestion } from '@/services/questions'
 
 interface ParamsID {
-  params: { patholiaId: string }
+  params: { questionId: string }
 }
 export default function PatientEdit({ params }: ParamsID) {
-  const { patholiaId } = use(params)
+  const { questionId } = use(params)
   const queryClient = useQueryClient()
-  console.log(patholiaId)
+
   const { data, isLoading } = useQuery({
-    queryKey: ['pathologiaById', patholiaId],
-    queryFn: async () => getPathologiesByID(patholiaId),
+    queryKey: ['pathologiaById', questionId],
+    queryFn: async () => getQuestionsById(questionId),
   })
 
   const { mutate } = useMutation({
-    mutationFn: putPathologies,
+    mutationFn: putQuestion,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['pathologiaById', patholiaId],
+        queryKey: ['pathologiaById', questionId],
       })
     },
   })
 
   const methods = useForm({
     criteriaMode: 'all',
-    resolver: zodResolver(patholiaSchema),
+    resolver: zodResolver(questionSchema),
     defaultValues: {
-      pathologias: {
-        code: '',
-        description: '',
+      questions: {
+        name: '',
+        response: '',
       },
     },
   })
 
   useEffect(() => {
     if (data) {
-      methods.reset({ pathologias: data })
+      methods.reset({ questions: data })
     }
   }, [data, methods])
 
   const onSubmit = (formData: any) => {
-    console.log(formData)
-    mutate({ id: patholiaId, ...formData })
+    mutate({ id: questionId, ...formData })
   }
 
   if (isLoading) {
     return <h2>Loading...</h2>
   }
 
-  const clientWatch = methods.watch('pathologias')
+  const clientWatch = methods.watch('questions')
 
   return (
     <>
       {data && (
         <form onSubmit={methods.handleSubmit(onSubmit)} className="p-3">
-          <h1>{patholiaId}</h1>
-          <h2 className="text-blue-600">{data.code}</h2>
+          <h1>{questionId}</h1>
           <div>
             <div className="grid grid-cols-2 gap-4 text-black mt-4">
               <TextInput
-                name="pathologias.name"
+                name="pathologias.code"
                 type="text"
-                defaultValue={clientWatch.code}
+                value={clientWatch.name}
                 onChange={(e) =>
-                  methods.setValue('pathologias.code', e.target.value)
+                  methods.setValue('questions.name', e.target.value)
                 }
-                label="Nome"
+                label="Código"
               />
               <TextInput
-                name="pathologias.document"
+                name="pathologias.description"
                 onChange={(e) =>
-                  methods.setValue('pathologias.description', e.target.value)
+                  methods.setValue('questions.response', e.target.value)
                 }
                 type="text"
-                defaultValue={clientWatch.description}
-                label="Documento"
+                value={clientWatch.response}
+                label="Descrição"
               />
             </div>
             <button

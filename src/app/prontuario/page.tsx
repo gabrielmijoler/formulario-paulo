@@ -11,7 +11,7 @@ import { getQuestion } from '@/services/questions'
 import { IQuestionResponse } from '@/services/questions/types'
 import { getPathologies } from '@/services/pathologies'
 import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IGetClient } from '@/services/clients/types'
+import { IGetResponse } from '@/services/clients/types'
 import {
   FormControl,
   ListItemText,
@@ -118,7 +118,7 @@ export default function Prontuario() {
     ],
   })
 
-  const clients: IGetClient[] = results[0].data ? results[0].data : []
+  const clients: IGetResponse[] = results[0].data ? results[0].data : []
 
   const questions: IQuestionResponse[] = Array.isArray(results[1].data)
     ? results[1].data

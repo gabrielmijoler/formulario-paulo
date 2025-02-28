@@ -13,12 +13,13 @@ import {
 import { Toast } from '@/components/Toast'
 import { parsePatholias } from '@/app/home/utils'
 import { FPTable } from '@/components/TableCollapse'
-import { Paper, TextField } from '@mui/material'
+import { Box, Button, Modal, Paper, TextField } from '@mui/material'
 import usePagination from '@/app/hooks/usePagination'
 import { useDebounceState } from '@/hook/useDebounceState'
 import { useState } from 'react'
 import { ErrorComponent } from '@/components/Error'
 import { columnsPathologies } from '@/utils/columns'
+import { FPBox } from '@/components/Box'
 
 export default function Patologias() {
   const [debounceSearch, search, setSearch] = useDebounceState<
@@ -37,6 +38,7 @@ export default function Patologias() {
     },
   })
   const { pagination, setPagination } = usePagination()
+  const [open, setOpen] = useState(false)
   const [pathologiesData, setPathologiesData] = useState<
     IPathologiesResponse[]
   >([])
@@ -76,6 +78,9 @@ export default function Patologias() {
     mutate({ code: data.code, description: data.description })
   }
 
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
   return (
     <Layout titulo="Cadastro de Patologias">
       {isSuccess && (
@@ -83,6 +88,61 @@ export default function Patologias() {
           item={{ message: 'Patologia criada com sucesso!', type: 'success' }}
         />
       )}
+
+      <Button variant="contained" color="primary" onClick={handleOpen}>
+        Nova Patologia
+      </Button>
+
+      <Modal
+        className="flex justify-center items-center"
+        open={open}
+        onClose={handleClose}
+      >
+        <Box
+          sx={{ width: 600, height: 'auto', backgroundColor: 'white', p: 2 }}
+        >
+          <FPBox className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
+            <Text fontSize="xl">Cadastro de patologias</Text>
+            <Controller
+              name="code"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  width="1/2"
+                  type="text"
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Digite o código"
+                />
+              )}
+            />
+            {errors.code && <span>Campo obrigatório</span>}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  width="1/2"
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Digite a descrição"
+                />
+              )}
+            />
+            {errors.description && <span>Campo obrigatório</span>}
+            <button
+              className="px-4 py-3 rounded-lg bg-gray-200 mt-4
+        border-2 focus:border-blue-500 focus:bg-white
+        focus:outline-none text-black w-20"
+              type="submit"
+            >
+              Enviar
+            </button>
+          </FPBox>
+        </Box>
+      </Modal>
       <Paper className="p-1">
         <TextField
           label="Buscar por nome"
@@ -101,46 +161,6 @@ export default function Patologias() {
           paginationItems={[10, 20, 30, 40]}
         />
       </Paper>
-      <form className="p-1 w-full" onSubmit={handleSubmit(onSubmit)}>
-        <Text fontSize="xl">Cadastro de patologias</Text>
-        <Controller
-          name="code"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              {...field}
-              width="1/2"
-              type="text"
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="Digite o código"
-            />
-          )}
-        />
-        {errors.code && <span>Campo obrigatório</span>}
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <TextInput
-              {...field}
-              width="1/2"
-              value={field.value}
-              onChange={field.onChange}
-              placeholder="Digite a descrição"
-            />
-          )}
-        />
-        {errors.description && <span>Campo obrigatório</span>}
-        <button
-          className="px-4 py-3 rounded-lg bg-gray-200 mt-4
-        border-2 focus:border-blue-500 focus:bg-white
-        focus:outline-none text-black w-20"
-          type="submit"
-        >
-          Enviar
-        </button>
-      </form>
     </Layout>
   )
 }

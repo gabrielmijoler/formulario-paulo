@@ -18,12 +18,12 @@ import { questionSchema } from './schema'
 import { parseQuestions } from '@/app/home/utils'
 import { FPTable } from '@/components/TableCollapse'
 import { Box, Paper, TextField } from '@mui/material'
-import { useDebounceState } from '@/hook/useDebounceState'
+import { useDebounceState } from '@/hook/use-debounce-state'
 import { Modal, Button } from '@mui/material'
 import { ErrorComponent } from '@/components/Error'
 import { IQuestion } from '@/services/questions/types'
 import { getQuestion, postQuestion } from '@/services/questions'
-import { columnsQuestions } from '@/utils/columns'
+import { columnsQuestions } from '@/utils/table-columns'
 
 export default function Paciente() {
   const queryClient = useQueryClient()

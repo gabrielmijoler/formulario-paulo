@@ -6,13 +6,15 @@ import Layout from '@/components/template/Layout'
 import { SelectChangeEvent } from '@mui/material'
 import { useState } from 'react'
 import { useAppData } from '@/context'
+
+import { useMedicalRecord } from '@/hook/use-medical-record'
 import {
   clientsToOptions,
   optionsToQuestion,
   pathologiesToOptions,
-} from '@/utils/prontuarioMaps'
-import { Formulario } from './componentes/formulario'
-import { useProntuarioData } from '@/hook/useProntuarioData'
+} from '@/utils/options-select'
+import { Form } from './components/form'
+import { IPathologiesResponse } from '@/services/pathologies/types'
 
 export default function Prontuario() {
   const [isContentSelected, setIsContentSelected] = useState(false)
@@ -68,14 +70,13 @@ export default function Prontuario() {
     },
   })
 
-  const { clients, questions, pathologies } = useProntuarioData()
+  const { clients, questions, pathologies } = useMedicalRecord()
   const clientWatch = watch('client')
   const QuestionsWatch = watch('questions')
 
   const optionsQuestion = optionsToQuestion(questions)
 
   const optionsClient = clientsToOptions(clients)
-  const optionsPathologies = pathologiesToOptions(pathologies)
   // const handleSelectChange = (event: SelectChangeEvent<number[]>) => {
   //   const selectedQuestions = optionsQuestion.filter((el) =>
   //     event.target.value.includes(el.id),
@@ -106,7 +107,7 @@ export default function Prontuario() {
 
   return (
     <Layout titulo="Prontuário do Prontuario">
-      <Formulario
+      <Form
         QuestionsWatch={QuestionsWatch}
         clientWatch={clientWatch}
         control={control}
@@ -119,12 +120,16 @@ export default function Prontuario() {
         onChangeClient={onChangeClient}
         onSubmit={onSubmit}
         optionsClient={optionsClient}
-        optionsPathologies={optionsPathologies}
+        optionsPathologies={pathologies}
         optionsQuestion={optionsQuestion}
         setValue={setValue}
-        setModalOpen={setModalOpen}
-        handleSelectChange={() => { }}
-        handleClose={() => { }}
+        setIsContentSelected={setIsContentSelected}
+        onChangePathologies={(event: SelectChangeEvent) => {
+          const selectedPathologies = pathologiesToOptions(pathologies).filter(
+            (el) => (event.target.value as unknown as string[]).includes(el.id),
+          )
+          setValue(event.target.name as any, selectedPathologies)
+        }}
       />
     </Layout>
   )

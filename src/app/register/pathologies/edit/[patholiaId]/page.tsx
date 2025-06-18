@@ -10,22 +10,22 @@ import { patholiaSchema } from '../../schema'
 import { getPathologiesByID, putPathologies } from '@/services/pathologies'
 
 interface ParamsID {
-  params: { patholiaId: string }
+  params: { pathologiaId: string }
 }
 export default function PatientEdit({ params }: ParamsID) {
-  const { patholiaId } = use(params)
+  const { pathologiaId } = params
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['pathologiaById', patholiaId],
-    queryFn: async () => getPathologiesByID(patholiaId),
+    queryKey: ['pathologiaById', pathologiaId],
+    queryFn: async () => getPathologiesByID(pathologiaId),
   })
 
   const { mutate } = useMutation({
     mutationFn: putPathologies,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['pathologiaById', patholiaId],
+        queryKey: ['pathologiaById', pathologiaId],
       })
     },
   })
@@ -48,7 +48,7 @@ export default function PatientEdit({ params }: ParamsID) {
   }, [data, methods])
 
   const onSubmit = (formData: any) => {
-    mutate({ id: patholiaId, ...formData })
+    mutate({ id: pathologiaId, ...formData })
   }
 
   if (isLoading) {
@@ -61,7 +61,7 @@ export default function PatientEdit({ params }: ParamsID) {
     <>
       {data && (
         <form onSubmit={methods.handleSubmit(onSubmit)} className="p-3">
-          <h1>{patholiaId}</h1>
+          <h1>{pathologiaId}</h1>
           <div>
             <div className="grid grid-cols-2 gap-4 text-black mt-4">
               <TextInput

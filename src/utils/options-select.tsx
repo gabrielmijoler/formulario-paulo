@@ -21,8 +21,8 @@ export function optionsToQuestion(questions: IQuestionResponse[]) {
   }))
 }
 export function pathologiesToOptions(pathologies: IPathologiesResponse[]) {
-  return pathologies.map((item, index) => ({
-    id: index,
+  return pathologies.map((item) => ({
+    id: item.id,
     value: item.code,
     label: item.description,
   }))

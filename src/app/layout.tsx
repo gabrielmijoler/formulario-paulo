@@ -1,4 +1,4 @@
-import { ReactQueryProvider } from '@/providers/ReactQueryProviders'
+import { ReactQueryProvider } from '@/providers/react-query-providers'
 import './globals.css'
 import { AppProvider } from '@/context'
 import { Metadata } from 'next'
@@ -21,14 +21,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      <html lang="pt" className="bg-white">
-        <AppProvider>
-          <ReactQueryProvider>
-            <body className={`${geistSans.variable}`}>{children}</body>
-          </ReactQueryProvider>
-        </AppProvider>
-      </html>
-    </>
+    <html lang="pt" className="bg-white">
+      <AppProvider>
+        <ReactQueryProvider>
+          <body className={`${geistSans.variable}`}>{children}</body>
+        </ReactQueryProvider>
+      </AppProvider>
+    </html>
   )
 }

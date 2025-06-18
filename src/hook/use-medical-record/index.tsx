@@ -3,7 +3,7 @@ import { getPathologies } from '@/services/pathologies'
 import { getQuestion } from '@/services/questions'
 import { useQueries } from '@tanstack/react-query'
 
-export function useProntuarioData() {
+export function useMedicalRecord() {
   const results = useQueries({
     queries: [
       {

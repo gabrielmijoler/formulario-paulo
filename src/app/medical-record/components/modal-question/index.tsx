@@ -48,8 +48,8 @@ export const ModalQuestion = ({
       selectedQuestions.map((item) => {
         const question = optionsQuestion.find((q) => q.id === parseInt(item))
         return {
-          id: question?.id || '',
-          name: question?.label || '',
+          id: question?.id ?? '',
+          name: question?.label ?? '',
         }
       }),
     )

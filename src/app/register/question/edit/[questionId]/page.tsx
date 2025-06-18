@@ -12,7 +12,7 @@ interface ParamsID {
   params: { questionId: string }
 }
 export default function PatientEdit({ params }: ParamsID) {
-  const { questionId } = use(params)
+  const { questionId } = params
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({

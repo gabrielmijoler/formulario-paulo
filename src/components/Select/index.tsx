@@ -13,7 +13,7 @@ export function SelectInput({
   width,
   name,
   noOptionsMessage = () => 'Nenhuma opção encontrada',
-}: SelectInputProps) {
+}: Readonly<SelectInputProps>) {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export function SelectInput({
 
   return (
     <Select
-      className={`rounded-lg mt-4 ${width ? `w-${width}` : 'w-full'}  text-black`}
+      className={`rounded-lg mt-4 ${width ? 'w-' + width : 'w-full'} text-black`}
       options={options}
       onChange={(e) => e?.value}
       formatGroupLabel={formatGroupLabel}

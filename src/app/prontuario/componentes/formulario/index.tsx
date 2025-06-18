@@ -17,11 +17,10 @@ import {
 } from '@mui/material'
 import { SelectInput } from '@/components/Select'
 import { TextAreaInput } from '@/components/TextInputArea'
-import { ModalQuestion } from '../modalQuestion'
+import { ModalQuestion } from '../ModalQuestion'
 import { Text } from '@/components/Text'
 import { IClient } from '@/services/clients/types'
 import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IQuestionResponse } from '@/services/questions/types'
 type FormularioProps = {
   control: Control<any>
   errors: FieldErrors<any>

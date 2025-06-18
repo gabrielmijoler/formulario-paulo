@@ -5,8 +5,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { TextInput } from '@/components/TextInput'
-import { questionSchema } from '@/app/cadastro/patologias/schema'
 import { getQuestionsById, putQuestion } from '@/services/questions'
+import { questionSchema } from '../../schema'
 
 interface ParamsID {
   params: { questionId: string }

@@ -6,13 +6,13 @@ import Layout from '@/components/template/Layout'
 import { SelectChangeEvent } from '@mui/material'
 import { useState } from 'react'
 import { useAppData } from '@/context'
-import { useProntuarioData } from './hook/query'
 import {
   clientsToOptions,
   optionsToQuestion,
   pathologiesToOptions,
 } from '@/utils/prontuarioMaps'
 import { Formulario } from './componentes/formulario'
+import { useProntuarioData } from '@/hook/useProntuarioData'
 
 export default function Prontuario() {
   const [isContentSelected, setIsContentSelected] = useState(false)
@@ -123,8 +123,8 @@ export default function Prontuario() {
         optionsQuestion={optionsQuestion}
         setValue={setValue}
         setModalOpen={setModalOpen}
-        handleSelectChange={() => {}}
-        handleClose={() => {}}
+        handleSelectChange={() => { }}
+        handleClose={() => { }}
       />
     </Layout>
   )

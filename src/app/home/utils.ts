@@ -1,7 +1,7 @@
 import { maskCPF } from '@/helpers/maskCep'
 import { IClient, IGetResponse } from '@/services/clients/types'
 import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IQuestionResponse } from '@/services/questions/types'
+import { IQuestion, IQuestionResponse } from '@/services/questions/types'
 
 const parseTexts = (txt?: string | null) => txt ?? '-'
 const parsePatient = (data: IClient): IClient => {
@@ -31,13 +31,9 @@ export const parsePatholias = (
   subscriptions: IGetResponse<IPathologiesResponse>,
 ): IPathologiesResponse[] => subscriptions.data.map(parsePathologia)
 
-const parseQuestion = (data: IQuestionResponse): IQuestionResponse => {
-  return {
-    id: data?.id,
-    name: parseTexts(data.name),
-    response: parseTexts(data.response),
-  }
+const parseQuestion = (data: IQuestion): IQuestion => {
+  return { name: parseTexts(data.name), response: parseTexts(data.response) }
 }
 export const parseQuestions = (
-  subscriptions: IGetResponse<IQuestionResponse>,
-): IQuestionResponse[] => subscriptions.data.map(parseQuestion)
+  subscriptions: IGetResponse<IQuestion>,
+): IQuestion[] => subscriptions.data.map(parseQuestion)

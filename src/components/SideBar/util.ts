@@ -1,3 +1,4 @@
+import { RoutesUrls } from '@/routes'
 import { DashBoard, IconCasa } from '../icons'
 
 export type MenuItem = {
@@ -25,15 +26,15 @@ export const MenuList: Menu[] = [
     icon: DashBoard(),
     submenu: true,
     submenuItens: [
-      { title: 'Paciente', url: '/cadastro/paciente' },
-      { title: 'Perguntas', url: '/cadastro/perguntas' },
-      { title: 'Patologias', url: '/cadastro/patologias' },
+      { title: 'Paciente', url: RoutesUrls.PATHOLIES_URL },
+      { title: 'Perguntas', url: RoutesUrls.PATIENT_URL },
+      { title: 'Patologias', url: RoutesUrls.QUESTION_URL },
     ],
   },
   {
     title: 'Prontuário',
     icon: DashBoard(),
     submenu: true,
-    submenuItens: [{ title: 'Perguntas', url: '/prontuario' }],
+    submenuItens: [{ title: 'Perguntas', url: RoutesUrls.MEDICAL_RECORD_URL }],
   },
 ]

@@ -61,25 +61,13 @@ export function Form({
   onChangePathologies,
   getValues,
 }: FormProps) {
-  const disabledFields = [
-    { name: 'client.name', value: clientWatch.name, placeholder: 'Nome' },
-    {
-      name: 'client.document',
-      value: clientWatch.document,
-      placeholder: 'Documento',
-    },
-    {
-      name: 'client.address',
-      value: clientWatch.address,
-      placeholder: 'Endereço',
-    },
-    { name: 'client.ieRg', value: clientWatch.ieRg, placeholder: 'IE/RG' },
-    { name: 'client.email', value: clientWatch.email, placeholder: 'E-mail' },
-    {
-      name: 'client.telephone',
-      value: clientWatch.telephone,
-      placeholder: 'Telefone',
-    },
+  const fields = [
+    ['client.name', clientWatch.name, 'Nome'],
+    ['client.document', clientWatch.document, 'Documento'],
+    ['client.address', clientWatch.address, 'Endereço'],
+    ['client.ieRg', clientWatch.ieRg, 'IE/RG'],
+    ['client.email', clientWatch.email, 'E-mail'],
+    ['client.telephone', clientWatch.telephone, 'Telefone'],
   ]
   return (
     <form className="p-1" onSubmit={handleSubmit(onSubmit)}>
@@ -115,14 +103,14 @@ export function Form({
 
       {isContentSelected && (
         <div className="grid grid-cols-2 gap-4 text-black mt-4">
-          {disabledFields.map((field) => (
+          {fields.map(([name, value, placeholder]) => (
             <input
-              key={field.name}
-              name={field.name}
+              key={name}
+              name={name}
               type="text"
-              value={field.value}
+              value={value}
               disabled
-              placeholder={field.placeholder}
+              placeholder={placeholder}
               className="p-2 rounded disabled:bg-gray-400"
             />
           ))}

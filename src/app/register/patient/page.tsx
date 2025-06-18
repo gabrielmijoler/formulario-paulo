@@ -23,12 +23,12 @@ import { clientSchema } from './schema'
 import { parsePatients } from '@/app/home/utils'
 import { FPTable } from '@/components/TableCollapse'
 import { Box, Paper, TextField } from '@mui/material'
-import { getColumns, subColumns } from '@/app/home/columns'
 import { useDebounceState } from '@/hook/use-debounce-state'
 import EditIcon from '@mui/icons-material/Edit'
 import { Modal, Button } from '@mui/material'
 import Link from 'next/link'
 import { ErrorComponent } from '@/components/Error'
+import { getColumns, subColumns } from '@/utils/table-columns'
 
 export default function Paciente() {
   const queryClient = useQueryClient()

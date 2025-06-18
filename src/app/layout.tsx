@@ -3,7 +3,6 @@ import './globals.css'
 import { AppProvider } from '@/context'
 import { Metadata } from 'next'
 import localFont from 'next/font/local'
-// import { useState } from 'react'
 
 const metadata: Metadata = {
   title: 'Medoc',

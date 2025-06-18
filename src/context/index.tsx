@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { getUserByName, postLogin } from '@/services/clients'
@@ -68,12 +68,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  const Logout = async () => {
-    await removeCookie('authToken')
-    const user = await getCookie('authToken')
-    if (!user) {
-      router.push('/')
-    }
+  const Logout = () => {
+    removeCookie('authToken').then(() => {
+      getCookie('authToken').then((user) => {
+        if (!user) {
+          router.push('/')
+        }
+      })
+    })
   }
 
   const fetchAndSetUser = async (user: string) => {
@@ -90,24 +92,25 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const saveTheme = localStorage.getItem('theme')
     if (saveTheme) {
-      setTheme(saveTheme as string)
+      setTheme(saveTheme)
     }
     fetchAndSetUser(user.name)
-  }, [theme])
+  }, [user.name])
+
+  const contextValue = useMemo(
+    () => ({
+      theme,
+      changeTheme,
+      Login,
+      Logout,
+      errorMessage,
+      user,
+    }),
+    [theme, changeTheme, Login, Logout, errorMessage, user],
+  )
 
   return (
-    <AppContext.Provider
-      value={{
-        theme,
-        changeTheme,
-        Login,
-        Logout,
-        errorMessage,
-        user,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   )
 }
 

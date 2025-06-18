@@ -1,5 +1,4 @@
 'use server'
-import { IGetPagination, IGetResponse } from '../clients/types'
 import { requestApi } from '../request.api'
 import { IQuestion, IQuestionResponse } from './types'
 
@@ -13,16 +12,12 @@ export async function postQuestion(
   })
 }
 
-export async function getQuestion(
-  params: IGetPagination,
-): Promise<IGetResponse<IQuestionResponse[]>> {
+export async function getQuestion(): Promise<IQuestionResponse> {
   return requestApi({
     url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/questions',
     method: 'GET',
-    params,
   })
 }
-
 export async function getQuestionsById(id: string): Promise<IQuestionResponse> {
   return requestApi({
     url: `https://clinical-backend-ae40133038af.herokuapp.com/v1/questions/${id}`,

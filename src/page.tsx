@@ -31,28 +31,14 @@ export default function Patologias() {
   >(undefined, 1000)
   const [questionData, setQuestionData] = useState<IQuestionResponse[]>([])
 
-  let { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ['questions', pagination, debounceSearch],
     queryFn: async () => {
-      const response = await getQuestion({
-        paginate: true,
-        current_page: pagination.page,
-        per_page: pagination.itemsPerPage,
-        total: pagination.total,
-        filter: { name: debounceSearch ?? '' },
-      })
-      console.log(response.data)
-      const updatedData = response.data.map((client: any) => ({
-        ...client,
-        isOpen: false,
-      }))
-
-      setQuestionData(updatedData)
-      return { ...response, data: updatedData }
+      getQuestion()
     },
   })
 
-  console.log(questionData)
+  console.log(data)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -135,7 +121,7 @@ export default function Patologias() {
           </FPBox>
         </Box>
       </Modal>
-      <Paper className="p-1">
+      {/* <Paper className="p-1">
         <TextField
           label="Buscar por nome"
           variant="outlined"
@@ -152,7 +138,7 @@ export default function Patologias() {
           setPagination={setPagination}
           paginationItems={[10, 20, 30, 40]}
         />
-      </Paper>
+      </Paper> */}
     </Layout>
   )
 }

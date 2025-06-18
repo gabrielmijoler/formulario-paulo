@@ -8,7 +8,7 @@ const metadata: Metadata = {
   title: 'Medoc',
 }
 
-const geistSans = localFont({
+const gestSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
   weight: '100 900',
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="pt" className="bg-white">
       <AppProvider>
         <ReactQueryProvider>
-          <body className={`${geistSans.variable}`}>{children}</body>
+          <body className={`${gestSans.variable}`}>{children}</body>
         </ReactQueryProvider>
       </AppProvider>
     </html>

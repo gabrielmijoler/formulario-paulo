@@ -1,136 +1,80 @@
-'use client'
+import React from 'react'
+import { Toast } from '@/components/Toast'
+import { useApiData } from '@/hook/use-api-data'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { ErrorMessage } from '@/components/ErrorMessage'
+import { MedicalRecordFormView } from './view'
+import { useMedicalRecordMutation } from '@/hook/use-medical-record-mutation'
 
-import { SubmitHandler, useForm } from 'react-hook-form'
-
-import Layout from '@/components/template/Layout'
-import { SelectChangeEvent } from '@mui/material'
-import { useState } from 'react'
-import { useAppData } from '@/context'
-
-import { useMedicalRecord } from '@/hook/use-medical-record'
-import {
-  clientsToOptions,
-  optionsToQuestion,
-  pathologiesToOptions,
-} from '@/utils/options-select'
-import { Form } from './components/form'
-import { IPathologiesResponse } from '@/services/pathologies/types'
-
-export default function Prontuario() {
-  const [isContentSelected, setIsContentSelected] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const { user } = useAppData()
+export const MedicalRecordPage = () => {
+  const { clients, pathologies, questions, loading, error, refetch } =
+    useApiData()
   const {
-    handleSubmit,
-    watch,
-    setValue,
-    getValues,
-    formState: { errors },
-    control,
-  } = useForm({
-    criteriaMode: 'all',
-    defaultValues: {
-      symptoms: '',
-      clinicalExam: '',
-      completeClinicalExam: '',
-      conclusion: '',
-      clientId: 0,
-      userId: user.id,
-      status: user.status,
-      client: {
-        id: 0,
-        name: '',
-        document: '',
-        address: '',
-        ieRg: '',
-        email: '',
-        telephone: '',
-      },
-      pathologies: [
-        {
-          id: '',
-          code: '',
-          description: '',
-        },
-      ],
-      questions: [
-        {
-          id: 0,
-          name: '',
-          response: '',
-        },
-      ],
+    isLoading: submitting,
+    error: submitError,
+    isSuccess: submitSuccess,
+    reset: resetMutation,
+  } = useMedicalRecordMutation()
 
-      treatments: [
-        {
-          description: '',
-          medicalRecordId: 0,
-        },
-      ],
-    },
-  })
-
-  const { clients, questions, pathologies } = useMedicalRecord()
-  const clientWatch = watch('client')
-  const QuestionsWatch = watch('questions')
-
-  const optionsQuestion = optionsToQuestion(questions)
-
-  const optionsClient = clientsToOptions(clients)
-  // const handleSelectChange = (event: SelectChangeEvent<number[]>) => {
-  //   const selectedQuestions = optionsQuestion.filter((el) =>
-  //     event.target.value.includes(el.id),
-  //   )
-  //   console.log('selectedQuestions', selectedQuestions)
-  //   const currentValue = event.target.name as any
-  //   console.log('currentValue', currentValue)
-  //   setSelectedQuestions(currentValue)
-  //   setValue(currentValue, selectedQuestions)
-  // }
-
-  const onChangeClient = (event: SelectChangeEvent) => {
-    const selectedClient = optionsClient.find(
-      (el) => el.id === (event.target.value as unknown as number),
-    )
-    const currentValue = event.target.name as any
-    setIsContentSelected(currentValue.length > 0)
-    setValue(currentValue, selectedClient)
-  }
-
-  const handleModal = () => {
-    setModalOpen(!modalOpen)
-  }
-
-  const onSubmit: SubmitHandler<any> = (data) => {
+  const handleSubmit = (data: any) => {
     console.log(data)
   }
 
+  const handleRetry = () => {
+    refetch()
+  }
+
+  const handleClearSuccess = () => {
+    resetMutation()
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <ErrorMessage message={error} onRetry={handleRetry} />
+      </div>
+    )
+  }
+
   return (
-    <Layout titulo="Prontuário do Prontuario">
-      <Form
-        QuestionsWatch={QuestionsWatch}
-        clientWatch={clientWatch}
-        control={control}
-        errors={errors}
-        getValues={getValues}
-        handleModal={handleModal}
-        handleSubmit={handleSubmit}
-        isContentSelected={isContentSelected}
-        modalOpen={modalOpen}
-        onChangeClient={onChangeClient}
-        onSubmit={onSubmit}
-        optionsClient={optionsClient}
-        optionsPathologies={pathologies}
-        optionsQuestion={optionsQuestion}
-        setValue={setValue}
-        setIsContentSelected={setIsContentSelected}
-        onChangePathologies={(event: SelectChangeEvent) => {
-          const selectedPathologies = pathologiesToOptions(pathologies).filter(
-            (el) => (event.target.value as unknown as string[]).includes(el.id),
-          )
-          setValue(event.target.name as any, selectedPathologies)
-        }}
-      />
-    </Layout>
+    <div className="max-w-4xl mx-auto p-6">
+      {submitSuccess && (
+        <Toast
+          item={{ message: 'Prontuário salvo com sucesso!', type: 'success' }}
+        />
+      )}
+
+      {submitError && (
+        <div className="mb-4">
+          <ErrorMessage message={submitError} onRetry={resetMutation} />
+        </div>
+      )}
+
+      <div className={`${submitting ? 'opacity-50 pointer-events-none' : ''}`}>
+        <MedicalRecordFormView
+          clients={clients}
+          pathologies={pathologies}
+          questions={questions}
+          onSubmit={handleSubmit}
+        />
+      </div>
+
+      {submitting && (
+        <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex items-center">
+            <LoadingSpinner />
+            <span className="ml-4">Salvando prontuário...</span>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

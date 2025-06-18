@@ -19,7 +19,14 @@ export function useMedicalRecord() {
       },
       {
         queryKey: ['getQuestions'],
-        queryFn: () => getQuestion(),
+        queryFn: () =>
+          getQuestion({
+            paginate: false,
+            per_page: 10,
+            current_page: 1,
+            total: 0,
+            filter: {},
+          }),
       },
       {
         queryKey: ['getPathologies'],

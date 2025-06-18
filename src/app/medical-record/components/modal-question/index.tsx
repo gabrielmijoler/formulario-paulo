@@ -14,7 +14,7 @@ import {
 type IModalQuestion = {
   control: any
   errors: any
-  optionsQuestion: {
+  optionsQuestion?: {
     id: number
     value: string
     label: string
@@ -46,7 +46,7 @@ export const ModalQuestion = ({
     setValue(
       'questions',
       selectedQuestions.map((item) => {
-        const question = optionsQuestion.find((q) => q.id === parseInt(item))
+        const question = optionsQuestion!.find((q) => q.id === parseInt(item))
         return {
           id: question?.id ?? '',
           name: question?.label ?? '',
@@ -94,7 +94,7 @@ export const ModalQuestion = ({
                   field.onChange(event)
                 }}
               >
-                {optionsQuestion.map((option) => (
+                {optionsQuestion!.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.label}
                   </MenuItem>
@@ -120,7 +120,7 @@ export const ModalQuestion = ({
                 key={item}
                 type="text"
                 value={
-                  optionsQuestion.find((value) => value.id === item)?.label
+                  optionsQuestion!.find((value) => value.id === item)?.label
                 }
                 disabled
                 className=" border p-2 rounded bg-gray-100 disabled:bg-slate-300"

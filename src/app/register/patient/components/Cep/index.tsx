@@ -1,9 +1,7 @@
 'use client'
 
 import { Controller } from 'react-hook-form'
-
 import { TextInput } from '@/components/TextInput'
-
 import { UseCep } from './use'
 import { FPBox } from '@/components/Box'
 

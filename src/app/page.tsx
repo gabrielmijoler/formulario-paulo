@@ -9,6 +9,8 @@ import { TextInput } from '@/components/TextInput'
 import { useAppData } from '@/context'
 import { useRouter } from 'next/navigation'
 import Logo from '@/components/template/Logo'
+import { Route } from '@mui/icons-material'
+import { RoutesUrls } from '@/routes'
 
 export default function Autenticacao() {
   const { Login } = useAppData()
@@ -31,12 +33,11 @@ export default function Autenticacao() {
     try {
       setLoading(true)
       await Login(username, password)
-      setTimeout(() => {}, 2000)
-      router.push('/home')
+      router.push(RoutesUrls.HOME)
       setLoading(false)
     } catch (error) {
       const errorMessage =
-        (error as any)?.response?.data?.message || 'Ocorreu um erro ao logar.'
+        (error as any)?.response?.data?.message || 'Ocorreu um erro ao tentar logar.'
       setError(errorMessage)
       setLoading(false)
     }

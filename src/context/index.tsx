@@ -12,17 +12,13 @@ interface AppContextProps {
   Login: (username: string, password: string) => Promise<string | undefined>
   changeTheme?: () => void
   Logout: () => void
-  errorMessage: {
-    message: string
-    type: string
-  }
+
   user: IAuthUser
 }
 
 const AppContext = createContext<AppContextProps>({
   Login: async () => '',
-  errorMessage: { message: '', type: '' },
-  Logout: () => {},
+  Logout: () => { },
   user: {
     id: 0,
     document: '',
@@ -42,7 +38,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter()
 
-  const [errorMessage, setErrorMessage] = useState({ message: '', type: '' })
 
   function changeTheme() {
     const newTheme = theme === '' ? 'dark' : ''
@@ -51,7 +46,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   async function setAuthToken(auth: IAuthUser) {
-    await setCookie('authToken', JSON.stringify(auth))
+    console.log('Setting auth token:', auth)
+    await setCookie('authToken', JSON.stringify(auth.token))
   }
 
   const Login = async (username: string, password: string) => {
@@ -103,10 +99,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       changeTheme,
       Login,
       Logout,
-      errorMessage,
       user,
     }),
-    [theme, changeTheme, Login, Logout, errorMessage, user],
+    [theme, changeTheme, Login, Logout, user],
   )
 
   return (

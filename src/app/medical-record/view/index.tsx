@@ -1,3 +1,4 @@
+"use client"
 // views/MedicalRecordFormView.tsx
 import React from 'react'
 import { Text } from '@/components/Text'

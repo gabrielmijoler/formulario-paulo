@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { CloseIcon } from '@/components/icons'

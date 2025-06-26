@@ -10,7 +10,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { Toast } from '@/components/Toast'
 import { Box, Button, Modal, Paper, TextField } from '@mui/material'
 import usePagination from '@/hook/use-pagination'
-import { useState } from 'react'@/utils/table-columns
+import { useState } from 'react'
 import { useDebounceState } from '@/hook/use-debounce-state'
 import { IQuestionResponse } from '@/services/questions/types'
 import { FPBox } from '@/components/Box'
@@ -28,14 +28,14 @@ export default function Patologias() {
   >(undefined, 1000)
   const [questionData, setQuestionData] = useState<IQuestionResponse[]>([])
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['questions', pagination, debounceSearch],
-    queryFn: async () => {
-      getQuestion()
-    },
-  })
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ['questions', pagination, debounceSearch],
+  //   queryFn: async () => {
+  //     getQuestion(data)
+  //   },
+  // })
 
-  console.log(data)
+  // console.log(data)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)

@@ -17,7 +17,9 @@ const setCookie = async (name: string, value: any) => {
 }
 
 const getCookie = async (name: string) => {
+  console.log('name', name)
   const resCookies = await cookies()
+  console.log('getCookie', resCookies.get(name)?.value)
   const user = resCookies.get(name)?.value
   return user ? JSON.parse(user) : null
 }

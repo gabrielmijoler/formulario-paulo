@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { Toast } from '@/components/Toast'
 import { useApiData } from '@/hook/use-api-data'
@@ -6,7 +7,7 @@ import { ErrorMessage } from '@/components/ErrorMessage'
 import { MedicalRecordFormView } from './view'
 import { useMedicalRecordMutation } from '@/hook/use-medical-record-mutation'
 
-export const MedicalRecordPage = () => {
+export default function MedicalRecordPage() {
   const { clients, pathologies, questions, loading, error, refetch } =
     useApiData()
   const {

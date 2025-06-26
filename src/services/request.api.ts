@@ -1,4 +1,4 @@
-"use server"
+'use server'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { createAxiosApiInstance } from './axios.api'

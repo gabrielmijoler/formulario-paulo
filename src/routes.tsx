@@ -1,5 +1,6 @@
 export const RoutesUrls = {
-  HOME: '/',
+  LOGIN: '/',
+  HOME: '/home',
   DASHBOARD_URL: '/dashboard',
   PROFILE_URL: '/profile',
   MEDICAL_RECORD_URL: '/medical-record',

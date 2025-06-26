@@ -16,7 +16,7 @@ interface Menu {
 export const MenuList: Menu[] = [
   {
     title: 'Home',
-    url: '/home',
+    url: RoutesUrls.HOME,
     icon: IconCasa(),
     submenu: false,
     submenuItens: [],

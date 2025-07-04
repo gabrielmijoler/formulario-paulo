@@ -1,8 +1,7 @@
 import React from 'react'
 
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  value?: any
+  name?: string
   required?: boolean
   type?: 'text' | 'email' | 'password' | 'submit' | 'date' | 'button'
   naoRenderizarQuando?: boolean
@@ -10,7 +9,7 @@ interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   width?: string
   placeholder?: string
-  name: string
+  label: string
 }
 
 export const TextInput: React.FC<AuthInputProps> = (props) => {

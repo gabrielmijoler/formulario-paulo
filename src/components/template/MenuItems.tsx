@@ -10,7 +10,6 @@ interface MenuItemsProps {
   className?: string
   onClick?: () => void
   hasSubMenu?: boolean
-  onClickIcon?: () => void
   subItems?: { title: string; url: string }[]
 }
 
@@ -34,8 +33,8 @@ export default function MenuItems(props: MenuItemsProps) {
 
   const handleIconClick = () => {
     setIsExpanded(!isExpanded)
-    if (props.onClickIcon) {
-      props.onClickIcon()
+    if (props.onClick) {
+      props.onClick()
     }
   }
 

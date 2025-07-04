@@ -9,7 +9,6 @@ import { IAuthUser } from '@/services/clients/types'
 
 interface AppContextProps {
   theme?: string
-  Login: (username: string, password: string) => Promise<string | undefined>
   changeTheme?: () => void
   Logout: () => void
 
@@ -17,7 +16,6 @@ interface AppContextProps {
 }
 
 const AppContext = createContext<AppContextProps>({
-  Login: async () => '',
   Logout: () => { },
   user: {
     id: 0,

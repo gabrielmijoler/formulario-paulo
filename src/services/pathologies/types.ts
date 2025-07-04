@@ -7,9 +7,3 @@ export type IPathologiesResponse = {
   description: string
   id: string
 }
-export type IGetPathologiesRequest = {
-  paginate: boolean
-  per_page: number
-  current_page: number
-  filter?: string
-}

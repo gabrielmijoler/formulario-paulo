@@ -23,9 +23,9 @@ export default function Menu() {
         <Logo />
       </div>
       <ul className="flex-grow">
-        {MenuList.map((menu, index) => (
+        {MenuList.map((menu) => (
           <MenuItems
-            key={index}
+            key={menu.title}
             url={menu.url}
             texto={menu.title}
             icon={menu.icon}

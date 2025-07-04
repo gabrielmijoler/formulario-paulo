@@ -7,5 +7,7 @@ export interface ModalBaseProps {
   isOpen: boolean
   closeOnOutsideClick?: boolean
   children: ReactNode
+  className?: string
   onClose?: () => void
+  bgOpacity: boolean
 }

@@ -58,10 +58,10 @@ export default function MenuItems(props: MenuItemsProps) {
       </li>
       {isExpanded && props.hasSubMenu && (
         <ul>
-          {props.subItems?.map((submenuItem, index) => (
+          {props.subItems?.map((submenuItem) => (
             <li
               onClick={() => (window.location.href = submenuItem.url)}
-              key={index}
+              key={submenuItem.title}
               className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:bg-purple-600 rounded-md"
             >
               <Link href={submenuItem.url}>{submenuItem.title}</Link>

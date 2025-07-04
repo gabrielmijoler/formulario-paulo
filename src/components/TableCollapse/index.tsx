@@ -1,157 +1,282 @@
-'use client'
-
-import React, { useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import {
   Box,
-  Collapse,
-  IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
+  Tooltip,
+  Collapse,
+  PaginationItem,
+  Pagination,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Paper,
 } from '@mui/material'
+import { ChevronLeft, ChevronRight, Sort } from '@mui/icons-material'
+import { ColumnTypeProps, RowProps, TableProps } from './types'
 
-import { IconChevrondown, IconChevronUp } from '@/components/icons'
+export function FPTable({
+  data,
+  pagination = {
+    total: 0,
+    page: 1,
+    itemsPerPage: 10,
+  },
+  columns,
+  params,
+  emptyMessage,
+  isLoading,
+  paginationItems = [10, 20, 30],
+  shouldRenderEmptyColumns = false,
+  hideHeader = false,
+  setPagination,
+  fetchItems,
+  handleChangeSort,
+  columnsCollapse,
+}: TableProps) {
+  const renderRows = (rows: RowProps[], parentColor?: string) => {
+    return rows.map((row, index): JSX.Element => {
+      const bgColor = index % 2 === 0 ? '#f5f6f6' : '#ffffff'
+      const rowColor = parentColor ?? bgColor
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number,
-) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [{ date: '2020-01-05', customerId: '11091700', amount: 3 }],
+      return (
+        <Fragment key={index}>
+          <TableRow sx={{ backgroundColor: rowColor }}>
+            {renderColumns(row, rowColor)}
+          </TableRow>
+          <TableRow>
+            <TableCell
+              style={{ paddingBottom: 0, paddingTop: 0, background: rowColor }}
+              colSpan={columns.length + 1}
+            >
+              <Collapse in={row?.isOpen} timeout="auto" unmountOnExit>
+                <Box margin={1}>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        {columnsCollapse &&
+                          columnsCollapse.map((item) => (
+                            <TableCell
+                              key={`${item.name}-${item.key}`}
+                              align={item.align && 'center'}
+                              sx={{
+                                width: item.width,
+                                minWidth: item.minWidth,
+                                maxWidth: item.maxWidth,
+                              }}
+                            >
+                              {renderTableSortLabel(item)}
+                            </TableCell>
+                          ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data
+                        ?.filter((r) => r.id === row.id)
+                        .map((collapsedRow) => (
+                          <TableRow key={collapsedRow.id}>
+                            {columnsCollapse?.map((column) => (
+                              <TableCell key={column.key}>
+                                {column.render
+                                  ? column.render(collapsedRow, collapsedRow.id)
+                                  : collapsedRow[column.key]}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </Fragment>
+      )
+    })
   }
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-]
+  const renderColumns = (row: TableProps['data'][0], rowColor: string) => {
+    return columns.map((column) => (
+      <TableCell
+        key={`${row.id}-${column.key}`}
+        sx={{
+          backgroundColor: rowColor,
+          position: column.freeze ? 'sticky' : 'static',
+          left: column.freeze ? 0 : 'auto',
+        }}
+      >
+        {column.render ? column.render(row, row.id) : row[column.key]}
+      </TableCell>
+    ))
+  }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props
-  const [open, setOpen] = useState(false)
+  const renderTableWithNoRows = () => (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {columns.map((item) => (
+              <TableCell
+                key={`${item.name}-${item.key}`}
+                align={item.align && 'center'}
+                sx={{
+                  width: item.width,
+                  minWidth: item.minWidth,
+                  maxWidth: item.maxWidth,
+                }}
+              >
+                {renderTableSortLabel(item)}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+      </Table>
+    </TableContainer>
+  )
+
+  const renderPagination = () => {
+    if (pagination.total > 0 && setPagination) {
+      const handlePageChange = (
+        event: React.ChangeEvent<unknown>,
+        page: number,
+      ) => {
+        setPagination({ ...pagination, page })
+      }
+
+      const totalPages = Math.ceil(pagination.total / pagination.itemsPerPage)
+
+      return (
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={2}
+        >
+          <Pagination
+            count={totalPages}
+            page={pagination.page}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                selected={item.page === pagination.page}
+              />
+            )}
+          />
+          <FormControl variant="outlined" size="small">
+            <InputLabel>Itens por página</InputLabel>
+            <Select
+              label="Itens por página"
+              value={pagination.itemsPerPage}
+              onChange={(e) =>
+                setPagination({
+                  ...pagination,
+                  itemsPerPage: Number(e.target.value),
+                })
+              }
+            >
+              {paginationItems?.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item} itens
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      )
+    } else {
+      return null
+    }
+  }
+
+  const renderTableSortLabel = (column: ColumnTypeProps) => {
+    if (!column.visibleOrdering) return column.name
+
+    return (
+      <Tooltip title="Sort" enterDelay={300}>
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => handleChangeSort && handleChangeSort(column.key || '')}
+        >
+          <Sort sx={{ marginRight: '0.5rem' }} />
+          {column.name}
+        </span>
+      </Tooltip>
+    )
+  }
+
+  useEffect(() => {
+    if (!fetchItems) return
+    fetchItems({
+      ...params,
+      ...pagination,
+    })
+  }, [pagination.page, pagination.itemsPerPage])
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <Box textAlign="center">
+          <span>Loading...</span>
+        </Box>
+      </Box>
+    )
+  } else if (data.length === 0) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <Box textAlign="center">
+          {shouldRenderEmptyColumns && renderTableWithNoRows()}
+          <Box mt="2rem">
+            <span>{emptyMessage || 'No data available'}</span>
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
 
   return (
     <>
-      <TableRow>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <IconChevronUp /> : <IconChevrondown />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
-        <TableCell align="right">{row.price}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <h6>History</h6>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell>{historyRow.date}</TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  )
-}
-
-export default function CollapsibleTable() {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-  return (
-    <Paper>
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
-              <TableCell align="right">Price&nbsp;($)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <Row key={row.name} row={row} />
-              ))}
-          </TableBody>
+          {!hideHeader && (
+            <TableHead>
+              <TableRow>
+                {columns.map((item) => (
+                  <TableCell
+                    key={`${item.name}-${item.key}`}
+                    align={item.align && 'center'}
+                    sx={{
+                      width: item.width,
+                      minWidth: item.minWidth,
+                      maxWidth: item.maxWidth,
+                    }}
+                  >
+                    {renderTableSortLabel(item)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+          )}
+          <TableBody>{renderRows(data)}</TableBody>
         </Table>
+
+        {renderPagination()}
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+    </>
   )
 }

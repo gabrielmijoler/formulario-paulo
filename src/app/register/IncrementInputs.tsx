@@ -1,7 +1,7 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
-import { Box } from '@/components/Box'
 import { TextAreaInput } from '@/components/TextInputArea'
+import { FPBox } from '@/components/Box'
 
 export default function IncrementInputs() {
   const { control } = useForm()
@@ -12,9 +12,9 @@ export default function IncrementInputs() {
   })
 
   return (
-    <Box className="p-1 w-full">
+    <FPBox className="p-1 w-full">
       {fields?.map((field, index) => (
-        <Box key={field.id}>
+        <FPBox key={field.id}>
           <Controller
             name={`prescription.${index}.value`}
             control={control}
@@ -23,7 +23,7 @@ export default function IncrementInputs() {
                 {...field}
                 label="relatório"
                 value={value}
-                onChangeValue={onChange}
+                onChange={onChange}
                 placeholder="digite o relatório"
               />
             )}
@@ -35,7 +35,7 @@ export default function IncrementInputs() {
           >
             Remove
           </button>
-        </Box>
+        </FPBox>
       ))}
       <button
         className="block p-2.5 rounded-lg bg-gray-500 mt-2
@@ -48,6 +48,6 @@ export default function IncrementInputs() {
       >
         ADD
       </button>
-    </Box>
+    </FPBox>
   )
 }

@@ -10,6 +10,8 @@ export function ModalBase({
   width,
   height,
   onClose,
+  className,
+  bgOpacity,
   p,
 }: ModalBaseProps) {
   const modalRef = useRef<HTMLDivElement>(null)
@@ -43,14 +45,19 @@ export function ModalBase({
 
   return isOpen
     ? createPortal(
-        <div className={`fixed z-[999] inset-0 overflow-y-auto`}>
-          <div className={`flex items-center content-center min-h-screen`}>
+        <div
+          className={`fixed z-[999] inset-0 overflow-y-auto ${bgOpacity && 'bg-black bg-opacity-50'}`}
+        >
+          <div
+            className={`flex items-center flex-col justify-center min-h-screen`}
+          >
             <div
               className={`
-                ${height ? `h-${height}` : 'h-screen'}
-                ${width ? `w-${width}` : 'w-20'}
+                ${height ? `${height}` : 'h-auto'}
+                ${width ? `${width}` : 'w-20'}
                 ${p ? `p-${p}` : 'p-0'}
-                bg-white rounded-lg shadow-lg scale-100	duration-300
+                bg-white rounded-lg
+                ${className}
               `}
               ref={modalRef}
             >

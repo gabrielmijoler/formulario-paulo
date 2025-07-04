@@ -1,6 +1,6 @@
 import { BoxProps } from './types'
 
-export function Box({
+export function FPBox({
   children,
   display,
   direction,

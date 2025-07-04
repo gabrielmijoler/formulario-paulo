@@ -1,70 +1,47 @@
-'use client'
-
 import { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useFormContext } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { IClient } from '@/services/clients/types'
+import { IViaCepResponse } from './types'
 
-import { AddressProps, FormProps, schemaForm } from './schema'
+function viaCepToClientAddress(data: IViaCepResponse) {
+  return {
+    zipCode: data.cep ?? '',
+    street: data.logradouro ?? '',
+    number: '',
+    city: data.localidade ?? '',
+    state: data.uf ?? '',
+    complement: data.complemento ?? '',
+    neighborhood: data.bairro ?? '',
+  }
+}
 
-export const UseCep = () => {
-  const {
-    formState: { errors },
-    control,
-    watch,
-    setValue,
-  } = useForm<FormProps>({
-    criteriaMode: 'all',
-    mode: 'all',
-    resolver: zodResolver(schemaForm),
+export const useCep = () => {
+  const { watch, setValue } = useFormContext<IClient>()
+  const watchZipCode = watch('clientAddress.zipCode')
 
-    defaultValues: {
-      address: {
-        zipCode: '',
-        street: '',
-        number: '',
-        city: '',
-        state: '',
-        complement: '',
-        district: '',
-      },
-    },
+  const fetchAddress = async (zipCode: string) => {
+    const { data } = await axios.get(
+      `https://viacep.com.br/ws/${zipCode}/json/`,
+    )
+    return viaCepToClientAddress(data)
+  }
+
+  const { data: cepData } = useQuery({
+    queryKey: ['cep', watchZipCode],
+    queryFn: () => fetchAddress(watchZipCode),
+    enabled: !!watchZipCode && watchZipCode.length === 8,
+    staleTime: 1000 * 60 * 5,
   })
 
-  const watchZipCode = watch('address.zipCode')
-
-  const handleSetData = useCallback(
-    (data: AddressProps) => {
-      setValue('address.city', data.address.localidade)
-      setValue('address.street', data.address.logradouro)
-      setValue('address.state', data.address.uf)
-      setValue('address.district', data.address.bairro)
-      setValue('address.complement', data.address.complemento)
-    },
-    [setValue],
-  )
-
-  const handleFetchAddress = useCallback(
-    async (zipCode: string) => {
-      const { data } = await axios.get(
-        `https://viacep.com.br/ws/${zipCode}/json/`,
-      )
-      if (!data) return alert('Erro ao receber CEP')
-      handleSetData(data)
-    },
-    [handleSetData],
-  )
-
   useEffect(() => {
-    setValue('address.zipCode', watchZipCode)
-
-    if (watchZipCode.length !== 9) return
-
-    handleFetchAddress(watchZipCode)
-  }, [handleFetchAddress, watchZipCode, setValue])
-
-  return {
-    control,
-    errors,
-  }
+    if (cepData) {
+      setValue('clientAddress.city', cepData.city)
+      setValue('clientAddress.street', cepData.street)
+      setValue('clientAddress.state', cepData.state)
+      setValue('clientAddress.neighborhood', cepData.neighborhood)
+      setValue('clientAddress.complement', cepData.complement)
+    }
+  }, [cepData, setValue])
 }

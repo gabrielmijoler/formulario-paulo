@@ -1,22 +1,22 @@
 'use client'
 
-import { Controller } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { TextInput } from '@/components/TextInput'
-import { UseCep } from './use'
 import { FPBox } from '@/components/Box'
+import { IClient } from '@/services/clients/types'
+import { useCep } from './use'
+import { ErrorMessage } from '@/components/ErrorMessage'
 
 export default function Cep() {
-  const { errors, control } = UseCep()
-  const ErrorMessage = ({ message }: { message: string }) => {
-    return message ? <p className="text-red-400">{message}</p> : null
-  }
+  const { control, formState: { errors } } = useFormContext<IClient>()
+  useCep()
 
   return (
     <FPBox width="full">
       <FPBox direction="row" gap="1">
         <FPBox width="1/2">
           <Controller
-            name="address.zipCode"
+            name="clientAddress.zipCode"
             control={control}
             render={({ field }) => (
               <TextInput
@@ -24,17 +24,17 @@ export default function Cep() {
                 value={field.value}
                 onChange={field.onChange}
                 placeholder="CEP"
-                maxLength={9}
+                maxLength={8}
               />
             )}
           />
-          {errors.address?.zipCode?.message && (
-            <ErrorMessage message={errors.address?.zipCode?.message} />
+          {errors.clientAddress?.zipCode?.message && (
+            <ErrorMessage message={errors.clientAddress?.zipCode.message} />
           )}
         </FPBox>
         <FPBox width="1/2">
           <Controller
-            name="address.number"
+            name="clientAddress.number"
             control={control}
             render={({ field }) => (
               <TextInput
@@ -45,14 +45,14 @@ export default function Cep() {
               />
             )}
           />
-          {errors.address?.number?.message && (
-            <ErrorMessage message={errors.address?.number?.message} />
+          {errors.clientAddress?.number?.message && (
+            <ErrorMessage message={errors.clientAddress?.number?.message} />
           )}
         </FPBox>
       </FPBox>
       <FPBox>
         <Controller
-          name="address.street"
+          name="clientAddress.street"
           control={control}
           render={({ field }) => (
             <TextInput
@@ -64,30 +64,30 @@ export default function Cep() {
           )}
         />
 
-        {errors.address?.street?.message && (
-          <ErrorMessage message={errors.address?.street?.message} />
+        {errors.clientAddress?.street?.message && (
+          <ErrorMessage message={errors.clientAddress?.street?.message} />
         )}
       </FPBox>
       <FPBox>
         <Controller
-          name="address.district"
+          name="clientAddress.neighborhood"
           control={control}
           render={({ field }) => (
             <TextInput
               {...field}
               value={field.value}
               onChange={field.onChange}
-              placeholder="Estado"
+              placeholder="Bairro"
             />
           )}
         />
-        {errors.address?.district?.message && (
-          <ErrorMessage message={errors.address?.district?.message} />
+        {errors.clientAddress?.neighborhood?.message && (
+          <ErrorMessage message={errors.clientAddress?.neighborhood?.message} />
         )}
       </FPBox>
       <FPBox>
         <Controller
-          name="address.state"
+          name="clientAddress.state"
           control={control}
           render={({ field }) => (
             <TextInput
@@ -99,12 +99,12 @@ export default function Cep() {
             />
           )}
         />
-        {errors.address?.state?.message && (
-          <ErrorMessage message={errors.address?.state?.message} />
+        {errors.clientAddress?.state?.message && (
+          <ErrorMessage message={errors.clientAddress?.state?.message} />
         )}
       </FPBox>
       <Controller
-        name="address.city"
+        name="clientAddress.city"
         control={control}
         render={({ field }) => (
           <TextInput
@@ -116,12 +116,12 @@ export default function Cep() {
           />
         )}
       />
-      {errors.address?.city?.message && (
-        <ErrorMessage message={errors.address?.city?.message} />
+      {errors.clientAddress?.city?.message && (
+        <ErrorMessage message={errors.clientAddress?.city?.message} />
       )}
       <FPBox>
         <Controller
-          name="address.complement"
+          name="clientAddress.complement"
           control={control}
           render={({ field }) => (
             <TextInput
@@ -132,23 +132,11 @@ export default function Cep() {
             />
           )}
         />
-        {errors.address?.complement?.message && (
-          <ErrorMessage message={errors.address?.complement?.message} />
+        {errors.clientAddress?.complement?.message && (
+          <ErrorMessage message={errors.clientAddress?.complement?.message} />
         )}
       </FPBox>
     </FPBox>
   )
 }
 
-// {
-//     criteriaMode: 'all',
-//     defaultValues: {
-//       name: '',
-//       address: '',
-//       email: '',
-//       cpf: '',
-//       rg: '',
-//       dateBourn: '',
-//       obsAboutPatient: '',
-//     },
-//   }

@@ -46,7 +46,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   async function setAuthToken(auth: IAuthUser) {
-    console.log('Setting auth token:', auth)
     await setCookie('authToken', JSON.stringify(auth.token))
   }
 

@@ -8,6 +8,7 @@ import { FPBox } from '@/components/Box'
 import Link from 'next/link'
 import { IPathologiesResponse } from '@/services/pathologies/types'
 import { IQuestionResponse } from '@/services/questions/types'
+import { RoutesUrls } from '@/routes'
 
 export const columnsPathologies =
   (): ColumnTypeProps<IPathologiesResponse>[] => [
@@ -32,7 +33,7 @@ export const columnsPathologies =
 
         return (
           <FPBox display="flex" direction="row">
-            <Link href={`/cadastro/patologias/editar/${row.id}`} passHref>
+            <Link href={`${RoutesUrls.PATHOLIES_URL}/edit/${row.id}`} passHref>
               <IconButton size="small">{<EditIcon />}</IconButton>
             </Link>
           </FPBox>
@@ -59,7 +60,7 @@ export const columnsQuestions =
 
         return (
           <FPBox display="flex" direction="row">
-            <Link href={`/cadastro/pergunta/editar/${row.id}`} passHref>
+            <Link href={`${RoutesUrls.QUESTION_URL}/edit/${row.id}`} passHref>
               <IconButton size="small">{<EditIcon />}</IconButton>
             </Link>
           </FPBox>
@@ -96,7 +97,7 @@ export const getColumns = (
     },
     {
       name: 'RG',
-      key: 'IeRG',
+      key: 'ieRg',
     },
     {
       name: <div className="text-center">Editar</div>,
@@ -107,7 +108,7 @@ export const getColumns = (
 
         return (
           <FPBox display="flex" direction="row">
-            <Link href={`/cadastro/paciente/editar/${row.id}`} passHref>
+            <Link href={`${RoutesUrls.PATIENT_URL}/edit/${row.id}`} passHref>
               <IconButton size="small">{<EditIcon />}</IconButton>
             </Link>
           </FPBox>
@@ -122,8 +123,8 @@ export const subColumns: ColumnTypeProps<IClient>[] = [
     key: 'document',
   },
   {
-    name: 'Endereço',
-    key: 'address',
+    name: 'Cidade',
+    key: 'client.clientAddress.city',
   },
   {
     name: 'Telefone',

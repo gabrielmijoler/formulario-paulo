@@ -9,21 +9,22 @@ import { ActionButton } from '../components/action-button'
 import { ModalQuestion } from '../components/modal-question'
 import { IClient } from '@/services/clients/types'
 import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IQuestion } from '@/services/questions/types'
+import { IQuestion, IQuestionResponse } from '@/services/questions/types'
+import { GetApp } from '@mui/icons-material'
 
 interface MedicalRecordFormViewProps {
   clients: IClient[]
   pathologies: IPathologiesResponse[]
-  questions: IQuestion[]
+  questions: IQuestionResponse[]
   onSubmit: (data: any) => void
 }
 
-export const MedicalRecordFormView: React.FC<MedicalRecordFormViewProps> = ({
+export const MedicalRecordFormView = ({
   clients,
   pathologies,
   questions,
   onSubmit,
-}) => {
+}: MedicalRecordFormViewProps) => {
   const {
     control,
     errors,
@@ -31,12 +32,14 @@ export const MedicalRecordFormView: React.FC<MedicalRecordFormViewProps> = ({
     modalOpen,
     clientWatch,
     questionsWatch,
+    questionData,
     handleSubmit,
     setValue,
     getValues,
     handleClientChange,
     handlePathologyChange,
     handleModalToggle,
+    handleSave,
   } = useMedicalRecordController({
     clients,
     pathologies,
@@ -74,13 +77,21 @@ export const MedicalRecordFormView: React.FC<MedicalRecordFormViewProps> = ({
         control={control}
         errors={errors}
         options={pathologies}
-        value={getValues('pathologies').map((p) => p.id) ?? []}
+        value={
+          Array.isArray(getValues('pathologies'))
+            ? getValues('pathologies').map((p) => p.id)
+            : []
+        }
         onChange={handlePathologyChange}
         getOptionLabel={(pathology) => pathology.code}
         getOptionSecondary={(pathology) => pathology.description}
         getOptionValue={(pathology) => pathology.id}
       />
-
+      {questionData.map((q) => (
+        <div key={q.id}>
+          <strong>{q.name}</strong>: {q.response}
+        </div>
+      ))}
       <ActionButton
         variant="secondary"
         onClick={handleModalToggle}
@@ -88,17 +99,20 @@ export const MedicalRecordFormView: React.FC<MedicalRecordFormViewProps> = ({
       >
         Adicionar Perguntas
       </ActionButton>
-
       <ModalQuestion
         control={control}
         errors={errors}
-        // optionsQuestion={questions}
-        QuestionsWatch={questionsWatch}
+        optionsQuestion={questions.map((q) => ({
+          id: q.id,
+          value: q.name ?? q.name ?? String(q.id),
+        }))}
+        questionsWatch={questionsWatch}
         setValue={setValue}
         modalOpen={modalOpen}
         handleModal={handleModalToggle}
+        onSave={handleSave}
+        questionData={questionData}
       />
-
       <div className="flex gap-4 pt-4">
         <ActionButton type="submit" variant="primary" className="flex-1">
           Cadastrar Prontuário

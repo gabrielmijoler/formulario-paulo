@@ -64,7 +64,8 @@ export function Form({
   const fields = [
     ['client.name', clientWatch.name, 'Nome'],
     ['client.document', clientWatch.document, 'Documento'],
-    ['client.address', clientWatch.address, 'Endereço'],
+    ['client.clientAddress.city ', clientWatch.clientAddress.city, 'Cidade'],
+    ['client.clientAddress.street ', clientWatch.clientAddress.street, 'Endereço'],
     ['client.ieRg', clientWatch.ieRg, 'IE/RG'],
     ['client.email', clientWatch.email, 'E-mail'],
     ['client.telephone', clientWatch.telephone, 'Telefone'],
@@ -150,7 +151,7 @@ export function Form({
         control={control}
         errors={errors}
         optionsQuestion={optionsQuestion}
-        QuestionsWatch={QuestionsWatch}
+        questionsWatch={QuestionsWatch}
         setValue={setValue}
         modalOpen={modalOpen}
         handleModal={handleModal}

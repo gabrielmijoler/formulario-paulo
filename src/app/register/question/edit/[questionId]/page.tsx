@@ -9,10 +9,10 @@ import { getQuestionsById, putQuestion } from '@/services/questions'
 import { questionSchema } from '../../schema'
 
 interface ParamsID {
-  params: { questionId: string }
+  params: Promise<{ questionId: string }>
 }
 export default function PatientEdit({ params }: ParamsID) {
-  const { questionId } = params
+  const { questionId } = use(params)
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({

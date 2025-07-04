@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 import { IClient } from '@/services/clients/types'
 import { maskCPF, maskRG } from '@/helpers/maskCep'
+import Cep from '../Cep'
 
 interface PacienteModalProps {
   isOpen: boolean
@@ -139,29 +140,7 @@ export const PacienteModal = ({
                   </Text>
                 )}
               </div>
-
-              <div>
-                <Controller
-                  name="address"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <TextInput
-                      {...field}
-                      width="full"
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Digite o endereço"
-                      label="Endereço"
-                    />
-                  )}
-                />
-                {methods.formState.errors.address && (
-                  <Text color="red-500" className="text-sm mt-1">
-                    {methods.formState.errors.address.message}
-                  </Text>
-                )}
-              </div>
-
+              <Cep />
               <div>
                 <Controller
                   name="telephone"

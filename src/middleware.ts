@@ -4,7 +4,6 @@ import { getCookie } from './app/actions'
 export async function middleware(request: NextRequest) {
   const auth = await getCookie('authToken')
   const protectedRoutes = config.matcher
-  console.log('Protected Routes:', auth)
   if (protectedRoutes.includes(request.nextUrl.pathname) && !auth?.token) {
     return NextResponse.redirect(new URL('/', request.url))
   }

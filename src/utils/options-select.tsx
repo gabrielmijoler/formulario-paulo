@@ -7,7 +7,7 @@ export function clientsToOptions(clients: IClient[]) {
     id: item.id,
     name: item.name,
     document: item.document,
-    address: item.address,
+    address: item.clientAddress,
     ieRg: item.ieRg,
     email: item.email,
     telephone: item.telephone,

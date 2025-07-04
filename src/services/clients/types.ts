@@ -18,12 +18,20 @@ export type IAuthUser = {
   telephone: string
   token: string
 }
-
-export type IClient = {
+export interface IClientAddress {
+  zipCode: string
+  street: string
+  number: string
+  complement: string
+  neighborhood: string
+  city: string
+  state: string
+}
+export interface IClient {
   id: number
   name: string
   document: string
-  address: string
+  clientAddress: IClientAddress
   ieRg: string
   email: string
   telephone: string
@@ -41,6 +49,7 @@ export type IGetPagination = {
   current_page: number
   total: number
   filter: FilterParams
+  relations?: string
 }
 
 export type Pagination = {

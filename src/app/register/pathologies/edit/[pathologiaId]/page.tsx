@@ -10,10 +10,10 @@ import { patholiaSchema } from '../../schema'
 import { getPathologiesByID, putPathologies } from '@/services/pathologies'
 
 interface ParamsID {
-  params: { pathologiaId: string }
+  params: Promise<{ pathologiaId: string }>
 }
 export default function PatientEdit({ params }: ParamsID) {
-  const { pathologiaId } = params
+  const { pathologiaId } = use(params)
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({

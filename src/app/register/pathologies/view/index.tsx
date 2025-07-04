@@ -49,9 +49,6 @@ export const PatologiasView = () => {
             <h1 className="text-2xl font-bold text-gray-800">
               Gerenciamento de Patologias
             </h1>
-            <p className="text-sm text-gray-600">
-              Cadastre e gerencie patologias do sistema
-            </p>
           </div>
         </div>
         <Button
@@ -130,7 +127,7 @@ export const PatologiasView = () => {
             <div className="text-2xl font-bold text-purple-600">
               {Math.ceil(
                 (data.pagination?.total || 0) /
-                  (data.pagination?.per_page || 1),
+                (data.pagination?.per_page || 1),
               )}
             </div>
             <div className="text-sm text-gray-600">Total de Páginas</div>

@@ -57,7 +57,7 @@ const QuestionModal: React.FC<{
             fontSize="xl"
             className="font-semibold"
           >
-            Cadastro de Paciente
+            Gerenciamento de pergunta
           </Text>
 
           <Controller

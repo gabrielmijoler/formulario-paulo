@@ -35,12 +35,12 @@ export async function getClient(
 }
 export async function getClientByID(id: string): Promise<IClient> {
   return requestApi({
-    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}clients/${id}`,
+    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/clients/${id}`,
     method: 'GET',
   })
 }
 
-export async function postClient(params: IClient): Promise<IAuthUser> {
+export async function postClient(params: IClient): Promise<IClient> {
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/clients`,
     method: 'POST',

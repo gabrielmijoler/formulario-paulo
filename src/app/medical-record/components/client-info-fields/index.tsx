@@ -11,11 +11,12 @@ export const ClientInfoFields: React.FC<ClientInfoFieldsProps> = ({
   isVisible,
 }) => {
   if (!isVisible) return null
-
+  console.log(client)
   const fields = [
     { key: 'name', value: client.name, label: 'Nome' },
     { key: 'document', value: client.document, label: 'Documento' },
-    { key: 'address', value: client.address, label: 'Endereço' },
+    { key: 'clientAddress_city', value: client.clientAddress?.city, label: 'Cidade' },
+    { key: 'clientAddress_street', value: client.clientAddress?.street, label: 'Endereço' },
     { key: 'ieRg', value: client.ieRg, label: 'IE/RG' },
     { key: 'email', value: client.email, label: 'E-mail' },
     { key: 'telephone', value: client.telephone, label: 'Telefone' },

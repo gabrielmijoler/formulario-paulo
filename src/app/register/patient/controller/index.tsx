@@ -8,12 +8,8 @@ import { IClient } from '@/services/clients/types'
 import { getClient, postClient } from '@/services/clients'
 import { useDebounceState } from '@/hook/use-debounce-state'
 import { clientSchema } from '../schema'
+import { PaginationState } from '@/app/types'
 
-interface PaginationState {
-  page: number
-  itemsPerPage: number
-  total: number
-}
 
 export const usePacienteController = () => {
   const queryClient = useQueryClient()
@@ -36,7 +32,15 @@ export const usePacienteController = () => {
       id: 0,
       name: '',
       email: '',
-      address: '',
+      clientAddress: {
+        zipCode: '',
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        city: '',
+        state: '',
+      },
       document: '',
       ieRg: '',
       telephone: '',
@@ -54,7 +58,6 @@ export const usePacienteController = () => {
       console.error('Erro ao criar paciente:', error)
     },
   })
-
   const { data, error, isLoading } = useQuery({
     queryKey: ['clients', pagination, debounceSearch],
     queryFn: async () => {
@@ -64,6 +67,7 @@ export const usePacienteController = () => {
         per_page: pagination.itemsPerPage,
         total: pagination.total,
         filter: { name: debounceSearch ?? '' },
+        relations: 'clientAddress'
       })
 
       const updatedData = response.data.map((client: IClient) => ({
@@ -85,20 +89,27 @@ export const usePacienteController = () => {
     methods.reset()
   }, [methods])
 
-  const handleSubmit: SubmitHandler<IClient> = useCallback(
+  const handleSubmit: SubmitHandler<IClient> =
     (data) => {
       createClient({
-        id: data.id,
+        id: 0,
         name: data.name,
         email: data.email,
-        address: data.address,
+        clientAddress: {
+          zipCode: data.clientAddress.zipCode,
+          street: data.clientAddress.street,
+          number: data.clientAddress.number,
+          complement: data.clientAddress.complement,
+          neighborhood: data.clientAddress.neighborhood,
+          city: data.clientAddress.city,
+          state: data.clientAddress.state,
+        },
         document: data.document,
         ieRg: data.ieRg,
         telephone: data.telephone,
       })
-    },
-    [createClient],
-  )
+    }
+
 
   const handleOpenRow = useCallback(
     (rowData: IClient) => {
@@ -131,14 +142,11 @@ export const usePacienteController = () => {
     isModalOpen,
     pagination,
     search,
-
     methods,
-
     data,
     error,
     isLoading,
     isCreateSuccess,
-
     handleOpenModal,
     handleCloseModal,
     handleSubmit,

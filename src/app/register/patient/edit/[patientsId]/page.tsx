@@ -1,21 +1,45 @@
 'use client'
 
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { getClientByID, putClient } from '@/services/clients'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useFormContext } from 'react-hook-form'
 import { clientSchema } from '../../schema'
 import { TextInput } from '@/components/TextInput'
+import { IClient } from '@/services/clients/types'
 
 interface ParamsID {
-  params: { patientsId: string }
+  params: Promise<{ patientsId: string }>
 }
 
 export default function PatientEdit({ params }: ParamsID) {
-  const { patientsId } = params
+  const { patientsId } = React.use(params)
+
   const queryClient = useQueryClient()
 
+  const methods = useForm({
+    criteriaMode: 'all',
+    resolver: zodResolver(clientSchema),
+    defaultValues: {
+      client: {
+        name: '',
+        email: '',
+        clientAddress: {
+          zipCode: '',
+          street: '',
+          number: '',
+          complement: '',
+          neighborhood: '',
+          city: '',
+          state: '',
+        },
+        document: '',
+        ieRg: '',
+        telephone: '',
+      },
+    },
+  })
   const { data, isLoading } = useQuery({
     queryKey: ['patients', patientsId],
     queryFn: async () => getClientByID(patientsId),
@@ -28,22 +52,6 @@ export default function PatientEdit({ params }: ParamsID) {
     },
   })
 
-  const methods = useForm({
-    criteriaMode: 'all',
-    resolver: zodResolver(clientSchema),
-    defaultValues: {
-      client: {
-        id: 0,
-        name: '',
-        email: '',
-        address: '',
-        document: '',
-        ieRg: '',
-        telephone: '',
-      },
-    },
-  })
-
   useEffect(() => {
     if (data) {
       methods.reset({ client: data })
@@ -51,7 +59,6 @@ export default function PatientEdit({ params }: ParamsID) {
   }, [data, methods])
 
   const onSubmit = (formData: any) => {
-    console.log(formData)
     mutate({ id: patientsId, ...formData })
   }
 
@@ -59,53 +66,72 @@ export default function PatientEdit({ params }: ParamsID) {
     return <h2>Loading...</h2>
   }
   const clientWatch = methods.watch('client')
-  const formFields: Array<{
-    name:
-      | 'client.name'
-      | 'client.document'
-      | 'client.address'
-      | 'client.ieRg'
-      | 'client.email'
-      | 'client.telephone'
-    label: string
-    placeholder: string
-    value: string
-  }> = [
+  const formFields = [
     {
-      name: 'client.name' as const,
+      name: 'name',
       label: 'Nome',
       placeholder: 'Nome',
-      value: clientWatch.name,
+      value: clientWatch.name ?? '',
     },
     {
-      name: 'client.document' as const,
+      name: 'document',
       label: 'Documento',
       placeholder: 'Documento',
-      value: clientWatch.document,
+      value: clientWatch.document ?? '',
     },
     {
-      name: 'client.address' as const,
-      label: 'Endereço',
-      placeholder: 'Endereço',
-      value: clientWatch.address,
+      name: 'clientAddress.street',
+      label: 'Rua',
+      placeholder: 'Rua',
+      value: clientWatch.clientAddress?.street ?? '',
     },
     {
-      name: 'client.ieRg' as const,
+      name: 'clientAddress.number',
+      label: 'Número',
+      placeholder: 'Número',
+      value: clientWatch.clientAddress?.number ?? '',
+    },
+    {
+      name: 'clientAddress.city',
+      label: 'Cidade',
+      placeholder: 'Cidade',
+      value: clientWatch.clientAddress?.city ?? '',
+    },
+    {
+      name: 'clientAddress.state',
+      label: 'Estado',
+      placeholder: 'Estado',
+      value: clientWatch.clientAddress?.state ?? '',
+    },
+    {
+      name: 'clientAddress.complement',
+      label: 'Complemento',
+      placeholder: 'Complemento',
+      value: clientWatch.clientAddress?.complement ?? '',
+    },
+    {
+      name: 'clientAddress.neighborhood',
+      label: 'Bairro',
+      placeholder: 'Bairro',
+      value: clientWatch.clientAddress?.neighborhood ?? '',
+    },
+    {
+      name: 'ieRg',
       label: 'RG',
       placeholder: 'IE/RG',
-      value: clientWatch.ieRg,
+      value: clientWatch.ieRg ?? '',
     },
     {
-      name: 'client.email' as const,
+      name: 'email',
       label: 'Email',
       placeholder: 'E-mail',
-      value: clientWatch.email,
+      value: clientWatch.email ?? '',
     },
     {
-      name: 'client.telephone' as const,
+      name: 'telephone',
       label: 'Telefone',
       placeholder: 'Telefone',
-      value: clientWatch.telephone,
+      value: clientWatch.telephone ?? '',
     },
   ] as const
 
@@ -113,7 +139,6 @@ export default function PatientEdit({ params }: ParamsID) {
     <>
       {data && (
         <form onSubmit={methods.handleSubmit(onSubmit)} className="p-3">
-          <h1>{patientsId}</h1>
           <h2 className="text-blue-600">{data.name}</h2>
           <div>
             <div className="grid grid-cols-2 gap-4 text-black mt-4">
@@ -124,7 +149,7 @@ export default function PatientEdit({ params }: ParamsID) {
                   type="text"
                   value={field.value}
                   onChange={(e) =>
-                    methods.setValue(`${field.name}`, e.target.value)
+                    methods.setValue(`client.${field.name}`, e.target.value)
                   }
                   placeholder={field.placeholder}
                   label={field.label}

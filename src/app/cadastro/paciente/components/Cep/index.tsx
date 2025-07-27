@@ -24,7 +24,6 @@ export default function Cep() {
               <TextInput
                 {...field}
                 value={field.value}
-                onChangeValue={field.onChange}
                 placeholder="CEP"
                 maxLength={9}
               />
@@ -39,12 +38,7 @@ export default function Cep() {
             name="address.number"
             control={control}
             render={({ field }) => (
-              <TextInput
-                {...field}
-                value={field.value}
-                onChangeValue={field.onChange}
-                placeholder="Número"
-              />
+              <TextInput {...field} value={field.value} placeholder="Número" />
             )}
           />
           {errors.address?.number?.message && (
@@ -57,12 +51,7 @@ export default function Cep() {
           name="address.street"
           control={control}
           render={({ field }) => (
-            <TextInput
-              {...field}
-              value={field.value}
-              onChangeValue={field.onChange}
-              placeholder="Rua"
-            />
+            <TextInput {...field} value={field.value} placeholder="Rua" />
           )}
         />
 
@@ -75,12 +64,7 @@ export default function Cep() {
           name="address.district"
           control={control}
           render={({ field }) => (
-            <TextInput
-              {...field}
-              value={field.value}
-              onChangeValue={field.onChange}
-              placeholder="Estado"
-            />
+            <TextInput {...field} value={field.value} placeholder="Estado" />
           )}
         />
         {errors.address?.district?.message && (
@@ -96,7 +80,6 @@ export default function Cep() {
               {...field}
               width="50"
               value={field.value}
-              onChangeValue={field.onChange}
               placeholder="UF"
             />
           )}
@@ -113,7 +96,6 @@ export default function Cep() {
             {...field}
             width="50"
             value={field.value}
-            onChangeValue={field.onChange}
             placeholder="Cidade"
           />
         )}
@@ -129,7 +111,6 @@ export default function Cep() {
             <TextInput
               {...field}
               value={field.value}
-              onChangeValue={field.onChange}
               placeholder="Complemento"
             />
           )}

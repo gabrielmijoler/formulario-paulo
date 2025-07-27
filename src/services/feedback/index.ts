@@ -1,11 +1,11 @@
-"use server"
+'use server'
 
 import { requestApi } from '../request.api'
 import { IFeedback } from './type'
 
 export async function postUser(params: IFeedback): Promise<IFeedback> {
   return requestApi({
-    url: `https://clinical-backend-ae40133038af.herokuapp.com/v1/feedback`,
+    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/feedback`,
     method: 'post',
     data: params,
   })

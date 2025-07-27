@@ -4,7 +4,7 @@ interface AuthInputProps
   value?: any
   required?: boolean
   naoRenderizarQuando?: boolean
-  onChangeValue?: (newValue: any) => void
+  onChange?: (newValue: any) => void
   height?: string
   width?: string
   placeholder?: string
@@ -16,7 +16,7 @@ export const TextAreaInput = (props: AuthInputProps) => {
       <label>{props.label}</label>
       <textarea
         value={props.value}
-        onChange={(e) => props.onChangeValue?.(e.target.value)}
+        onChange={(e) => props.onChange?.(e.target.value)}
         required={props.required}
         placeholder={props.placeholder}
         className={`

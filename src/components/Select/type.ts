@@ -53,5 +53,5 @@ export interface SelectInputProps<T = any>
    */
   multiValueRemoveVariant?: MultiValueRemoveVariants
   width?: string
-  onChange: (newValue: T) => void
+  onChange?: (newValue: T) => void
 }

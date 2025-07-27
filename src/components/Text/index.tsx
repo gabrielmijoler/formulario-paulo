@@ -12,7 +12,7 @@ export function Text({ variant = 'span', ...props }: TextProps) {
         ${props.lineHeight ?? `leading-${props.lineHeight}`}
         ${props.letterSpacing ? `tracking-${props.letterSpacing}` : 'tracking-normal'}
         ${props.color ? `text-${props.color}` : 'text-inherit'}
-        ${props.textAlign ? `text-${props.textAlign}` : 'text-left'}
+        ${props.textAlign ? `text-${props.textAlign}` : 'text-left'}0
         ${props.textDecoration ? `${props.textDecoration}` : 'no-underline'}
         ${props.textTransform ? `${props.textTransform}` : 'normal-case'}
         ${props.cursor ? `cursor-${props.cursor}` : 'cursor-auto'}

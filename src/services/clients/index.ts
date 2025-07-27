@@ -11,10 +11,12 @@ import { IAuthUser, IClient, IGetParams, ILogin } from './types'
 //     },
 //   )
 // }
+// const BASE_URL = https://clinical-backend-ae40133038af.herokuapp.com
+const BASE_URL = 'http://localhost:3001'
 
 export async function postLogin(params: ILogin): Promise<any> {
   return requestApi({
-    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/auth/login',
+    url: `${BASE_URL}/v1/auth/login`,
     method: 'POST',
     data: params,
   })
@@ -22,21 +24,21 @@ export async function postLogin(params: ILogin): Promise<any> {
 
 export async function getClient(params: IGetParams): Promise<IClient[]> {
   return requestApi({
-    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients',
+    url: `${BASE_URL}/v1/clients`,
     method: 'GET',
     params,
   })
 }
 export async function getClientByID(id: string): Promise<IAuthUser> {
   return requestApi({
-    url: `https://clinical-backend-ae40133038af.herokuapp.com/v1/clients/${id}`,
+    url: `${BASE_URL}/v1/clients/${id}`,
     method: 'GET',
   })
 }
 
 export async function postClient(params: IClient): Promise<IAuthUser> {
   return requestApi({
-    url: 'https://clinical-backend-ae40133038af.herokuapp.com/v1/clients',
+    url: `${BASE_URL}/v1/clients`,
     method: 'GET',
     data: params,
   })

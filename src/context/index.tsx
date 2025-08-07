@@ -1,8 +1,7 @@
 'use client'
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
 import { getUserByName, postLogin } from '@/services/clients'
 import { getCookie, removeCookie, setCookie } from '@/app/actions'
 import { IAuthUser } from '@/services/clients/types'
@@ -11,12 +10,27 @@ interface AppContextProps {
   theme?: string
   changeTheme?: () => void
   Logout: () => void
-
+  Login: (username: string, password: string) => Promise<string>
+  fetchAndSetUser: (username: string) => Promise<IAuthUser>
+  setUser: (user: IAuthUser) => void
   user: IAuthUser
 }
 
 const AppContext = createContext<AppContextProps>({
   Logout: () => { },
+  Login: async () => '',
+  fetchAndSetUser: async () => ({
+    id: 0,
+    document: '',
+    email: '',
+    name: '',
+    password: '',
+    status: '',
+    telephone: '',
+    token: '',
+    type: '',
+  }),
+  setUser: () => { },
   user: {
     id: 0,
     document: '',
@@ -32,10 +46,19 @@ const AppContext = createContext<AppContextProps>({
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState('dark')
-  const [user, setUser] = useState<IAuthUser>({} as IAuthUser)
+  const [user, setUser] = useState<IAuthUser>({
+    id: 0,
+    document: '',
+    email: '',
+    name: '',
+    password: '',
+    status: '',
+    telephone: '',
+    token: '',
+    type: '',
+  })
 
   const router = useRouter()
-
 
   function changeTheme() {
     const newTheme = theme === '' ? 'dark' : ''
@@ -49,11 +72,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const Login = async (username: string, password: string) => {
     try {
-      const response = await postLogin({
-        username,
-        password,
-      })
-
+      const response = await postLogin({ username, password })
       setAuthToken(response)
       return response.name
     } catch (error: any) {
@@ -71,10 +90,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     })
   }
 
-  const fetchAndSetUser = async (user: string) => {
+  const fetchAndSetUser = async (username: string) => {
     try {
-      const response = await getUserByName(user)
-
+      const response = await getUserByName(username)
       setUser(response)
       return response
     } catch (error: any) {
@@ -82,23 +100,17 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  useEffect(() => {
-    const saveTheme = localStorage.getItem('theme')
-    if (saveTheme) {
-      setTheme(saveTheme)
-    }
-    fetchAndSetUser(user.name)
-  }, [user.name])
-
   const contextValue = useMemo(
     () => ({
       theme,
       changeTheme,
       Login,
       Logout,
+      fetchAndSetUser,
+      setUser,
       user,
     }),
-    [theme, changeTheme, Login, Logout, user],
+    [theme, user]
   )
 
   return (

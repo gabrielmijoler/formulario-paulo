@@ -1,7 +1,6 @@
 import { Button, Paper, TextField } from '@mui/material'
 import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material'
 import Layout from '@/components/template/Layout'
-import { Toast } from '@/components/Toast'
 import { FPTable } from '@/components/TableCollapse'
 import { ErrorComponent } from '@/components/Error'
 import { parsePatients } from '@/app/home/utils'
@@ -36,11 +35,8 @@ export const PacienteView = () => {
 
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
-      {isCreateSuccess && (
-        <Toast
-          item={{ message: 'Paciente criado com sucesso!', type: 'success' }}
-        />
-      )}
+      {isCreateSuccess && null /* TODO: Implement success message */}
+
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">

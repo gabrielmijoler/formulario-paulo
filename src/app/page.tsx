@@ -36,8 +36,7 @@ export default function Login() {
           placeholder="Email de usuário"
           type="email"
           name="username"
-          required
-        />
+          required label={''} />
         <TextInput
           placeholder="Senha"
           type="password"

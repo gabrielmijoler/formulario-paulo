@@ -6,7 +6,6 @@ import { FPBox } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { Toast } from '@/components/Toast'
 import { parseQuestions } from '@/app/home/utils'
 import { FPTable } from '@/components/TableCollapse'
 import {
@@ -179,14 +178,7 @@ export default function QuestionView() {
 
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
-      {isSuccess && (
-        <Toast
-          item={{
-            message: 'Paciente cadastrado com sucesso!',
-            type: 'success',
-          }}
-        />
-      )}
+      {isSuccess && /*toast*/ null}
 
       <ActionBar onNewPatient={handleOpen} isLoading={isLoading} />
 

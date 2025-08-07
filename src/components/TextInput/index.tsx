@@ -9,7 +9,7 @@ interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   width?: string
   placeholder?: string
-  label: string
+  label?: string
 }
 
 export const TextInput: React.FC<AuthInputProps> = (props) => {

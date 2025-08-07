@@ -4,7 +4,7 @@ import { requestApi } from '../request.api'
 import { IQuestion, IQuestionResponse } from './types'
 
 export async function postQuestion(
-  params: IQuestionResponse[],
+  params: IQuestionResponse,
 ): Promise<IQuestionResponse> {
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/questions`,

@@ -26,15 +26,15 @@ export const MenuList: Menu[] = [
     icon: DashBoard(),
     submenu: true,
     submenuItens: [
-      { title: 'Paciente', url: RoutesUrls.PATHOLIES_URL },
-      { title: 'Perguntas', url: RoutesUrls.PATIENT_URL },
-      { title: 'Patologias', url: RoutesUrls.QUESTION_URL },
+      { title: 'Paciente', url: RoutesUrls.PATIENT_URL },
+      { title: 'Perguntas', url: RoutesUrls.QUESTION_URL },
+      { title: 'Patologias', url: RoutesUrls.PATHOLIES_URL },
     ],
   },
   {
     title: 'Prontuário',
     icon: DashBoard(),
     submenu: true,
-    submenuItens: [{ title: 'Perguntas', url: RoutesUrls.MEDICAL_RECORD_URL }],
+    submenuItens: [{ title: 'Prontuário', url: RoutesUrls.MEDICAL_RECORD_URL }],
   },
 ]

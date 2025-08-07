@@ -5,7 +5,6 @@ import {
   LocalHospital as MedicalIcon,
 } from '@mui/icons-material'
 import Layout from '@/components/template/Layout'
-import { Toast } from '@/components/Toast'
 import { FPTable } from '@/components/TableCollapse'
 import { ErrorComponent } from '@/components/Error'
 import { parsePatholias } from '@/app/home/utils'
@@ -37,11 +36,7 @@ export const PatologiasView = () => {
 
   return (
     <Layout titulo="Cadastro de Patologias">
-      {isCreateSuccess && (
-        <Toast
-          item={{ message: 'Patologia criada com sucesso!', type: 'success' }}
-        />
-      )}
+      {isCreateSuccess && null /* TODO: Implement success message */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-3">
           <MedicalIcon className="text-blue-600 text-3xl" />

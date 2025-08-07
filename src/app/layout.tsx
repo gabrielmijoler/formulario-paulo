@@ -1,5 +1,5 @@
-import { ReactQueryProvider } from '@/providers/react-query-providers'
 import './globals.css'
+import { ReactQueryProvider } from '@/providers/react-query-providers'
 import { AppProvider } from '@/context'
 import { Metadata } from 'next'
 import localFont from 'next/font/local'

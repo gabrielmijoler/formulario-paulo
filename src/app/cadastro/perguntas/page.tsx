@@ -1,7 +1,6 @@
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { Toast } from '@/components/Toast'
 import { revalidatePath } from 'next/cache'
 import { getCookie } from '@/app/actions'
 import { Box } from '@mui/material'
@@ -21,16 +20,6 @@ export async function postQuestionAction(formData: FormData) {
     },
     body: JSON.stringify({ name }),
   })
-
-  if (response.ok) {
-    Toast({ message: 'Pergunta adicionada com sucesso!', type: 'success' })
-    revalidatePath('/')
-  } else {
-    Toast({
-      message: 'Ocorreu um erro tentar adicionar pergunta',
-      type: 'error',
-    })
-  }
 }
 export async function addQuestionAction(formData: FormData) {
   'use server'

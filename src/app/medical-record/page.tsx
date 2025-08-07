@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import { Toast } from '@/components/Toast'
 import { useApiData } from '@/hook/use-api-data'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { ErrorMessage } from '@/components/ErrorMessage'
@@ -47,11 +46,7 @@ export default function MedicalRecordPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {submitSuccess && (
-        <Toast
-          item={{ message: 'Prontuário salvo com sucesso!', type: 'success' }}
-        />
-      )}
+      {submitSuccess && null /* TODO: Implement success message */}
 
       {submitError && (
         <div className="mb-4">

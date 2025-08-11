@@ -4,9 +4,11 @@ import Layout from '@/components/template/Layout'
 import { FPTable } from '@/components/TableCollapse'
 import { ErrorComponent } from '@/components/Error'
 import { parsePatients } from '@/app/home/utils'
-import { getColumns, subColumns } from '@/utils/table-columns'
+import { columnsPatients } from '@/utils/table-columns'
 import { usePacienteController } from '../controller'
 import { PacienteModal } from '../components/modal'
+import Table from '@/componentsNext/table'
+import { TableRows } from '@/componentsNext/table/table.rows'
 
 export const PacienteView = () => {
   const {
@@ -22,17 +24,18 @@ export const PacienteView = () => {
     handleOpenModal,
     handleCloseModal,
     handleSubmit,
-    handleOpenRow,
     handleSearchChange,
     handlePaginationChange,
   } = usePacienteController()
 
-  const columns = getColumns(handleOpenRow)
 
   if (error) {
     return <ErrorComponent error={error} />
   }
-
+  const mapTo = (row: any) => ({
+      name: { content: row.name },
+      age: { content: row.age },
+  });
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
       {isCreateSuccess && null /* TODO: Implement success message */}
@@ -78,19 +81,24 @@ export const PacienteView = () => {
             className="max-w-md"
           />
         </div>
-
-        <FPTable
-          columns={columns}
-          data={parsePatients({
+        <Table className="w-full">
+                    <TableRows
+                      data={parsePatients({
             ...data,
             data: clientData,
           })}
-          columnsCollapse={subColumns}
-          isLoading={isLoading}
-          pagination={pagination}
-          setPagination={handlePaginationChange}
-          paginationItems={[10, 20, 30, 40]}
-        />
+                      columns={columnsPatients}
+                      mapTo={mapTo}
+                      emptyMessage="Nenhuma patologia encontrada"
+                    />
+                    <Table.Columns columns={columnsPatients} />
+                    <Table.Pagination
+                      total={pagination.total}
+                      perPage={pagination.page}
+                      perPageOptions={[10, 15, 20]}
+                    />
+                  </Table>
+
       </Paper>
     </Layout>
   )

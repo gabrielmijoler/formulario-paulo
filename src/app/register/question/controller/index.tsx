@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDebounceState } from '@/hook/use-debounce-state'
-import { IQuestion } from '@/services/questions/types'
+import { IQuestion, IQuestionResponse } from '@/services/questions/types'
 import { getQuestion, postQuestion } from '@/services/questions'
 import { questionSchema } from '../schema'
 
@@ -17,7 +17,7 @@ interface PaginationState {
 
 interface UseQuestionControllerReturn {
   openModal: boolean
-  questionData: IQuestion[]
+  questionData: IQuestionResponse[]
   pagination: PaginationState
   search: string | undefined
 
@@ -100,6 +100,7 @@ export const useQuestionController = (): UseQuestionControllerReturn => {
   const onSubmit: SubmitHandler<IQuestion> = useCallback(
     (data) => {
       mutate({
+        ...data,
         response: data.response,
         name: data.name,
       })

@@ -7,6 +7,7 @@ import { IPathologiesRequest, IPathologiesResponse } from './types'
 export async function postPathologies(
   params: IPathologiesRequest,
 ): Promise<IPathologiesResponse> {
+  console.log(params)
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/pathologies`,
     method: 'POST',

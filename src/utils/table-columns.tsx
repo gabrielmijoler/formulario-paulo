@@ -9,125 +9,106 @@ import Link from 'next/link'
 import { IPathologiesResponse } from '@/services/pathologies/types'
 import { IQuestionResponse } from '@/services/questions/types'
 import { RoutesUrls } from '@/routes'
+import { TTableColumn } from '@/componentsNext/table'
 
-export const columnsPathologies =
-  (): ColumnTypeProps<IPathologiesResponse>[] => [
-    {
-      name: 'Code',
-      key: 'code',
-    },
-    {
-      name: 'Description',
-      key: 'description',
-    },
-    {
-      name: 'Id',
-      key: 'id',
-    },
-    {
-      name: <div className="text-center">Editar</div>,
-      key: 'edit',
-      width: '5rem',
-      render: (row: IPathologiesResponse) => {
-        if (!row) return null
-
-        return (
-          <FPBox display="flex" direction="row">
-            <Link href={`${RoutesUrls.PATHOLIES_URL}/edit/${row.id}`} passHref>
-              <IconButton size="small">{<EditIcon />}</IconButton>
-            </Link>
-          </FPBox>
-        )
-      },
-    },
-  ]
-export const columnsQuestions =
-  (): ColumnTypeProps<IQuestionResponse>[] => [
-    {
-      name: 'Id',
-      key: 'id',
-    },
-    {
-      name: 'Perguntas',
-      key: 'name',
-    },
-    {
-      name: <div className="text-center">Editar</div>,
-      key: 'edit',
-      width: '5rem',
-      render: (row: IQuestionResponse) => {
-        if (!row) return null
-
-        return (
-          <FPBox display="flex" direction="row">
-            <Link href={`${RoutesUrls.QUESTION_URL}/edit/${row.id}`} passHref>
-              <IconButton size="small">{<EditIcon />}</IconButton>
-            </Link>
-          </FPBox>
-        )
-      },
-    },
-  ]
-
-export const getColumns = (
-  handleOpenRow?: (rowData: IClient) => void,
-): ColumnTypeProps<IClient>[] => [
-    {
-      key: 'collapse',
-      render: (row: IClient) => {
-        if (!row) return null
-
-        return (
-          <IconButton
-            size="small"
-            onClick={() => handleOpenRow && handleOpenRow(row)}
-          >
-            {row.isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        )
-      },
-    },
-    {
-      name: 'Nome',
-      key: 'name',
-    },
-    {
-      name: 'Email',
-      key: 'email',
-    },
-    {
-      name: 'RG',
-      key: 'ieRg',
-    },
-    {
-      name: <div className="text-center">Editar</div>,
-      key: 'edit',
-      width: '5rem',
-      render: (row: IClient) => {
-        if (!row) return null
-
-        return (
-          <FPBox display="flex" direction="row">
-            <Link href={`${RoutesUrls.PATIENT_URL}/edit/${row.id}`} passHref>
-              <IconButton size="small">{<EditIcon />}</IconButton>
-            </Link>
-          </FPBox>
-        )
-      },
-    },
-  ]
-
-export const subColumns: ColumnTypeProps<IClient>[] = [
+export const columnsPathologies: TTableColumn[] = [
   {
-    name: 'Documento',
-    key: 'document',
+    label: 'Code',
+    property: 'code',
   },
   {
-    name: 'Cidade',
-    key: 'client.clientAddress.city',
+    label: 'Description',
+    property: 'description',
   },
   {
-    name: 'Telefone',
-    key: 'telephone',
+    label: 'Id',
+    property: 'id',
+  },
+  {
+    label: 'Editar',
+    property: 'edit',
+    className: '5rem',
+    render: (row: IPathologiesResponse) => {
+      if (!row) return null
+
+      return (
+        <FPBox display="flex" direction="row">
+          <Link href={`${RoutesUrls.PATHOLIES_URL}/edit/${row.id}`} passHref>
+            <IconButton size="small">{<EditIcon />}</IconButton>
+          </Link>
+        </FPBox>
+      )
+    },
   },
 ]
+export const columnsQuestions: TTableColumn[] = [
+  {
+    label: 'ID',
+    property: 'id',
+  },
+  {
+    label: 'Perguntas',
+    property: 'questions',
+  },
+  {
+    label: 'Editar',
+    property: 'edit',
+    className: 'text-center',
+    render: (row: IQuestionResponse) => {
+      if (!row) return null
+
+      return (
+        <FPBox display="flex" direction="row">
+          <Link href={`${RoutesUrls.QUESTION_URL}/edit/${row.id}`} passHref>
+            <IconButton size="small">{<EditIcon />}</IconButton>
+          </Link>
+        </FPBox>
+      )
+    },
+  },
+]
+
+export const columnsPatients: TTableColumn[] = [ 
+  {
+    label: 'Nome',
+    property: 'name',
+  },
+  {
+    label: 'Email',
+    property: 'email',
+  },
+  {
+    label: 'RG',
+    property: 'ieRg',
+  },
+  {
+    label: 'Documento',
+    property: 'document',
+  },
+  {
+    label: 'Cidade',
+    property: 'client.clientAddress.city',
+  },
+  {
+    label: 'Telefone',
+    property: 'telephone',
+  },
+  {
+    label: 'Editar',
+    property: 'edit',
+    className: '5rem text-center',
+    render: (row: IClient) => {
+      if (!row) return null
+
+      return (
+        <FPBox display="flex" direction="row">
+          <Link href={`${RoutesUrls.PATIENT_URL}/edit/${row.id}`} passHref>
+            <IconButton size="small">{<EditIcon />}</IconButton>
+          </Link>
+        </FPBox>
+      )
+    },
+  },
+]
+
+export const subColumns: ColumnTypeProps<IClient>[] = []

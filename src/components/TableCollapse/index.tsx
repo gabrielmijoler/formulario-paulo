@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment, JSX, useEffect } from 'react'
 import {
   Box,
   Table,
@@ -199,13 +199,23 @@ export function FPTable({
 
     return (
       <Tooltip title="Sort" enterDelay={300}>
-        <span
+        <button
+          type="button"
           className="flex items-center cursor-pointer"
+          style={{ background: 'none', border: 'none', padding: 0, margin: 0, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => handleChangeSort && handleChangeSort(column.key || '')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleChangeSort && handleChangeSort(column.key || '')
+            }
+          }}
+          tabIndex={0}
+          aria-label={`Sort by ${column.name}`}
         >
           <Sort sx={{ marginRight: '0.5rem' }} />
           {column.name}
-        </span>
+        </button>
       </Tooltip>
     )
   }

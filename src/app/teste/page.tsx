@@ -4,6 +4,7 @@ import Ternary from "@/componentsNext/ternary";
 import { TableRows } from "@/componentsNext/table/table.rows";
 import Footer from "@/componentsNext/footer";
 import { GoBackButton } from "@/componentsNext/goBackHeader/goBackButton";
+import Table from "@/componentsNext/table";
 
 const columns = [
     { property: "name", label: "Nome" },
@@ -27,18 +28,17 @@ export default function Teste() {
                 <div>Falso</div>
             </Ternary>
 
-            <div>
-                <h2 className="font-bold mb-2">Tabela de Exemplo</h2>
-                <table>
-                    <TableRows
-                        data={data}
-                        columns={columns}
-                        mapTo={mapTo}
-                        emptyMessage="Sem dados"
-                    />
-                </table>
-            </div>
-            <Footer />
+            <Table className="w-full">
+                <TableRows
+                    data={data}
+                    columns={columns}
+                    mapTo={mapTo}
+                    emptyMessage="Sem dados"
+                />
+                <Table.Columns columns={columns} />
+                <Table.Pagination total={10} perPage={10} perPageOptions={[10, 15, 20]} />
+            </Table>
+
             <GoBackButton />
         </div>
     );

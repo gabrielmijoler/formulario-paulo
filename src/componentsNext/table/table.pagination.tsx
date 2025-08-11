@@ -1,7 +1,6 @@
 "use client";
 import { type KeyboardEvent, useMemo } from "react";
 
-import usePagination from "@/app/hooks/usePagination";
 import styled from "@emotion/styled";
 import { ExpandMore } from "@mui/icons-material";
 import {
@@ -14,6 +13,7 @@ import {
 
 import NumericField from "../numericField";
 import Pagination from "../pagination";
+import usePagination from "@/hook/hooksNext/usePagination";
 
 type TProps = {
   perPageOptions?: number[];

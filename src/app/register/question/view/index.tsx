@@ -19,6 +19,8 @@ import {
 import { ErrorComponent } from '@/components/Error'
 import { columnsQuestions } from '@/utils/table-columns'
 import { useQuestionController } from '../controller'
+import Table from '@/componentsNext/table'
+import { TableRows } from '@/componentsNext/table/table.rows'
 
 const QuestionModal: React.FC<{
   open: boolean
@@ -155,27 +157,26 @@ export default function QuestionView() {
     questionData,
     pagination,
     search,
-
     isLoading,
     error,
     isSuccess,
     isMutating,
-
     methods,
-
     handleOpen,
     handleClose,
     onSubmit,
     handleSearchChange,
-    setPagination,
-
     data,
   } = useQuestionController()
 
   if (error) {
     return <ErrorComponent error={error} />
   }
-
+  const mapTo = (row: any) => ({
+    id: row.id,
+    name: { content: row.name },
+    response: { content: row.response },
+  })
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
       {isSuccess && /*toast*/ null}
@@ -197,18 +198,26 @@ export default function QuestionView() {
           isLoading={isLoading}
         />
 
-        <FPTable
-          columns={columnsQuestions()}
-          data={parseQuestions({
-            ...data,
-            data: questionData,
-          })}
-          isLoading={isLoading}
-          pagination={pagination}
-          setPagination={setPagination}
-          paginationItems={[10, 20, 30, 50]}
-          emptyMessage="Nenhum paciente encontrado"
-        />
+        <Table className="w-full">
+          <TableRows
+            data={parseQuestions({
+              ...data,
+              data: questionData,
+            }).map((q) => ({
+              ...q,
+              id: String(q.id ?? ''),
+            }))}
+            columns={columnsQuestions}
+            mapTo={mapTo}
+            emptyMessage="Nenhuma pergunta encontrada"
+          />
+          <Table.Columns columns={columnsQuestions} />
+          <Table.Pagination
+            total={pagination.total}
+            perPage={pagination.page}
+            perPageOptions={[10, 15, 20]}
+          />
+        </Table>
       </Paper>
     </Layout>
   )

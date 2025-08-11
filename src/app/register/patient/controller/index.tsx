@@ -110,19 +110,6 @@ export const usePacienteController = () => {
       })
     }
 
-
-  const handleOpenRow = useCallback(
-    (rowData: IClient) => {
-      const updatedData = clientData.map((client) =>
-        client.id === rowData.id
-          ? { ...client, isOpen: !client.isOpen }
-          : client,
-      )
-      setClientData(updatedData)
-    },
-    [clientData],
-  )
-
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearch(value)
@@ -150,7 +137,6 @@ export const usePacienteController = () => {
     handleOpenModal,
     handleCloseModal,
     handleSubmit,
-    handleOpenRow,
     handleSearchChange,
     handlePaginationChange,
   }

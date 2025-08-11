@@ -70,7 +70,6 @@ export const usePatologiasController = () => {
       return { ...response, data: updatedData }
     },
   })
-
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true)
   }, [])
@@ -82,6 +81,7 @@ export const usePatologiasController = () => {
 
   const handleSubmit: SubmitHandler<IPathologiesRequest> = useCallback(
     (data) => {
+      console.log(data)
       createPathology({
         code: data.code,
         description: data.description,
@@ -109,14 +109,11 @@ export const usePatologiasController = () => {
     isModalOpen,
     pagination,
     search,
-
     methods,
-
     data,
     error,
     isLoading,
     isCreateSuccess,
-
     handleOpenModal,
     handleCloseModal,
     handleSubmit,

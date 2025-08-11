@@ -1,7 +1,7 @@
 import { maskCPF } from '@/helpers/maskCep'
 import { IClient, IGetResponse } from '@/services/clients/types'
 import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IQuestion, IQuestionResponse } from '@/services/questions/types'
+import { IQuestion } from '@/services/questions/types'
 
 const parseTexts = (txt?: string | null) => txt ?? '-'
 const parsePatient = (data: IClient): IClient => {
@@ -11,7 +11,7 @@ const parsePatient = (data: IClient): IClient => {
     email: parseTexts(data.email),
     ieRg: maskCPF(data.ieRg) ?? '-',
     document: parseTexts(data.document),
-    address: parseTexts(data.address),
+    clientAddress:  data.clientAddress,
     telephone: parseTexts(data.telephone),
     isOpen: data?.isOpen ?? false,
   }

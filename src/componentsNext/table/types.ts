@@ -5,6 +5,7 @@ export type TTableColumn = {
   property: string;
   sort?: boolean;
   className?: string;
+  render?: (row: any) => ReactNode;
 };
 
 export type TTableRow = { content: ReactNode; className?: string };

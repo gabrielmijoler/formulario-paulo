@@ -11,6 +11,8 @@ import { parsePatholias } from '@/app/home/utils'
 import { columnsPathologies } from '@/utils/table-columns'
 import { usePatologiasController } from '../controller'
 import { PatologiasModal } from '../component/modal'
+import Table from '@/componentsNext/table'
+import { TableRows } from '@/componentsNext/table/table.rows'
 
 export const PatologiasView = () => {
   const {
@@ -33,6 +35,11 @@ export const PatologiasView = () => {
   if (error) {
     return <ErrorComponent error={error} />
   }
+  const mapTo = (row: any) => ({
+    id: row.id,
+    name: { content: row.name },
+    response: { content: row.response },
+  })
 
   return (
     <Layout titulo="Cadastro de Patologias">
@@ -90,17 +97,23 @@ export const PatologiasView = () => {
         </div>
 
         <div className="border-t pt-4">
-          <FPTable
-            columns={columnsPathologies()}
-            data={parsePatholias({
-              ...data,
-              data: pathologiesData,
-            })}
-            isLoading={isLoading}
-            pagination={pagination}
-            setPagination={handlePaginationChange}
-            paginationItems={[10, 20, 30, 40]}
-          />
+          <Table className="w-full">
+            <TableRows
+              data={parsePatholias({
+                ...data,
+                data: pathologiesData,
+              })}
+              columns={columnsPathologies}
+              mapTo={mapTo}
+              emptyMessage="Nenhuma patologia encontrada"
+            />
+            <Table.Columns columns={columnsPathologies} />
+            <Table.Pagination
+              total={pagination.total}
+              perPage={pagination.page}
+              perPageOptions={[10, 15, 20]}
+            />
+          </Table>
         </div>
       </Paper>
 
@@ -122,7 +135,7 @@ export const PatologiasView = () => {
             <div className="text-2xl font-bold text-purple-600">
               {Math.ceil(
                 (data.pagination?.total || 0) /
-                (data.pagination?.per_page || 1),
+                  (data.pagination?.per_page || 1),
               )}
             </div>
             <div className="text-sm text-gray-600">Total de Páginas</div>

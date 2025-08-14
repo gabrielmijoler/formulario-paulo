@@ -1,30 +1,30 @@
-"use client";
-import { type KeyboardEvent, useMemo } from "react";
+'use client'
+import { type KeyboardEvent, useMemo } from 'react'
 
-import styled from "@emotion/styled";
-import { ExpandMore } from "@mui/icons-material";
+import styled from '@emotion/styled'
+import { ExpandMore } from '@mui/icons-material'
 import {
   MenuItem,
   Select,
   TableCell,
   TableFooter,
   TableRow,
-} from "@mui/material";
+} from '@mui/material'
 
-import NumericField from "../numericField";
-import Pagination from "../pagination";
-import usePagination from "@/hook/hooksNext/usePagination";
+import NumericField from '../numericField'
+import Pagination from '../pagination'
+import usePagination from '@/hook/hooksNext/usePagination'
 
 type TProps = {
-  perPageOptions?: number[];
-  perPage?: number;
-  total?: number;
-};
+  perPageOptions?: number[]
+  perPage?: number
+  total?: number
+}
 
 const SelectIcon = styled(ExpandMore)({
   width: 14,
   height: 14,
-});
+})
 
 export function TablePagination({
   perPage = 10,
@@ -37,18 +37,18 @@ export function TablePagination({
     currentPerPage,
     handleChangePage,
     handleSelectPerPage,
-  } = usePagination({ perPage, total });
+  } = usePagination({ perPage, total })
 
-  const toItem = currentPerPage * currentPage;
-  const fromItem = total === 0 ? total : toItem - (currentPerPage - 1);
+  const toItem = currentPerPage * currentPage
+  const fromItem = total === 0 ? total : toItem - (currentPerPage - 1)
 
-  const itemCountText = `${fromItem}-${Math.min(toItem, total)} de ${total} itens`;
+  const itemCountText = `${fromItem}-${Math.min(toItem, total)} de ${total} itens`
 
   const handleInputPage = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleChangePage(e, Number((e.target as HTMLInputElement).value));
+    if (e.key === 'Enter') {
+      handleChangePage(e, Number((e.target as HTMLInputElement).value))
     }
-  };
+  }
 
   const mappedPerPageOptions = useMemo(
     () =>
@@ -62,7 +62,7 @@ export function TablePagination({
         </MenuItem>
       )),
     [perPageOptions],
-  );
+  )
 
   return (
     <TableFooter className="bg-white border-t border-multi-neutral-100">
@@ -79,22 +79,22 @@ export function TablePagination({
                 slotProps={{
                   input: {
                     className:
-                      "flex items-center leading-0 h-7 p-0 pr-6 text-xs font-semibold text-multi-text-primary",
+                      'flex items-center leading-0 h-7 p-0 pr-6 text-xs font-semibold text-multi-text-primary',
                   },
                 }}
                 sx={{
-                  boxShadow: "none",
-                  ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                  "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  boxShadow: 'none',
+                  '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                  '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
                     {
                       border: 0,
                     },
-                  "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
                     {
                       border: 0,
                     },
-                  "& .MuiSelect-icon": {
-                    top: "unset",
+                  '& .MuiSelect-icon': {
+                    top: 'unset',
                   },
                 }}
                 value={currentPerPage}
@@ -103,8 +103,9 @@ export function TablePagination({
               </Select>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center text-xs gap-3">
               <Pagination
+                color="standard"
                 count={count}
                 onChange={handleChangePage}
                 page={currentPage}
@@ -118,7 +119,7 @@ export function TablePagination({
                   slotProps={{
                     input: {
                       className:
-                        "w-16 border-multi-neutral-100 rounded p-0 h-7 text-xs font-semibold text-multi-text-primary",
+                        'w-16 border-multi-neutral-100 rounded p-0 h-7 text-xs font-semibold text-multi-text-primary',
                     },
                   }}
                 />
@@ -128,5 +129,5 @@ export function TablePagination({
         </TableCell>
       </TableRow>
     </TableFooter>
-  );
+  )
 }

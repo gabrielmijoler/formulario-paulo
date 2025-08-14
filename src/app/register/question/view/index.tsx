@@ -7,7 +7,6 @@ import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
 import { parseQuestions } from '@/app/home/utils'
-import { FPTable } from '@/components/TableCollapse'
 import {
   Box,
   Paper,
@@ -168,7 +167,8 @@ export default function QuestionView() {
     handleSearchChange,
     data,
   } = useQuestionController()
-
+  console.log('QuestionView data:', questionData)
+  console.log('QuestionView data:', data)
   if (error) {
     return <ErrorComponent error={error} />
   }
@@ -203,10 +203,7 @@ export default function QuestionView() {
             data={parseQuestions({
               ...data,
               data: questionData,
-            }).map((q) => ({
-              ...q,
-              id: String(q.id ?? ''),
-            }))}
+            })}
             columns={columnsQuestions}
             mapTo={mapTo}
             emptyMessage="Nenhuma pergunta encontrada"

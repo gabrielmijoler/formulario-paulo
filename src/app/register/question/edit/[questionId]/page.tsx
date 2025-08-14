@@ -11,7 +11,7 @@ import { questionSchema } from '../../schema'
 interface ParamsID {
   params: Promise<{ questionId: string }>
 }
-export default function PatientEdit({ params }: ParamsID) {
+export default function PatientEdit({ params }: Readonly<ParamsID>) {
   const { questionId } = use(params)
   const queryClient = useQueryClient()
 
@@ -33,16 +33,17 @@ export default function PatientEdit({ params }: ParamsID) {
     criteriaMode: 'all',
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      questions: {
-        name: '',
-        response: '',
-      },
+      name: '',
+      response: '',
     },
   })
 
   useEffect(() => {
     if (data) {
-      methods.reset({ questions: data })
+      methods.reset({
+        name: data.name ?? '',
+        response: data.response ?? '',
+      })
     }
   }, [data, methods])
 
@@ -54,7 +55,8 @@ export default function PatientEdit({ params }: ParamsID) {
     return <h2>Loading...</h2>
   }
 
-  const clientWatch = methods.watch('questions')
+  const nameWatch = methods.watch('name')
+  const responseWatch = methods.watch('response')
 
   return (
     <>
@@ -64,28 +66,24 @@ export default function PatientEdit({ params }: ParamsID) {
           <div>
             <div className="grid grid-cols-2 gap-4 text-black mt-4">
               <TextInput
-                name="pathologias.code"
+                name="name"
                 type="text"
-                value={clientWatch.name}
-                onChange={(e) =>
-                  methods.setValue('questions.name', e.target.value)
-                }
-                label="Código"
+                value={nameWatch}
+                onChange={(e) => methods.setValue('name', e.target.value)}
+                label="Nome da Questão"
               />
               <TextInput
-                name="pathologias.description"
-                onChange={(e) =>
-                  methods.setValue('questions.response', e.target.value)
-                }
+                name="response"
+                onChange={(e) => methods.setValue('response', e.target.value)}
                 type="text"
-                value={clientWatch.response}
-                label="Descrição"
+                value={responseWatch}
+                label="Resposta"
               />
             </div>
             <button
               className="px-4 py-3 rounded-lg bg-green-500 mt-4
-        border-2 focus:border-blue-500 focus:bg-white
-        focus:outline-none text-black w-20"
+            border-2 focus:border-blue-500 focus:bg-white
+            focus:outline-none text-black w-20"
               type="submit"
             >
               Salvar

@@ -41,6 +41,7 @@ export const PatologiasModal = ({
       >
         <FormProvider {...methods}>
           <FPBox
+            as="form"
             className="p-1 w-full"
             onSubmit={methods.handleSubmit(onSubmit)}
           >

@@ -41,6 +41,7 @@ export const usePatologiasController = () => {
   const { mutate: createPathology, isSuccess: isCreateSuccess } = useMutation({
     mutationFn: postPathologies,
     onSuccess: () => {
+      console.log('Patologia criada com sucesso!')
       methods.reset()
       queryClient.invalidateQueries({ queryKey: ['pathologies'] })
       handleCloseModal()
@@ -78,9 +79,9 @@ export const usePatologiasController = () => {
     setIsModalOpen(false)
     methods.reset()
   }, [methods])
-
   const handleSubmit: SubmitHandler<IPathologiesRequest> = useCallback(
     (data) => {
+      console.log('aqui')
       console.log(data)
       createPathology({
         code: data.code,

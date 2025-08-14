@@ -1,19 +1,19 @@
-import type { ReactElement } from "react";
+import type { ReactElement } from 'react'
 
-import { TableBody, TableCell, TableRow } from "@mui/material";
+import { TableBody, TableCell, TableRow } from '@mui/material'
 
-import Ternary from "../ternary";
+import Ternary from '../ternary'
 
-import { TableTd } from "./table.td";
-import type { TFormattedRow, TTableColumn } from "./types";
+import { TableTd } from './table.td'
+import type { TFormattedRow, TTableColumn } from './types'
 
 type TProps<T> = {
-  data?: (T & { id: string })[];
-  columns: TTableColumn[];
-  mapTo: (data: T) => TFormattedRow;
-  emptyMessage?: string;
-  emptyComponent?: ReactElement;
-};
+  data?: (T & { id: string })[]
+  columns: TTableColumn[]
+  mapTo: (data: T) => TFormattedRow
+  emptyMessage?: string
+  emptyComponent?: ReactElement
+}
 
 export function TableRows<T>({
   data,
@@ -21,7 +21,7 @@ export function TableRows<T>({
   mapTo,
   emptyMessage,
   emptyComponent,
-}: TProps<T>) {
+}: Readonly<TProps<T>>) {
   if (!data?.length) {
     return (
       <TableBody className="bg-white">
@@ -30,28 +30,31 @@ export function TableRows<T>({
             <Ternary condition={Boolean(emptyComponent)}>
               {emptyComponent}
               <div className="flex w-full justify-center items-center">
-                {emptyMessage ?? "Nenhum item para listar"}
+                {emptyMessage ?? 'Nenhum item para listar'}
               </div>
             </Ternary>
           </TableCell>
         </TableRow>
       </TableBody>
-    );
+    )
   }
 
   const mappedRows = data.map((item) => {
-    const row = mapTo(item);
+    const row = mapTo(item)
 
     const mappedCells = columns.map((column) => {
       return (
         <TableTd
+          className="text-start"
           contentClassName={row[column.property]?.className}
           key={`row[${item.id}][${column.property}]`}
         >
-          {row[column.property]?.content ?? "-"}
+          {column.render
+            ? column.render(item)
+            : (row[column.property]?.content ?? '-')}
         </TableTd>
-      );
-    });
+      )
+    })
 
     return (
       <TableRow
@@ -60,8 +63,8 @@ export function TableRows<T>({
       >
         {mappedCells}
       </TableRow>
-    );
-  });
+    )
+  })
 
-  return <TableBody className="bg-white">{mappedRows}</TableBody>;
+  return <TableBody className="bg-white">{mappedRows}</TableBody>
 }

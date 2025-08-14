@@ -28,18 +28,23 @@ export const PacienteView = () => {
     handlePaginationChange,
   } = usePacienteController()
 
-
   if (error) {
     return <ErrorComponent error={error} />
   }
+
   const mapTo = (row: any) => ({
-      name: { content: row.name },
-      age: { content: row.age },
-  });
+    name: { content: row.name },
+    age: { content: row.age },
+    email: { content: row.email },
+    ieRg: { content: row.ieRg },
+    document: { content: row.document },
+    clientAddress: { content: row.clientAddress.city },
+    telephone: { content: row.telephone },
+  })
+
   return (
     <Layout titulo="Cadastro de Paciente" className="font-bold">
       {isCreateSuccess && null /* TODO: Implement success message */}
-
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">
@@ -82,23 +87,22 @@ export const PacienteView = () => {
           />
         </div>
         <Table className="w-full">
-                    <TableRows
-                      data={parsePatients({
-            ...data,
-            data: clientData,
-          })}
-                      columns={columnsPatients}
-                      mapTo={mapTo}
-                      emptyMessage="Nenhuma patologia encontrada"
-                    />
-                    <Table.Columns columns={columnsPatients} />
-                    <Table.Pagination
-                      total={pagination.total}
-                      perPage={pagination.page}
-                      perPageOptions={[10, 15, 20]}
-                    />
-                  </Table>
-
+          <TableRows
+            data={parsePatients({
+              ...data,
+              data: clientData,
+            })}
+            columns={columnsPatients}
+            mapTo={mapTo}
+            emptyMessage="Nenhuma patologia encontrada"
+          />
+          <Table.Columns columns={columnsPatients} />
+          <Table.Pagination
+            total={pagination.total}
+            perPage={pagination.page}
+            perPageOptions={[10, 15, 20]}
+          />
+        </Table>
       </Paper>
     </Layout>
   )

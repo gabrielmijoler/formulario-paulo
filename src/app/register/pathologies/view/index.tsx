@@ -1,4 +1,4 @@
-import { Button, Paper, TextField } from '@mui/material'
+import { Button, IconButton, Paper, TextField } from '@mui/material'
 import {
   Add as AddIcon,
   Search as SearchIcon,
@@ -13,6 +13,10 @@ import { usePatologiasController } from '../controller'
 import { PatologiasModal } from '../component/modal'
 import Table from '@/componentsNext/table'
 import { TableRows } from '@/componentsNext/table/table.rows'
+import { FPBox } from '@/components/Box'
+import Link from 'next/link'
+import EditIcon from '@mui/icons-material/Edit'
+import { RoutesUrls } from '@/routes'
 
 export const PatologiasView = () => {
   const {
@@ -36,10 +40,11 @@ export const PatologiasView = () => {
     return <ErrorComponent error={error} />
   }
   const mapTo = (row: any) => ({
-    id: row.id,
-    name: { content: row.name },
-    response: { content: row.response },
+    code: { content: row.code },
+    description: { content: row.description },
   })
+  console.log(columnsPathologies)
+  console.log(data)
 
   return (
     <Layout titulo="Cadastro de Patologias">
@@ -95,7 +100,6 @@ export const PatologiasView = () => {
             }}
           />
         </div>
-
         <div className="border-t pt-4">
           <Table className="w-full">
             <TableRows

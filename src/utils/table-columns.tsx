@@ -1,7 +1,5 @@
 import { ColumnTypeProps } from '@/components/TableCollapse/types'
 import { IClient } from '@/services/clients/types'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import { FPBox } from '@/components/Box'
@@ -15,24 +13,22 @@ export const columnsPathologies: TTableColumn[] = [
   {
     label: 'Code',
     property: 'code',
+    sort: true,
   },
   {
     label: 'Description',
     property: 'description',
-  },
-  {
-    label: 'Id',
-    property: 'id',
+    sort: true,
   },
   {
     label: 'Editar',
     property: 'edit',
-    className: '5rem',
+    className: 'w-24 text-center',
     render: (row: IPathologiesResponse) => {
       if (!row) return null
 
       return (
-        <FPBox display="flex" direction="row">
+        <FPBox display="flex" className="justify-center pr-2" direction="row">
           <Link href={`${RoutesUrls.PATHOLIES_URL}/edit/${row.id}`} passHref>
             <IconButton size="small">{<EditIcon />}</IconButton>
           </Link>
@@ -43,12 +39,8 @@ export const columnsPathologies: TTableColumn[] = [
 ]
 export const columnsQuestions: TTableColumn[] = [
   {
-    label: 'ID',
-    property: 'id',
-  },
-  {
     label: 'Perguntas',
-    property: 'questions',
+    property: 'name',
   },
   {
     label: 'Editar',
@@ -68,7 +60,7 @@ export const columnsQuestions: TTableColumn[] = [
   },
 ]
 
-export const columnsPatients: TTableColumn[] = [ 
+export const columnsPatients: TTableColumn[] = [
   {
     label: 'Nome',
     property: 'name',

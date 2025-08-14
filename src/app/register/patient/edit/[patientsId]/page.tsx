@@ -13,31 +13,29 @@ interface ParamsID {
   params: Promise<{ patientsId: string }>
 }
 
-export default function PatientEdit({ params }: ParamsID) {
+export default function PatientEdit({ params }: Readonly<ParamsID>) {
   const { patientsId } = React.use(params)
 
   const queryClient = useQueryClient()
 
-  const methods = useForm({
+  const methods = useForm<IClient>({
     criteriaMode: 'all',
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      client: {
-        name: '',
-        email: '',
-        clientAddress: {
-          zipCode: '',
-          street: '',
-          number: '',
-          complement: '',
-          neighborhood: '',
-          city: '',
-          state: '',
-        },
-        document: '',
-        ieRg: '',
-        telephone: '',
+      name: '',
+      email: '',
+      clientAddress: {
+        zipCode: '',
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        city: '',
+        state: '',
       },
+      document: '',
+      ieRg: '',
+      telephone: '',
     },
   })
   const { data, isLoading } = useQuery({
@@ -54,7 +52,7 @@ export default function PatientEdit({ params }: ParamsID) {
 
   useEffect(() => {
     if (data) {
-      methods.reset({ client: data })
+      methods.reset(data)
     }
   }, [data, methods])
 
@@ -65,73 +63,79 @@ export default function PatientEdit({ params }: ParamsID) {
   if (isLoading) {
     return <h2>Loading...</h2>
   }
-  const clientWatch = methods.watch('client')
+  const nameWatch = methods.watch('name')
+  const documentWatch = methods.watch('document')
+  const clientAddressWatch = methods.watch('clientAddress')
+  const ieRgWatch = methods.watch('ieRg')
+  const emailWatch = methods.watch('email')
+  const telephoneWatch = methods.watch('telephone')
+
   const formFields = [
     {
       name: 'name',
       label: 'Nome',
       placeholder: 'Nome',
-      value: clientWatch.name ?? '',
+      value: nameWatch ?? '',
     },
     {
       name: 'document',
       label: 'Documento',
       placeholder: 'Documento',
-      value: clientWatch.document ?? '',
+      value: documentWatch ?? '',
     },
     {
       name: 'clientAddress.street',
       label: 'Rua',
       placeholder: 'Rua',
-      value: clientWatch.clientAddress?.street ?? '',
+      value: clientAddressWatch?.street ?? '',
     },
     {
       name: 'clientAddress.number',
       label: 'Número',
       placeholder: 'Número',
-      value: clientWatch.clientAddress?.number ?? '',
+      value: clientAddressWatch?.number ?? '',
     },
     {
       name: 'clientAddress.city',
       label: 'Cidade',
       placeholder: 'Cidade',
-      value: clientWatch.clientAddress?.city ?? '',
+      value: clientAddressWatch?.city ?? '',
     },
     {
       name: 'clientAddress.state',
       label: 'Estado',
       placeholder: 'Estado',
-      value: clientWatch.clientAddress?.state ?? '',
+      value: clientAddressWatch?.state ?? '',
     },
     {
       name: 'clientAddress.complement',
       label: 'Complemento',
       placeholder: 'Complemento',
-      value: clientWatch.clientAddress?.complement ?? '',
+      value: clientAddressWatch?.complement ?? '',
     },
     {
       name: 'clientAddress.neighborhood',
       label: 'Bairro',
       placeholder: 'Bairro',
-      value: clientWatch.clientAddress?.neighborhood ?? '',
+      value: clientAddressWatch?.neighborhood ?? '',
     },
     {
       name: 'ieRg',
       label: 'RG',
       placeholder: 'IE/RG',
-      value: clientWatch.ieRg ?? '',
+      value: ieRgWatch ?? '',
     },
     {
       name: 'email',
       label: 'Email',
       placeholder: 'E-mail',
-      value: clientWatch.email ?? '',
+      value: emailWatch ?? '',
     },
     {
       name: 'telephone',
       label: 'Telefone',
       placeholder: 'Telefone',
-      value: clientWatch.telephone ?? '',
+      value: telephoneWatch ?? '',
     },
   ] as const
 
@@ -148,9 +152,7 @@ export default function PatientEdit({ params }: ParamsID) {
                   name={field.name}
                   type="text"
                   value={field.value}
-                  onChange={(e) =>
-                    methods.setValue(`client.${field.name}`, e.target.value)
-                  }
+                  onChange={(e) => methods.setValue(field.name, e.target.value)}
                   placeholder={field.placeholder}
                   label={field.label}
                 />

@@ -63,14 +63,14 @@ export default function Home() {
             value={search ?? ''}
             onChange={(event) => setSearch(event.target.value)}
           />
-          <FPTable
-            columns={columnsPathologies()}
+          {/* <FPTable
+            columns={columnsPathologies}
             data={parseQuestions({ ...data, data: medicalRecordData })}
             isLoading={isLoading}
             pagination={pagination}
             setPagination={setPagination}
             paginationItems={[10, 20, 30, 40]}
-          />
+          /> */}
         </Paper>
       </Box>
     </Layout>

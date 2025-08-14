@@ -1,17 +1,17 @@
-import { ArrowLeft, ArrowRight } from "@mui/icons-material";
+import { ArrowLeft, ArrowRight } from '@mui/icons-material'
 import {
   Pagination as MuiPagination,
   PaginationItem,
   type PaginationProps,
   styled,
-} from "@mui/material";
+} from '@mui/material'
 
 const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({
-  "&.Mui-selected": {
-    color: theme.palette.primary.main,
-    backgroundColor: theme.palette.primary.lighter,
+  '&.Mui-selected': {
+    color: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary,
   },
-}));
+}))
 
 export default function Pagination(props: PaginationProps) {
   return (
@@ -26,5 +26,5 @@ export default function Pagination(props: PaginationProps) {
       )}
       {...props}
     />
-  );
+  )
 }

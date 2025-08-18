@@ -13,7 +13,7 @@ interface LayoutProps {
   className?: string
 }
 
-export default function Layout(props: LayoutProps) {
+export default function Layout(props: Readonly<LayoutProps>) {
   const { theme } = useAppData()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -26,7 +26,7 @@ export default function Layout(props: LayoutProps) {
       <div
         className={`
             flex flex-col p-2 w-full
-            bg-gray-300 dark:bg-gradient-to-r from-indigo-500 to-blue-600
+            bg-gray-300 dark:bg-gradient-to-br from-indigo-300 to-blue-600
         `}
       >
         <Header onToggleSidebar={handleToggleSidebar} />

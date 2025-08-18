@@ -9,14 +9,14 @@ import Logo from './Logo'
 import MenuItems from './MenuItems'
 import { logoutAction } from '@/useServer/logouAction'
 
-export default function Menu() {
+export default function SideBar() {
   const { theme, changeTheme } = useAppData()
 
   return (
     <nav
       className="
-        flex flex-col py-2 z-50 text-white w-56
-        bg-gradient-to-r from-indigo-500 to-purple-800 inset-0 overflow-auto fixed
+        flex flex-col py-2 z-50 text-white w-32
+        bg-gradient-to-br from-indigo-400 to-indigo-500 inset-0 overflow-auto fixed
       "
     >
       <div className="flex items-center justify-center mb-8">

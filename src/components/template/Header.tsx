@@ -11,7 +11,7 @@ interface HeaderProps {
   onToggleSidebar: (isOpen: boolean) => void
 }
 
-export function Header({ onToggleSidebar }: HeaderProps) {
+export function Header({ onToggleSidebar }: Readonly<HeaderProps>) {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleModalVisibility = () => {
@@ -23,19 +23,23 @@ export function Header({ onToggleSidebar }: HeaderProps) {
   return (
     <div className={`flex`}>
       <div className={`flex flex-grow justify-start items-center`}>
-        <span
+        <button
+          type="button"
           onClick={handleModalVisibility}
           className={`
             flex flex-col justify-center items-center
             dark:text-gray-200 mr-2 cursor-pointer
+            bg-transparent border-none p-0
             `}
+          aria-label="Open sidebar"
         >
           {IconBar()}
-        </span>
+        </button>
         <ModalBase
           isOpen={isOpen}
           closeOnOutsideClick
           onClose={handleModalVisibility}
+          bgOpacity={false}
         >
           <SideBar />
         </ModalBase>

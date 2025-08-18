@@ -9,7 +9,7 @@ import { getClient, postClient } from '@/services/clients'
 import { useDebounceState } from '@/hook/use-debounce-state'
 import { clientSchema } from '../schema'
 import { PaginationState } from '@/app/types'
-
+import { getPathologies } from '@/services/pathologies'
 
 export const usePacienteController = () => {
   const queryClient = useQueryClient()
@@ -17,13 +17,7 @@ export const usePacienteController = () => {
   const [debounceSearch, search, setSearch] = useDebounceState<
     string | undefined
   >(undefined, 1000)
-  const [clientData, setClientData] = useState<IClient[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [pagination, setPagination] = useState<PaginationState>({
-    page: 1,
-    itemsPerPage: 10,
-    total: 10,
-  })
 
   const methods = useForm<IClient>({
     criteriaMode: 'all',
@@ -59,24 +53,16 @@ export const usePacienteController = () => {
     },
   })
   const { data, error, isLoading } = useQuery({
-    queryKey: ['clients', pagination, debounceSearch],
+    queryKey: ['clients', debounceSearch],
     queryFn: async () => {
       const response = await getClient({
         paginate: true,
-        current_page: pagination.page,
-        per_page: pagination.itemsPerPage,
-        total: pagination.total,
+        current_page: data?.pagination?.current_page,
+        per_page: data?.pagination?.per_page,
+        total: data?.pagination?.total,
         filter: { name: debounceSearch ?? '' },
-        relations: 'clientAddress'
       })
-
-      const updatedData = response.data.map((client: IClient) => ({
-        ...client,
-        isOpen: false,
-      }))
-
-      setClientData(updatedData)
-      return { ...response, data: updatedData }
+      return response
     },
   })
 
@@ -89,26 +75,25 @@ export const usePacienteController = () => {
     methods.reset()
   }, [methods])
 
-  const handleSubmit: SubmitHandler<IClient> =
-    (data) => {
-      createClient({
-        id: 0,
-        name: data.name,
-        email: data.email,
-        clientAddress: {
-          zipCode: data.clientAddress.zipCode,
-          street: data.clientAddress.street,
-          number: data.clientAddress.number,
-          complement: data.clientAddress.complement,
-          neighborhood: data.clientAddress.neighborhood,
-          city: data.clientAddress.city,
-          state: data.clientAddress.state,
-        },
-        document: data.document,
-        ieRg: data.ieRg,
-        telephone: data.telephone,
-      })
-    }
+  const handleSubmit: SubmitHandler<IClient> = (data) => {
+    createClient({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      clientAddress: {
+        zipCode: data.clientAddress.zipCode,
+        street: data.clientAddress.street,
+        number: data.clientAddress.number,
+        complement: data.clientAddress.complement,
+        neighborhood: data.clientAddress.neighborhood,
+        city: data.clientAddress.city,
+        state: data.clientAddress.state,
+      },
+      document: data.document,
+      ieRg: data.ieRg,
+      telephone: data.telephone,
+    })
+  }
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -117,17 +102,15 @@ export const usePacienteController = () => {
     [setSearch],
   )
 
-  const handlePaginationChange = useCallback(
-    (newPagination: PaginationState) => {
-      setPagination(newPagination)
-    },
-    [],
-  )
+  // const handlePaginationChange = useCallback(
+  //   (newPagination: PaginationState) => {
+  //     setPagination(newPagination)
+  //   },
+  //   [],
+  // )
 
   return {
-    clientData,
     isModalOpen,
-    pagination,
     search,
     methods,
     data,
@@ -138,6 +121,6 @@ export const usePacienteController = () => {
     handleCloseModal,
     handleSubmit,
     handleSearchChange,
-    handlePaginationChange,
+    // handlePaginationChange,
   }
 }

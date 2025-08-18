@@ -8,16 +8,6 @@ import {
   ILogin,
 } from './types'
 
-// export async function postLogin(params: ILogin): Promise<any> {
-//   await fetch(
-//     'https://clinical-backend-ae40133038af.herokuapp.com/v1/auth/login',
-//     {
-//       method: 'POST',
-//       body: JSON.stringify(params),
-//     },
-//   )
-// }
-
 export async function postLogin(params: ILogin): Promise<any> {
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/auth/login`,

@@ -52,23 +52,19 @@ export const usePatologiasController = () => {
   })
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ['pathologies', pagination, debounceSearch],
+    queryKey: ['pathologies', debounceSearch],
     queryFn: async () => {
       const response = await getPathologies({
         paginate: true,
-        current_page: pagination.page,
-        per_page: pagination.itemsPerPage,
-        total: pagination.total,
-        filter: { name: debounceSearch ?? '' },
+        current_page: data?.pagination?.current_page,
+        per_page: data?.pagination?.per_page,
+        total: data?.pagination?.total,
+        filter: {
+          description: debounceSearch ?? '',
+        },
       })
 
-      const updatedData = response.data.map((pathology: any) => ({
-        ...pathology,
-        isOpen: false,
-      }))
-
-      setPathologiesData(updatedData)
-      return { ...response, data: updatedData }
+      return response
     },
   })
   const handleOpenModal = useCallback(() => {

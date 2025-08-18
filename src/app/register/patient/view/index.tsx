@@ -3,7 +3,7 @@ import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material'
 import Layout from '@/components/template/Layout'
 import { FPTable } from '@/components/TableCollapse'
 import { ErrorComponent } from '@/components/Error'
-import { parsePatients } from '@/app/home/utils'
+import { parsePathologiesGetResponse, parsePatients } from '@/app/home/utils'
 import { columnsPatients } from '@/utils/table-columns'
 import { usePacienteController } from '../controller'
 import { PacienteModal } from '../components/modal'
@@ -12,20 +12,18 @@ import { TableRows } from '@/componentsNext/table/table.rows'
 
 export const PacienteView = () => {
   const {
-    clientData,
     isModalOpen,
-    pagination,
+    // pagination,
     search,
     methods,
     data,
     error,
-    isLoading,
     isCreateSuccess,
     handleOpenModal,
     handleCloseModal,
     handleSubmit,
     handleSearchChange,
-    handlePaginationChange,
+    // handlePaginationChange,
   } = usePacienteController()
 
   if (error) {
@@ -38,7 +36,7 @@ export const PacienteView = () => {
     email: { content: row.email },
     ieRg: { content: row.ieRg },
     document: { content: row.document },
-    clientAddress: { content: row.clientAddress.city },
+    clientAddress: { content: row.clientAddress?.street },
     telephone: { content: row.telephone },
   })
 
@@ -88,19 +86,15 @@ export const PacienteView = () => {
         </div>
         <Table className="w-full">
           <TableRows
-            data={parsePatients({
-              ...data,
-              data: clientData,
-            })}
+            data={data?.data}
             columns={columnsPatients}
             mapTo={mapTo}
             emptyMessage="Nenhuma patologia encontrada"
           />
           <Table.Columns columns={columnsPatients} />
           <Table.Pagination
-            total={pagination.total}
-            perPage={pagination.page}
-            perPageOptions={[10, 15, 20]}
+            total={data?.pagination?.total}
+            perPage={data?.pagination?.per_page}
           />
         </Table>
       </Paper>

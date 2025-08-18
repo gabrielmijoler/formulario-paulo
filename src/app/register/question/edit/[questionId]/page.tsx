@@ -16,7 +16,7 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['pathologiaById', questionId],
+    queryKey: ['questionsById', questionId],
     queryFn: async () => getQuestionsById(questionId),
   })
 
@@ -24,7 +24,7 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
     mutationFn: putQuestion,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['pathologiaById', questionId],
+        queryKey: ['questionsById', questionId],
       })
     },
   })

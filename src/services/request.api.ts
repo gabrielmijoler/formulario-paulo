@@ -1,9 +1,8 @@
 'use server'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
-
 import { createAxiosApiInstance } from './axios.api'
 
-const CLINICAL_BASE_URL = process.env.CLINICAL_BASE_URL
+const CLINICAL_BASE_URL = process.env.NEXT_PUBLIC_CLINICAL_BASE_URL
 
 const clientApi = createAxiosApiInstance(CLINICAL_BASE_URL)
 

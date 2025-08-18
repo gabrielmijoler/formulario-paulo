@@ -68,7 +68,7 @@ const QuestionModal: React.FC<{
                 {...field}
                 width="full"
                 type="text"
-                placeholder="Digite o nome do paciente"
+                placeholder="Digite o nome da pergunta"
                 disabled={isMutating}
                 aria-describedby="name-error"
               />
@@ -136,7 +136,7 @@ const ActionBar: React.FC<{
 }> = ({ onNewPatient, isLoading }) => (
   <div className="mb-6 flex justify-between items-center">
     <h1 className="text-2xl font-bold text-gray-800">
-      Gerenciamento de Pacientes
+      Gerenciamento de Perguntas
     </h1>
     <Button
       variant="contained"
@@ -153,8 +153,6 @@ const ActionBar: React.FC<{
 export default function QuestionView() {
   const {
     openModal,
-    questionData,
-    pagination,
     search,
     isLoading,
     error,
@@ -167,8 +165,6 @@ export default function QuestionView() {
     handleSearchChange,
     data,
   } = useQuestionController()
-  console.log('QuestionView data:', questionData)
-  console.log('QuestionView data:', data)
   if (error) {
     return <ErrorComponent error={error} />
   }
@@ -200,19 +196,15 @@ export default function QuestionView() {
 
         <Table className="w-full">
           <TableRows
-            data={parseQuestions({
-              ...data,
-              data: questionData,
-            })}
+            data={data?.data}
             columns={columnsQuestions}
             mapTo={mapTo}
             emptyMessage="Nenhuma pergunta encontrada"
           />
           <Table.Columns columns={columnsQuestions} />
           <Table.Pagination
-            total={pagination.total}
-            perPage={pagination.page}
-            perPageOptions={[10, 15, 20]}
+            total={data?.pagination?.total}
+            perPage={data?.pagination?.per_page}
           />
         </Table>
       </Paper>

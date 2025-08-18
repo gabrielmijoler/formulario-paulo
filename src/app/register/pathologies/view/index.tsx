@@ -7,7 +7,7 @@ import {
 import Layout from '@/components/template/Layout'
 import { FPTable } from '@/components/TableCollapse'
 import { ErrorComponent } from '@/components/Error'
-import { parsePatholias } from '@/app/home/utils'
+// import { parsePatholias } from '@/app/home/utils'
 import { columnsPathologies } from '@/utils/table-columns'
 import { usePatologiasController } from '../controller'
 import { PatologiasModal } from '../component/modal'
@@ -20,14 +20,12 @@ import { RoutesUrls } from '@/routes'
 
 export const PatologiasView = () => {
   const {
-    pathologiesData,
     isModalOpen,
     pagination,
     search,
     methods,
     data,
     error,
-    isLoading,
     isCreateSuccess,
     handleOpenModal,
     handleCloseModal,
@@ -103,10 +101,7 @@ export const PatologiasView = () => {
         <div className="border-t pt-4">
           <Table className="w-full">
             <TableRows
-              data={parsePatholias({
-                ...data,
-                data: pathologiesData,
-              })}
+              data={data?.data}
               columns={columnsPathologies}
               mapTo={mapTo}
               emptyMessage="Nenhuma patologia encontrada"
@@ -115,7 +110,6 @@ export const PatologiasView = () => {
             <Table.Pagination
               total={pagination.total}
               perPage={pagination.page}
-              perPageOptions={[10, 15, 20]}
             />
           </Table>
         </div>

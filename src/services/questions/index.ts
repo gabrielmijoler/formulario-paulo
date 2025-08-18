@@ -1,7 +1,7 @@
 'use server'
 import { IGetPagination, IGetResponse } from '../clients/types'
 import { requestApi } from '../request.api'
-import { IQuestion, IQuestionResponse } from './types'
+import { IQuestionResponse } from './types'
 
 export async function postQuestion(
   params: IQuestionResponse,
@@ -23,15 +23,6 @@ export async function getQuestion(
   })
 }
 
-export async function getQuestions(
-  params: IGetPagination,
-): Promise<IGetResponse<IQuestionResponse>> {
-  return requestApi({
-    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/questions`,
-    method: 'GET',
-    params,
-  })
-}
 export async function getQuestionsById(id: string): Promise<IQuestionResponse> {
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}questions/${id}`,

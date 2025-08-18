@@ -30,7 +30,7 @@ export function TablePagination({
   perPage = 10,
   total = 0,
   perPageOptions = [10, 15, 20],
-}: TProps) {
+}: Readonly<TProps>) {
   const {
     count,
     currentPage,

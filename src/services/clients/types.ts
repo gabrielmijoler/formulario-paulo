@@ -39,23 +39,23 @@ export interface IClient {
 }
 
 export type IGetResponse<T> = {
-  data: T[]
+  data: T[] | undefined
   pagination?: Pagination
 }
 
 export type IGetPagination = {
   paginate: boolean
-  per_page: number
-  current_page: number
-  total: number
+  per_page: number | undefined
+  current_page: number | undefined
+  total: number | undefined
   filter: FilterParams
   relations?: string
 }
 
 export type Pagination = {
-  per_page: number
-  current_page: number
-  total: number
+  per_page: number | undefined
+  current_page: number | undefined
+  total: number | undefined
 }
 
 export type FilterParams = {

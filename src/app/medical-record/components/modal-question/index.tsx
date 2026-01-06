@@ -18,7 +18,7 @@ type IModalQuestion = {
   control: any
   errors: any
   optionsQuestion?: {
-    id: number
+    id?: number
     value: string
   }[]
   questionsWatch: any
@@ -36,7 +36,7 @@ export const ModalQuestion = ({
   setValue,
   modalOpen,
   handleModal,
-  onSave
+  onSave,
 }: IModalQuestion) => {
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([])
   const [responses, setResponses] = useState<Record<number, string>>({})
@@ -104,8 +104,12 @@ export const ModalQuestion = ({
                 const {
                   target: { value },
                 } = event
-                setSelectedQuestions(typeof value === 'string' ? value.split(',') : value)
-                field.onChange(typeof value === 'string' ? value.split(',') : value)
+                setSelectedQuestions(
+                  typeof value === 'string' ? value.split(',') : value,
+                )
+                field.onChange(
+                  typeof value === 'string' ? value.split(',') : value,
+                )
               }}
               renderValue={(selected) =>
                 optionsQuestion
@@ -159,11 +163,7 @@ export const ModalQuestion = ({
         })}
 
       <div className="flex justify-end gap-2 mt-4 m-2">
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={handleModal}
-        >
+        <Button variant="outlined" color="secondary" onClick={handleModal}>
           Cancelar
         </Button>
         <Button

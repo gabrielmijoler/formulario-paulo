@@ -2,18 +2,11 @@ import { postMedicalRecord } from '@/services/medical-record'
 import { IMedicalRecordRequest } from '@/services/medical-record/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-interface UseMedicalRecordMutationReturn {
-  isLoading: boolean
-  error: string | null
-  isSuccess: boolean
-  reset: () => void
-}
-
-export const useMedicalRecordMutation = (): UseMedicalRecordMutationReturn => {
+export const useMedicalRecordMutation = () => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    // mutationFn: postMedicalRecord({ ...params }),
+    mutationFn: (data: IMedicalRecordRequest) => postMedicalRecord(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medical-records'] })
     },
@@ -27,5 +20,6 @@ export const useMedicalRecordMutation = (): UseMedicalRecordMutationReturn => {
     error: mutation.error?.message ?? null,
     isSuccess: mutation.isSuccess,
     reset: mutation.reset,
+    mutate: mutation.mutate,
   }
 }

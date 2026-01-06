@@ -1,15 +1,15 @@
-import { BaseErrorScreen } from "@/componentsNext/errors";
-import BlockErrorImage from "@images/block-error.svg";
+import { BaseErrorScreen } from '@/componentsNext/errors'
+import BlockErrorImage from '@images/block-error.svg'
 
 type TProps = {
-  reset: VoidFunction;
-  containerClassName?: string;
-};
+  reset: VoidFunction
+  containerClassName?: string
+}
 
 export function SomethingWentWrongScreen({
   reset,
   containerClassName,
-}: TProps) {
+}: Readonly<TProps>) {
   return (
     <BaseErrorScreen
       containerClassName={containerClassName}
@@ -20,5 +20,5 @@ export function SomethingWentWrongScreen({
     >
       Estamos enfrentando problemas técnicos. Já estamos resolvendo!
     </BaseErrorScreen>
-  );
+  )
 }

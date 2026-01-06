@@ -5,5 +5,5 @@ export type IPathologiesRequest = {
 export type IPathologiesResponse = {
   code: string
   description: string
-  id: string
+  id: number
 }

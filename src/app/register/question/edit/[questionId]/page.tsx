@@ -34,7 +34,6 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
     resolver: zodResolver(questionSchema),
     defaultValues: {
       name: '',
-      response: '',
     },
   })
 
@@ -42,7 +41,6 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
     if (data) {
       methods.reset({
         name: data.name ?? '',
-        response: data.response ?? '',
       })
     }
   }, [data, methods])
@@ -56,7 +54,6 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
   }
 
   const nameWatch = methods.watch('name')
-  const responseWatch = methods.watch('response')
 
   return (
     <>
@@ -71,13 +68,6 @@ export default function PatientEdit({ params }: Readonly<ParamsID>) {
                 value={nameWatch}
                 onChange={(e) => methods.setValue('name', e.target.value)}
                 label="Nome da Questão"
-              />
-              <TextInput
-                name="response"
-                onChange={(e) => methods.setValue('response', e.target.value)}
-                type="text"
-                value={responseWatch}
-                label="Resposta"
               />
             </div>
             <button

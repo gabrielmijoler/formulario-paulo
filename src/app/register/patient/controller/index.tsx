@@ -10,6 +10,7 @@ import { useDebounceState } from '@/hook/use-debounce-state'
 import { clientSchema } from '../schema'
 import { PaginationState } from '@/app/types'
 import { getPathologies } from '@/services/pathologies'
+import { getMedicalRecord } from '@/services/medical-record'
 
 export const usePacienteController = () => {
   const queryClient = useQueryClient()
@@ -55,17 +56,18 @@ export const usePacienteController = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ['clients', debounceSearch],
     queryFn: async () => {
-      const response = await getClient({
+      const response = await getMedicalRecord({
         paginate: true,
         current_page: data?.pagination?.current_page,
         per_page: data?.pagination?.per_page,
         total: data?.pagination?.total,
         filter: { name: debounceSearch ?? '' },
       })
+      console.log('response', response)
       return response
     },
   })
-
+  console.log('data', data)
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true)
   }, [])

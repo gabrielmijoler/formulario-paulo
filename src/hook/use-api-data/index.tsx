@@ -35,14 +35,15 @@ export const useApiData = (): UseApiDataReturn => {
     refetch: refetchClients,
   } = useQuery({
     queryKey: ['clients_medical_record', pagination, debounceSearch],
-    queryFn: () => getClient({
-      paginate: true,
-      current_page: pagination.page,
-      per_page: pagination.itemsPerPage,
-      total: pagination.total,
-      filter: { name: debounceSearch ?? '' },
-      relations: 'clientAddress'
-    }),
+    queryFn: () =>
+      getClient({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+        relations: 'clientAddress',
+      }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
@@ -54,21 +55,23 @@ export const useApiData = (): UseApiDataReturn => {
     refetch: refetchPathologies,
   } = useQuery({
     queryKey: ['pathologies'],
-    queryFn: () => getPathologies({
-      paginate: true,
-      current_page: pagination.page,
-      per_page: pagination.itemsPerPage,
-      total: pagination.total,
-      filter: { name: debounceSearch ?? '' },
-    }),
+    queryFn: () =>
+      getPathologies({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+      }),
     staleTime: 10 * 60 * 1000, // 10 minutos
     gcTime: 30 * 60 * 1000, // 30 minutos
   })
 
-  const pathologies = pathologiesResponse?.data.map((pathology: any) => ({
-    ...pathology,
-    isOpen: false,
-  })) || []
+  const pathologies =
+    pathologiesResponse?.data?.map((pathology: any) => ({
+      ...pathology,
+      isOpen: false,
+    })) || []
 
   const {
     data: questionsResponse,
@@ -77,13 +80,14 @@ export const useApiData = (): UseApiDataReturn => {
     refetch: refetchQuestions,
   } = useQuery({
     queryKey: ['questions'],
-    queryFn: () => getQuestions({
-      paginate: true,
-      current_page: pagination.page,
-      per_page: pagination.itemsPerPage,
-      total: pagination.total,
-      filter: { name: debounceSearch ?? '' },
-    }),
+    queryFn: () =>
+      getQuestions({
+        paginate: true,
+        current_page: pagination.page,
+        per_page: pagination.itemsPerPage,
+        total: pagination.total,
+        filter: { name: debounceSearch ?? '' },
+      }),
     staleTime: 15 * 60 * 1000, // 15 minutos
     gcTime: 60 * 60 * 1000, // 1 hora
   })
@@ -102,8 +106,6 @@ export const useApiData = (): UseApiDataReturn => {
     refetchPathologies()
     refetchQuestions()
   }
-  console.log('clientsResponse', clientsResponse)
-  console.log('clientsResponse', questions)
   return {
     clients: clientsResponse?.data || [],
     pathologies,

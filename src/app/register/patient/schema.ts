@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { schemaCEP } from './components/Cep/schema'
+import { IClient } from '@/services/types/medical-record'
 
 export const clientSchema = z.object({
   id: z.number().int(),
@@ -19,6 +20,6 @@ export const clientSchema = z.object({
       const rgRegex = /^\d{2}\.\d{3}\.\d{3}-\d{1}$/
       return rgRegex.test(value)
     }, 'RG inválido'),
-  telephone: z.string().nonempty('Campo obrigatório'),
+  telephone: z.string(),
   clientAddress: schemaCEP,
-})
+}) satisfies z.ZodType<IClient>

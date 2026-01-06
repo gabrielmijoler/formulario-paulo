@@ -1,10 +1,12 @@
+import { IClientAddress } from '../clients/types'
+
 export type IClientMedicalRecord = {
   name: string
   document: string
-  address: string
+  address: IClientAddress
   ieRg: string
   email: string
-  telephone: number
+  telephone: string
 }
 export type IMedicalRecordPathology = {
   pathologiesId: number
@@ -52,6 +54,4 @@ export type IMedicalRecordResponse = {
   medicalRecordQuestions: IMedicalRecordQuestion[]
   treatments: ITreatment[]
   feedbacks: IFeedback[]
-  createdAt: string
-  updatedAt: string
 }

@@ -5,9 +5,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDebounceState } from '@/hook/use-debounce-state'
-import { IQuestion } from '@/services/questions/types'
-import { getQuestion, postQuestion } from '@/services/questions'
+import { IQuestionResponse } from '@/services/questions/types'
+import { getQuestions, postQuestion } from '@/services/questions'
 import { questionSchema } from '../schema'
+
+type ICreateQuestion = Pick<IQuestionResponse, 'name'>
 
 interface UseQuestionControllerReturn {
   openModal: boolean
@@ -16,17 +18,16 @@ interface UseQuestionControllerReturn {
   error: unknown
   isSuccess: boolean
   isMutating: boolean
-  methods: ReturnType<typeof useForm<IQuestion>>
+  methods: ReturnType<typeof useForm<ICreateQuestion>>
   handleOpen: () => void
   handleClose: () => void
-  onSubmit: SubmitHandler<IQuestion>
+  onSubmit: SubmitHandler<ICreateQuestion>
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   data: any
 }
 
 const FORM_DEFAULT_VALUES = {
   name: '',
-  response: '',
 } as const
 
 const DEBOUNCE_DELAY = 1000
@@ -38,7 +39,7 @@ export const useQuestionController = (): UseQuestionControllerReturn => {
   >(undefined, DEBOUNCE_DELAY)
   const [openModal, setOpenModal] = useState(false)
 
-  const methods = useForm<IQuestion>({
+  const methods = useForm<ICreateQuestion>({
     criteriaMode: 'all',
     resolver: zodResolver(questionSchema),
     defaultValues: FORM_DEFAULT_VALUES,
@@ -74,14 +75,10 @@ export const useQuestionController = (): UseQuestionControllerReturn => {
     },
   })
 
-  const onSubmit: SubmitHandler<IQuestion> = useCallback(
+  const onSubmit: SubmitHandler<ICreateQuestion> = useCallback(
     (data) => {
       console.log('Submitting question:', data)
-      mutate({
-        ...data,
-        response: data.response,
-        name: data.name,
-      })
+      mutate({ ...data, response: '', id: 0 } as IQuestionResponse)
     },
     [mutate],
   )
@@ -89,7 +86,7 @@ export const useQuestionController = (): UseQuestionControllerReturn => {
   const { data, error, isLoading } = useQuery({
     queryKey: ['questions', debounceSearch],
     queryFn: async () => {
-      const response = await getQuestion({
+      const response = await getQuestions({
         paginate: true,
         current_page: data?.pagination?.current_page,
         per_page: data?.pagination?.per_page,
@@ -102,7 +99,7 @@ export const useQuestionController = (): UseQuestionControllerReturn => {
     refetchOnWindowFocus: false,
     retry: 2,
   })
-
+  console.log(data)
   return {
     openModal,
     search,

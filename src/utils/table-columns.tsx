@@ -8,6 +8,7 @@ import { IPathologiesResponse } from '@/services/pathologies/types'
 import { IQuestionResponse } from '@/services/questions/types'
 import { RoutesUrls } from '@/routes'
 import { TTableColumn } from '@/componentsNext/table'
+import { IMedicalRecordResponse } from '@/services/medical-record/types'
 
 export const columnsPathologies: TTableColumn[] = [
   {
@@ -98,6 +99,49 @@ export const columnsPatients: TTableColumn[] = [
             <IconButton size="small">{<EditIcon />}</IconButton>
           </Link>
         </FPBox>
+      )
+    },
+  },
+]
+
+export const columnsMedicalRecord: TTableColumn[] = [
+  {
+    label: 'Paciente',
+    property: 'client',
+    sort: true,
+  },
+  {
+    label: 'Sintomas',
+    property: 'symptoms',
+    sort: true,
+  },
+  {
+    label: 'Exame Clínico',
+    property: 'clinicalExam',
+    sort: true,
+  },
+  {
+    label: 'Conclusão',
+    property: 'conclusion',
+    sort: true,
+  },
+  {
+    label: 'Status',
+    property: 'status',
+    sort: true,
+  },
+  {
+    label: 'Ações',
+    property: 'actions',
+    render: (row: IMedicalRecordResponse) => {
+      return (
+        <div className="flex gap-2 justify-center">
+          <Link href={`/medical-record/edit/${row.id}`}>
+            <IconButton size="small">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        </div>
       )
     },
   },

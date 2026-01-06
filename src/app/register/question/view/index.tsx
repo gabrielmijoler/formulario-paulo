@@ -6,7 +6,6 @@ import { FPBox } from '@/components/Box'
 import Layout from '@/components/template/Layout'
 import { Text } from '@/components/Text'
 import { TextInput } from '@/components/TextInput'
-import { parseQuestions } from '@/app/home/utils'
 import {
   Box,
   Paper,
@@ -15,6 +14,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { ErrorComponent } from '@/components/Error'
 import { columnsQuestions } from '@/utils/table-columns'
 import { useQuestionController } from '../controller'
@@ -112,7 +112,7 @@ const SearchSection: React.FC<{
 }> = ({ search, onSearchChange, isLoading }) => (
   <div className="mb-4">
     <TextField
-      label="Buscar paciente por nome"
+      label="Buscar questão"
       variant="outlined"
       size="medium"
       margin="dense"
@@ -123,7 +123,7 @@ const SearchSection: React.FC<{
       className="min-w-[300px]"
       slotProps={{
         input: {
-          'aria-label': 'Campo de busca por nome do paciente',
+          'aria-label': 'Campo de busca por questão',
         },
       }}
     />
@@ -144,8 +144,9 @@ const ActionBar: React.FC<{
       onClick={onNewPatient}
       disabled={isLoading}
       className="px-6 py-2"
+      startIcon={<AddIcon />}
     >
-      + Novo Paciente
+      Nova Pergunta
     </Button>
   </div>
 )

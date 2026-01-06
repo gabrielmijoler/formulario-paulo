@@ -1,31 +1,36 @@
 'use client'
 import React from 'react'
-import { useApiData } from '@/hook/use-api-data'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { ErrorMessage } from '@/components/ErrorMessage'
 import { MedicalRecordFormView } from './view'
-import { useMedicalRecordMutation } from '@/hook/use-medical-record-mutation'
+import { useMedicalRecordController } from './controller'
+import { useApiData } from '@/hook/use-api-data'
 
 export default function MedicalRecordPage() {
-  const { clients, pathologies, questions, loading, error, refetch } =
-    useApiData()
-  const {
-    isLoading: submitting,
-    error: submitError,
-    isSuccess: submitSuccess,
-    reset: resetMutation,
-  } = useMedicalRecordMutation()
+  const { loading, error, refetch } = useApiData()
 
-  const handleSubmit = (data: any) => {
-    console.log(data)
-  }
+  const {
+    clients,
+    pathologies,
+    questions,
+    control,
+    errors,
+    isContentSelected,
+    modalOpen,
+    clientWatch,
+    questionsWatch,
+    questionData,
+    handleSubmit,
+    setValue,
+    getValues,
+    handleClientChange,
+    handlePathologyChange,
+    handleModalToggle,
+    handleSave,
+  } = useMedicalRecordController()
 
   const handleRetry = () => {
     refetch()
-  }
-
-  const handleClearSuccess = () => {
-    resetMutation()
   }
 
   if (loading) {
@@ -46,31 +51,25 @@ export default function MedicalRecordPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {submitSuccess && null /* TODO: Implement success message */}
-
-      {submitError && (
-        <div className="mb-4">
-          <ErrorMessage message={submitError} onRetry={resetMutation} />
-        </div>
-      )}
-
-      <div className={`${submitting ? 'opacity-50 pointer-events-none' : ''}`}>
-        <MedicalRecordFormView
-          clients={clients}
-          pathologies={pathologies}
-          questions={questions}
-          onSubmit={handleSubmit}
-        />
-      </div>
-
-      {submitting && (
-        <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 flex items-center">
-            <LoadingSpinner />
-            <span className="ml-4">Salvando prontuário...</span>
-          </div>
-        </div>
-      )}
+      <MedicalRecordFormView
+        clients={clients}
+        pathologies={pathologies}
+        questions={questions}
+        control={control}
+        errors={errors}
+        isContentSelected={isContentSelected}
+        modalOpen={modalOpen}
+        clientWatch={clientWatch}
+        questionsWatch={questionsWatch}
+        questionData={questionData}
+        handleSubmit={handleSubmit}
+        setValue={setValue}
+        getValues={getValues}
+        handleClientChange={handleClientChange}
+        handlePathologyChange={handlePathologyChange}
+        handleModalToggle={handleModalToggle}
+        handleSave={handleSave}
+      />
     </div>
   )
 }

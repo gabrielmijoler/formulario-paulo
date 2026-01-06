@@ -1,47 +1,43 @@
-"use client"
+'use client'
 import { useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { SelectChangeEvent } from '@mui/material'
-import { IClient } from '@/services/clients/types'
-import { IPathologiesResponse } from '@/services/pathologies/types'
-import { IQuestion, IQuestionResponse } from '@/services/questions/types'
+import { IQuestionResponse } from '@/services/questions/types'
 import { IMedicalRecordResponse } from '@/services/medical-record/types'
 import { useAppData } from '@/context'
-import { postQuestion } from '@/services/questions'
-import { useMutation } from '@tanstack/react-query'
+import { MedicalRecordFormView } from '../view'
+import { useApiData } from '@/hook/use-api-data'
+import { IClient } from '@/services/clients/types'
+import { IPathologiesResponse } from '@/services/pathologies/types'
 
-interface UseMedicalRecordControllerProps {
-  clients: IClient[]
+interface MedicalRecordFormData {
+  client: IClient
   pathologies: IPathologiesResponse[]
-  questions: IQuestion[]
-  onSubmit: (data: IMedicalRecordResponse) => void
+  questions: IQuestionResponse[]
+  symptoms: string
+  clinicalExam: string
+  conclusion: string
 }
 
-export const useMedicalRecordController = ({
-  clients,
-  pathologies,
-  questions,
-  onSubmit,
-}: UseMedicalRecordControllerProps) => {
+export const useMedicalRecordController = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [isContentSelected, setIsContentSelected] = useState(false)
   const [questionData, setQuestionData] = useState<IQuestionResponse[]>([])
   const { user } = useAppData()
+  const { clients, pathologies, questions } = useApiData()
   const {
     control,
-    handleSubmit,
+    handleSubmit: rhfHandleSubmit,
     setValue,
     getValues,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<MedicalRecordFormData>({
     criteriaMode: 'all',
     defaultValues: {
       symptoms: '',
       clinicalExam: '',
-      completeClinicalExam: '',
       conclusion: '',
-      clientId: 0,
       userId: user.id,
       status: user.status,
       client: {
@@ -61,93 +57,59 @@ export const useMedicalRecordController = ({
         email: '',
         telephone: '',
       },
-      pathologies: [
-        {
-          id: '',
-          code: '',
-          description: '',
-        },
-      ],
-      questions: [
-        {
-          id: 0,
-          name: '',
-          response: '',
-        },
-      ],
-
-      treatments: [
-        {
-          description: '',
-          medicalRecordId: 0,
-        },
-      ],
+      pathologies: [],
+      questions: [],
+      symptoms: '',
+      clinicalExam: '',
+      conclusion: '',
     },
   })
 
   const clientWatch = watch('client')
   const questionsWatch = watch('questions')
+  const pathologiesWatch = watch('pathologies')
 
   const handleClientChange = useCallback(
-    (event: SelectChangeEvent) => {
-      const selectedClient = clients.find(
-        (client) => client.id === Number(event.target.value),
-      )
-
-      if (selectedClient) {
-        setValue('client', selectedClient)
+    (client: IClient | null) => {
+      if (client) {
+        setValue('client', client)
         setIsContentSelected(true)
       }
     },
-    [clients, setValue],
+    [setValue],
   )
 
   const handlePathologyChange = useCallback(
-    (event: SelectChangeEvent) => {
-      const selectedPathology = pathologies.find(
-        (pathology) => pathology.id === event.target.value,
-      )
-
-      if (selectedPathology) {
-        setValue('pathologies', [selectedPathology])
-      }
+    (selectedPathologies: IPathologiesResponse[]) => {
+      return setValue('pathologies', selectedPathologies)
     },
-    [pathologies, setValue],
+    [setValue],
   )
 
   const handleModalToggle = useCallback(() => {
     setModalOpen((prev) => !prev)
   }, [])
 
-  const handleFormSubmit = useCallback(
-    (data: any) => {
-      const selectedPathologies = Array.isArray(data.pathologies)
-        ? data.pathologies.map((id: string | number) => {
-          const found = pathologies.find((p) => p.id === id)
-          return found
-            ? { id: found.id, name: found.code, response: found.description }
-            : null
-        }).filter(Boolean)
-        : []
+  const handleFormSubmit = useCallback((data: any) => {
+    try {
+      console.log('Dados do formulário:', data)
+      // Aqui você deve chamar a mutation para salvar
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error)
+    }
+  }, [])
 
-      const payload = {
-        ...data,
-        pathologies: selectedPathologies,
-      }
-
-      onSubmit(payload)
+  const handleSave = useCallback(
+    (questionsWithResponses: IQuestionResponse[]) => {
+      setQuestionData(questionsWithResponses)
     },
-    [onSubmit, pathologies],
+    [],
   )
 
-  const handleSave = (questionsWithResponses: IQuestionResponse[]) => {
-    setQuestionData(questionsWithResponses)
-  }
-
-  console.log('clients', clients)
-  console.log('clientWatch', clientWatch)
-
   return {
+    clients,
+    pathologies,
+    questions,
     control,
     errors,
     isContentSelected,
@@ -155,13 +117,12 @@ export const useMedicalRecordController = ({
     clientWatch,
     questionsWatch,
     questionData,
-    handleSubmit: handleSubmit(handleFormSubmit),
+    handleSubmit: rhfHandleSubmit(handleFormSubmit),
     setValue,
     getValues,
     handleClientChange,
     handlePathologyChange,
     handleModalToggle,
     handleSave,
-    setIsContentSelected,
   }
 }

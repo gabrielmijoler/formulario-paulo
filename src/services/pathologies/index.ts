@@ -7,7 +7,6 @@ import { IPathologiesRequest, IPathologiesResponse } from './types'
 export async function postPathologies(
   params: IPathologiesRequest,
 ): Promise<IPathologiesResponse> {
-  console.log(params)
   return requestApi({
     url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/pathologies`,
     method: 'POST',
@@ -28,7 +27,7 @@ export async function getPathologiesByID(
   id: string,
 ): Promise<IPathologiesResponse> {
   return requestApi({
-    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}pathologies/${id}`,
+    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/pathologies/${id}`,
     method: 'GET',
   })
 }

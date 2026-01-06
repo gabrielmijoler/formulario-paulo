@@ -13,7 +13,7 @@ export async function postQuestion(
   })
 }
 
-export async function getQuestion(
+export async function getQuestions(
   params: IGetPagination,
 ): Promise<IGetResponse<IQuestionResponse>> {
   return requestApi({
@@ -25,7 +25,7 @@ export async function getQuestion(
 
 export async function getQuestionsById(id: string): Promise<IQuestionResponse> {
   return requestApi({
-    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}questions/${id}`,
+    url: `${process.env.NEXT_PUBLIC_CLINICAL_BASE_URL}/questions/${id}`,
     method: 'GET',
   })
 }

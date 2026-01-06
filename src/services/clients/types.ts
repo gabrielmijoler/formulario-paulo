@@ -35,7 +35,6 @@ export interface IClient {
   ieRg: string
   email: string
   telephone: string
-  isOpen?: boolean
 }
 
 export type IGetResponse<T> = {
